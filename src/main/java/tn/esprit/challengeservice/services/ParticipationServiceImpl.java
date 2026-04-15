@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import tn.esprit.challengeservice.clients.UserDto;
 import tn.esprit.challengeservice.clients.UserServiceClient;
 import tn.esprit.challengeservice.entities.*;
+import tn.esprit.challengeservice.exceptions.SonarResultsNotFoundException;
 import tn.esprit.challengeservice.repositories.ChallengeRepository;
 import tn.esprit.challengeservice.repositories.SonarCloudResultRepository;
 import tn.esprit.challengeservice.repositories.participationRepository;
@@ -144,7 +145,7 @@ public class ParticipationServiceImpl implements iparticipationService {
     @Override
     public SonarCloudResult getSonarResults(String participationId) {
         return sonarCloudResultRepository.findByParticipationId(participationId)
-                .orElseThrow(() -> new RuntimeException("SonarCloud results not found for participation: " + participationId));
+                .orElseThrow(() -> new SonarResultsNotFoundException("SonarCloud results not ready yet. Analysis may still be in progress."));
     }
 
     @Override
@@ -185,6 +186,24 @@ public class ParticipationServiceImpl implements iparticipationService {
         existing.setLinesOfCode(updatedResult.getLinesOfCode());
 
         return sonarCloudResultRepository.save(existing);
+    }
+
+    @Override
+    public void saveSonarPoints(String participationId, String sonarResultId, int pointsAwarded) {
+        if (pointsAwarded < 0) {
+            throw new IllegalArgumentException("pointsAwarded must be >= 0");
+        }
+        SonarCloudResult result = sonarCloudResultRepository.findById(sonarResultId)
+                .orElseThrow(() -> new SonarResultsNotFoundException("SonarCloud result not found: " + sonarResultId));
+        if (result.getParticipation() == null || !result.getParticipation().getId().equals(participationId)) {
+            throw new SonarResultsNotFoundException("SonarCloud result does not belong to participation: " + participationId);
+        }
+        Challenge challenge = result.getParticipation().getChallenge();
+        if (challenge != null && challenge.getPoints() != null && pointsAwarded > challenge.getPoints()) {
+            throw new IllegalArgumentException("pointsAwarded cannot exceed challenge max points (" + challenge.getPoints() + ")");
+        }
+        result.setPointsAwarded(pointsAwarded);
+        sonarCloudResultRepository.save(result);
     }
 
     private String getStringMetric(Map<String, Object> metrics, String key) {

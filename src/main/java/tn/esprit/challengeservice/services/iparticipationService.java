@@ -19,6 +19,8 @@ public interface iparticipationService {
 
     Optional<SonarCloudResult> getSonarResultsIfPresent(String participationId);
     SonarCloudResult updateSonarResults(String participationId, SonarCloudResult updatedResult);
+
+    void saveSonarPoints(String participationId, String sonarResultId, int pointsAwarded);
     List<ChallengeParticipation> getMyParticipations(String authorization);
     ChallengeParticipation getMyParticipationForChallenge(String challengeId, String authorization);
     long getTotalParticipantsCount();

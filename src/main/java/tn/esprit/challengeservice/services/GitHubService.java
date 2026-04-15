@@ -210,16 +210,21 @@ public class GitHubService {
         headers.set("Accept", "application/vnd.github+json");
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        String baseBranch = getDefaultBranch(repoName);
+
         Map<String, Object> body = Map.of(
                 "title", "Challenge Submission",
                 "head", branchName,
-                "base", "main",
+                "base", baseBranch,
                 "body", "Automated challenge submission from branch " + branchName
         );
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
         try {
+            if (githubToken == null || githubToken.isBlank()) {
+                throw new RuntimeException("GitHub token is not configured. Set GITHUB_TOKEN environment variable.");
+            }
             ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
@@ -229,12 +234,44 @@ public class GitHubService {
             }
             throw new RuntimeException("Failed to create pull request: " + response.getStatusCode());
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 422 && e.getResponseBodyAsString().contains("A pull request already exists")) {
-                log.info("Pull request already exists for branch {} in repo {}", branchName, repoName);
-                throw new RuntimeException("A pull request already exists for branch " + branchName);
+            String errorBody = e.getResponseBodyAsString();
+            int status = e.getStatusCode().value();
+            if (status == 401) {
+                throw new RuntimeException("Invalid or missing GitHub token. Check GITHUB_TOKEN is set correctly.");
             }
-            throw new RuntimeException("Failed to create pull request: " + e.getMessage());
+            if (status == 404) {
+                throw new RuntimeException("Repository or branch not found. Ensure the branch '" + branchName + "' exists and is pushed.");
+            }
+            if (status == 422) {
+                log.warn("GitHub 422 creating PR for repo {} branch {}: {}", repoName, branchName, errorBody);
+                if (errorBody != null && errorBody.contains("A pull request already exists")) {
+                    throw new RuntimeException("A pull request already exists for branch '" + branchName + "'. Check GitHub.");
+                }
+                if (errorBody != null && errorBody.contains("Reference does not exist")) {
+                    throw new RuntimeException("Branch '" + branchName + "' not found. Ensure it exists and is pushed to the remote.");
+                }
+                throw new RuntimeException("Cannot create pull request: " + (errorBody != null && errorBody.length() < 200 ? errorBody : "Validation failed. Check branch name and that it is pushed."));
+            }
+            throw new RuntimeException("Failed to create pull request: " + (errorBody != null && !errorBody.isBlank() ? errorBody : e.getMessage()));
         }
+    }
+
+    private String getDefaultBranch(String repoName) {
+        String url = "https://api.github.com/repos/" + ORG_OWNER + "/" + repoName;
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + githubToken);
+        headers.set("Accept", "application/vnd.github+json");
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                String defaultBranch = (String) response.getBody().get("default_branch");
+                return defaultBranch != null && !defaultBranch.isBlank() ? defaultBranch : "main";
+            }
+        } catch (Exception e) {
+            log.warn("Could not fetch default branch for repo {}, using main: {}", repoName, e.getMessage());
+        }
+        return "main";
     }
 
     @SuppressWarnings("unchecked")
