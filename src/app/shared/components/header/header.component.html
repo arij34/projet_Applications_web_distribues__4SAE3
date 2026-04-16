@@ -1,0 +1,93 @@
+<header class="modern-header" [class.scrolled]="isScrolled">
+  <div class="header-container">
+    <nav class="nav-wrapper">
+      <!-- Logo -->
+<a class="logo-wrapper" routerLink="/">
+  <img 
+    src="assets/img/logo.png" 
+    alt="Freelancy Logo" 
+    class="main-logo"
+  >
+</a>
+
+
+
+      <!-- Desktop Navigation -->
+      <div class="nav-menu-desktop">
+        <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <span>Home</span>
+        </a>
+        <a class="nav-link" routerLink="/challenges" routerLinkActive="active">
+          <span>Challenges</span>
+        </a>
+        <a class="nav-link" href="#about">
+          <span>About</span>
+        </a>
+        <a class="nav-link" href="#pricing">
+          <span>event</span>
+        </a>
+        <a class="nav-link" href="#contact">
+          <span>participant</span>
+        </a>
+      </div>
+      
+
+     <div class="header-actions">
+
+  <button class="auth-btn signin-btn" routerLink="/login">
+    <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+      <polyline points="10 17 15 12 10 7"></polyline>
+      <line x1="15" y1="12" x2="3" y2="12"></line>
+    </svg>
+    <span>Sign In</span>
+  </button>
+
+  <button class="auth-btn signup-btn" routerLink="/register">
+    <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 5v14"></path>
+      <path d="M5 12h14"></path>
+    </svg>
+    <span>Sign Up</span>
+  </button>
+
+</div>
+
+
+
+      <!-- Mobile Menu Toggle -->
+      <button 
+        class="mobile-toggle" 
+        type="button" 
+        [class.active]="isMobileMenuOpen"
+        (click)="toggleMobileMenu()"
+        aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="nav-menu-mobile" [class.active]="isMobileMenuOpen">
+      <a class="mobile-nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+        Home
+      </a>
+      <a class="mobile-nav-link" routerLink="/challenges" routerLinkActive="active" (click)="closeMobileMenu()">
+        Challenges
+      </a>
+      <a class="mobile-nav-link" href="#about" (click)="closeMobileMenu()">
+        About
+      </a>
+      <a class="mobile-nav-link" href="#pricing" (click)="closeMobileMenu()">
+        Pricing
+      </a>
+      <a class="mobile-nav-link" href="#contact" (click)="closeMobileMenu()">
+        Contact
+      </a>
+      <button class="mobile-cta-button" type="button" (click)="closeMobileMenu()">
+        Get Started
+      </button>
+    </div>
+  </div>
+</header>

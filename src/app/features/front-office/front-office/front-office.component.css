@@ -1,0 +1,237 @@
+/* ========================= Stats Section ========================= */
+
+.stats-section {
+  background: transparent;
+  padding: 90px 0;
+}
+
+/* Header */
+
+.stats-header h2 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #0f172a; /* texte principal */
+}
+
+.stats-header p {
+  font-size: 16px;
+  color: #64748b; /* texte secondaire */
+  margin-bottom: 60px;
+}
+
+/* Grid */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 40px;
+  align-items: center;
+}
+
+/* Items */
+
+.stat-item {
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+}
+
+/* Bootstrap Icons */
+
+.stat-icon {
+  font-size: 36px;
+  margin-bottom: 15px;
+  color: #4f46e5; /* couleur principale Freelancy */
+}
+
+/* Numbers */
+
+.stat-item h3 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #0f172a;
+}
+
+/* Labels */
+
+.stat-item p {
+  font-size: 14px;
+  color: #64748b;
+}
+.stat-item {
+  text-align: center;
+  padding: 25px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+/* ========================== */
+
+.pricing-card {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  position: relative;
+
+  /* bordure invisible par défaut */
+  border: 2px solid transparent;
+}
+
+/* Effet hover */
+.pricing-card:hover {
+  border: 2px solid #2563eb;   /* bleu seulement au hover */
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.2);
+}
+
+.pricing-card h2 {
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 30px 0;
+}
+
+.pricing-card ul li {
+  margin: 10px 0;
+  color: #555;
+}
+
+/* Badge */
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2563eb;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+/* ========================= Pricing Section ========================= */
+
+.pricing-section {
+  background: #f8fafc;
+}
+
+/* Pricing Card (même style que stat-item) */
+
+.pricing-card {
+  background: #ffffff;
+  padding: 35px 30px;
+  border-radius: 12px;
+
+  text-align: center;
+
+  /* même shadow que stat-item */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+  /* animation smooth */
+  transition: all 0.3s ease;
+
+  /* important */
+  position: relative;
+
+  /* border invisible */
+  border: 2px solid transparent;
+
+  height: 100%;
+}
+
+/* Hover effect EXACTEMENT comme stat-item */
+
+.pricing-card:hover {
+  transform: translateY(-6px);
+
+  /* shadow plus forte */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  /* border bleu moderne */
+  border: 2px solid #2563eb;
+}
+
+/* Title */
+
+.pricing-card h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Price */
+
+.pricing-card h2 {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 20px 0;
+  color: #0f172a;
+}
+
+.pricing-card h2 span {
+  font-size: 16px;
+  font-weight: 400;
+  color: #64748b;
+}
+
+/* Features list */
+
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 25px 0;
+  text-align: left;
+}
+
+.pricing-card ul li {
+  padding: 8px 0;
+  color: #64748b;
+  font-size: 15px;
+}
+
+/* Buttons */
+
+.pricing-card .btn {
+  margin-top: 15px;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+/* Popular badge */
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #2563eb;
+  color: white;
+
+  padding: 5px 16px;
+
+  font-size: 13px;
+
+  border-radius: 20px;
+
+  font-weight: 500;
+
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
