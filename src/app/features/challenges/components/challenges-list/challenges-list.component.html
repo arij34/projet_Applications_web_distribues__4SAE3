@@ -1,0 +1,241 @@
+<div class="challenges-page">
+  <app-header></app-header>
+  
+  <!-- Page Header Section -->
+  <section class="challenge-header-card">
+    <div class="gradient-overlay"></div>
+    <div class="decorative-circles">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="icon-wrapper">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <h1 class="challenge-title">Explore Challenges</h1>
+      <p class="challenge-description">Discover curated challenges to enhance your skills and build your portfolio</p>
+    </div>
+  </section>
+
+  <!-- Search Bar - Below Header -->
+  <div class="search-section-below">
+    <div class="search-wrapper">
+      <app-challenge-search (searchChanged)="onSearchChanged($event)"></app-challenge-search>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    
+    <!-- Filters Section -->
+    <div class="search-filter-section">
+      <div class="controls-bar">
+        <div class="filters-wrapper">
+          <app-challenge-filters (filtersChanged)="onFiltersChanged($event)"></app-challenge-filters>
+        </div>
+        
+        <div class="view-controls">
+          <div class="view-toggle">
+            <button
+              type="button"
+              (click)="viewMode = 'grid'"
+              [class.active]="viewMode === 'grid'"
+              class="view-btn"
+              aria-label="Grid view">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </button>
+            <button
+              type="button"
+              (click)="viewMode = 'list'"
+              [class.active]="viewMode === 'list'"
+              class="view-btn"
+              aria-label="List view">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Summary -->
+      <div class="results-summary">
+        <div class="results-text">
+          <span class="results-count">Showing <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong> - <strong>{{ Math.min(currentPage * itemsPerPage, filteredChallenges.length) }}</strong> of <strong>{{ filteredChallenges.length }}</strong> challenges</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="loading-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="loading-text">Loading challenges...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && filteredChallenges.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </div>
+      <h3 class="empty-title">No challenges found</h3>
+      <p class="empty-description">Try adjusting your filters or search terms to find what you're looking for</p>
+      <button
+        type="button"
+        (click)="onSearchChanged(''); onFiltersChanged({ category: 'All Categories', difficulty: 'All Levels', pointRange: { min: 0, max: Infinity }, sortBy: 'popular' })"
+        class="empty-action-btn">
+        Clear All Filters
+      </button>
+    </div>
+
+    <!-- Challenges Grid/List -->
+    <div *ngIf="!loading && filteredChallenges.length > 0" 
+         [class.challenges-grid]="viewMode === 'grid'"
+         [class.challenges-list]="viewMode === 'list'"
+         class="challenges-container">
+      <div *ngFor="let challenge of displayedChallenges; let i = index" 
+           class="challenge-item"
+           [style.animation-delay.ms]="i * 50">
+        <div class="challenge-card" (click)="onJoinChallenge(challenge.id)">
+          <div class="card-header-row">
+            <span class="status-badge" [ngClass]="getStatusClass(challenge.status)">
+              {{ getStatusLabel(challenge.status) }}
+            </span>
+            <span *ngIf="challenge.difficulty" class="difficulty-badge" [ngClass]="getDifficultyClass(challenge.difficulty)">
+              {{ challenge.difficulty }}
+            </span>
+          </div>
+          <h3 class="card-title">{{ challenge.title }}</h3>
+          <p class="card-description">{{ challenge.description }}</p>
+          <div class="card-meta">
+            <span *ngIf="challenge.category" class="meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
+              </svg>
+              {{ challenge.category }}
+            </span>
+            <span *ngIf="challenge.points" class="meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              {{ challenge.points }} pts
+            </span>
+            <span *ngIf="challenge.participants" class="meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              {{ challenge.participants }}
+            </span>
+          </div>
+          <div class="card-footer">
+            <button class="join-btn" (click)="onJoinChallenge(challenge.id); $event.stopPropagation()">
+              View Challenge
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!loading && totalPages > 1" class="pagination-wrapper">
+      <div class="pagination">
+        <button
+          type="button"
+          (click)="goToPage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="pagination-btn pagination-prev"
+          aria-label="Previous page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="pagination-numbers">
+          <button
+            *ngIf="visiblePages[0] > 1"
+            type="button"
+            (click)="goToPage(1)"
+            class="pagination-number">
+            1
+          </button>
+
+          <span *ngIf="visiblePages[0] > 2" class="pagination-ellipsis">...</span>
+
+          <button
+            *ngFor="let page of visiblePages"
+            type="button"
+            (click)="goToPage(page)"
+            [class.active]="currentPage === page"
+            class="pagination-number">
+            {{ page }}
+          </button>
+
+          <span *ngIf="visiblePages[visiblePages.length - 1] < totalPages - 1" class="pagination-ellipsis">...</span>
+
+          <button
+            *ngIf="visiblePages[visiblePages.length - 1] < totalPages"
+            type="button"
+            (click)="goToPage(totalPages)"
+            class="pagination-number">
+            {{ totalPages }}
+          </button>
+        </div>
+
+        <button
+          type="button"
+          (click)="goToPage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="pagination-btn pagination-next"
+          aria-label="Next page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div *ngIf="!loading && filteredChallenges.length > 0" class="cta-section">
+      <div class="cta-background">
+        <div class="cta-orb cta-orb-1"></div>
+        <div class="cta-orb cta-orb-2"></div>
+      </div>
+      
+      <div class="cta-content">
+        <h2 class="cta-title">Can't find what you're looking for?</h2>
+        <p class="cta-description">
+          Suggest a new challenge or create your own custom challenge for the community
+        </p>
+        <div class="cta-buttons">
+          <button type="button" class="cta-btn-primary">
+            Suggest a Challenge
+          </button>
+          <button type="button" class="cta-btn-secondary">
+            Create Custom Challenge
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

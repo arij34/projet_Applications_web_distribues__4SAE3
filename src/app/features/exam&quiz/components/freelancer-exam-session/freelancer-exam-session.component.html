@@ -1,0 +1,326 @@
+<div class="session-layout">
+
+  <!-- Fullscreen Enforcement Modal -->
+  <app-fullscreen-enforcement
+    *ngIf="showFullscreenEnforcement()"
+    (confirmed)="onFullscreenConfirmed()"
+    (declined)="onFullscreenDeclined()">
+  </app-fullscreen-enforcement>
+
+  <!-- Cheating Warning -->
+  <app-cheating-warning
+    [isVisible]="showCheatingWarning()"
+    [title]="cheatingWarningTitle"
+    [message]="cheatingWarningMessage"
+    [severity]="cheatingWarningSeverity"
+    (closed)="onWarningClosed()"
+    (dismissed)="onWarningDismissed()">
+  </app-cheating-warning>
+
+  <app-webcam-monitor
+    *ngIf="hasEnteredFullscreen() && examId !== null"
+    [examId]="examId!"
+    [attemptId]="attemptId ?? 0"
+    [userId]="currentUserId ?? undefined"
+    [detectionIntervalMs]="1000"
+    [noFaceTimeoutMs]="5000"
+    [requireFullscreen]="true"
+    (violationDetected)="onProctoringViolation($event)"
+    (backendAction)="onBackendProctoringAction($event)">
+  </app-webcam-monitor>
+
+  <!-- Top Bar -->
+  <header class="session-topbar" *ngIf="hasEnteredFullscreen()">
+    <div class="topbar-left">
+      <div class="exam-title-chip">{{ examTitle() }}</div>
+      <div class="progress-pill">
+        {{ answeredCount }} / {{ questions().length }} answered
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div
+        class="focus-warning-pill"
+        [class.focus-warning-pill-danger]="lookingAwayWarningCount() >= lookingAwayMaxWarnings - 1">
+        Face focus warnings: {{ lookingAwayWarningCount() }}/{{ lookingAwayMaxWarnings }}
+      </div>
+      <button
+        *ngIf="apiDebugLogs().length > 0"
+        class="btn-debug"
+        type="button"
+        (click)="toggleApiDebugPanel()">
+        API Logs ({{ apiDebugLogs().length }})
+      </button>
+      <button class="btn-submit-top" (click)="openSubmitConfirm()">
+        Submit Exam
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-track" *ngIf="hasEnteredFullscreen()">
+    <div class="progress-bar-fill" [style.width.%]="progress()"></div>
+  </div>
+
+  <!-- Body -->
+  <div class="session-body" *ngIf="hasEnteredFullscreen()">
+
+    <!-- Sidebar: Question Navigator -->
+    <aside class="question-nav">
+      <div class="nav-header">
+        <h3>Questions</h3>
+        <span class="nav-stats">{{ answeredCount }}/{{ questions().length }}</span>
+      </div>
+
+      <div class="nav-legend">
+        <span class="legend-item"><span class="legend-dot dot-answered"></span>Answered</span>
+        <span class="legend-item"><span class="legend-dot dot-current"></span>Current</span>
+        <span class="legend-item"><span class="legend-dot dot-skipped"></span>Skipped</span>
+      </div>
+
+      <div class="nav-grid">
+        <button
+          *ngFor="let q of questions(); let i = index"
+          class="nav-btn"
+          [ngClass]="'nav-' + questionStatus(q)"
+          (click)="goTo(i)"
+          [title]="'Question ' + q.number + ' — ' + (isAnswered(q.id) ? 'Answered' : 'Not answered')"
+        >
+          {{ q.number }}
+        </button>
+      </div>
+
+      <div class="warning-logs-panel">
+        <div class="warning-logs-header">Warning Logs</div>
+
+        @if (warningLogsNewest().length === 0) {
+          <p class="warning-logs-empty">No warnings yet.</p>
+        } @else {
+          <div class="warning-logs-list">
+            @for (log of warningLogsNewest(); track log.createdAtMs) {
+              <div class="warning-log-item">
+                <div class="warning-log-head">
+                  <p class="warning-log-label">{{ log.label }}</p>
+                  <span class="warning-log-time">{{ log.timestamp }}</span>
+                </div>
+                <p class="warning-log-message">{{ log.message }}</p>
+                <p class="warning-log-attempts">
+                  Attempts left:
+                  {{ log.attemptsLeft === null ? 'N/A' : log.attemptsLeft + '/' + lookingAwayMaxWarnings }}
+                </p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="nav-timer" [class.nav-timer-urgent]="timerUrgent">
+        <div class="nav-timer-icon-wrap" aria-hidden="true">
+          <svg class="nav-timer-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2h12"/>
+            <path d="M6 22h12"/>
+            <path d="M8 2v4l4 4-4 4v4"/>
+            <path d="M16 2v4l-4 4 4 4v4"/>
+          </svg>
+        </div>
+        <span class="nav-timer-label">Time Left</span>
+        <span class="nav-timer-value">{{ timerDisplay }}</span>
+      </div>
+
+      <div class="nav-summary">
+        <div class="ns-row">
+          <span class="ns-label">Answered</span>
+          <span class="ns-val success">{{ answeredCount }}</span>
+        </div>
+        <div class="ns-row">
+          <span class="ns-label">Remaining</span>
+          <span class="ns-val warning">{{ unansweredCount }}</span>
+        </div>
+        <div class="ns-row">
+          <span class="ns-label">Current marks</span>
+          <span class="ns-val success">{{ liveEarnedPoints() }}/{{ maxPoints }}</span>
+        </div>
+        <div class="ns-row">
+          <span class="ns-label">Total pts</span>
+          <span class="ns-val">{{ maxPoints }}</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main: Question Card -->
+    <main class="question-area">
+      <div class="question-card">
+
+        <!-- Question header -->
+        <div class="q-header">
+          <div class="q-meta">
+            <span class="q-number">Question {{ currentQuestion().number }} of {{ questions().length }}</span>
+            <span class="q-diff" [ngClass]="difficultyClass(currentQuestion().difficulty)">
+              {{ currentQuestion().difficulty | titlecase }}
+            </span>
+            <span class="q-type-chip">{{ currentQuestion().type === 'TRUE_FALSE' ? 'True / False' : currentQuestion().type === 'SHORT' ? 'Short Answer' : 'Multiple Choice' }}</span>
+          </div>
+          <span class="q-points">{{ currentQuestion().points }} pts</span>
+        </div>
+
+        <!-- Question text -->
+        <p class="q-text">{{ currentQuestion().text }}</p>
+
+        <!-- MCQ Answers -->
+        @if (currentQuestion().type === 'MCQ' || currentQuestion().type === 'TRUE_FALSE') {
+          <div class="answers-list">
+            @for (answer of currentQuestion().answers; track answer.id) {
+              <button
+                class="answer-option"
+                [class.selected]="answers()[currentQuestion().id] === answer.id"
+                (click)="selectAnswer(currentQuestion().id, answer.id)"
+              >
+                <span class="answer-radio">
+                  @if (answers()[currentQuestion().id] === answer.id) {
+                    <svg width="10" height="10" viewBox="0 0 10 10">
+                      <circle cx="5" cy="5" r="4" fill="currentColor"/>
+                    </svg>
+                  }
+                </span>
+                <span class="answer-text">{{ answer.text }}</span>
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Short Answer -->
+        @if (currentQuestion().type === 'SHORT') {
+          <div class="short-answer-block">
+            <label class="short-label">Your answer</label>
+            <textarea
+              class="short-textarea"
+              rows="6"
+              placeholder="Write your answer here…"
+              [(ngModel)]="shortAnswerText"
+            ></textarea>
+            <span class="char-count">{{ shortAnswerText.length }} characters</span>
+          </div>
+        }
+
+      </div>
+
+      <!-- Navigation footer -->
+      <div class="q-navigation">
+        <button class="nav-arrow" [disabled]="currentIndex() === 0" (click)="prev()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Previous
+        </button>
+
+        <div class="nav-dots">
+          <span
+            *ngFor="let q of questions(); let i = index"
+            class="nav-dot"
+            [class.active]="i === currentIndex()"
+            [class.filled]="isAnswered(q.id)"
+            (click)="goTo(i)"
+          ></span>
+        </div>
+
+        @if (currentIndex() < questions().length - 1) {
+          <button class="nav-arrow next" (click)="next()">
+            Next
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        } @else {
+          <button class="nav-arrow next submit-final" (click)="openSubmitConfirm()">
+            Submit
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </button>
+        }
+      </div>
+    </main>
+
+  </div>
+
+  @if (showApiDebugPanel() && apiDebugLogs().length > 0) {
+    <section class="api-debug-panel" aria-label="API debug logs">
+      <div class="api-debug-head">
+        <strong>Session API Debug</strong>
+        <button type="button" class="btn-debug-close" (click)="toggleApiDebugPanel()">Close</button>
+      </div>
+      <div class="api-debug-list">
+        @for (entry of apiDebugLogs(); track entry.ts + entry.endpoint + entry.message) {
+          <article class="api-debug-item">
+            <p class="api-debug-meta">{{ entry.ts }} | {{ entry.method }} {{ entry.endpoint }} | status: {{ entry.status }}</p>
+            <p class="api-debug-message">{{ entry.message }}</p>
+            @if (entry.request) {
+              <pre class="api-debug-pre">req: {{ entry.request | json }}</pre>
+            }
+            @if (entry.response) {
+              <pre class="api-debug-pre">res: {{ entry.response | json }}</pre>
+            }
+          </article>
+        }
+      </div>
+    </section>
+  }
+</div>
+
+<!-- Submit Confirm Modal -->
+@if (isSubmitConfirmOpen()) {
+  <div class="modal-overlay" (click)="cancelSubmit()">
+    <div class="confirm-modal" (click)="$event.stopPropagation()">
+      <div class="confirm-icon">📋</div>
+      <h2>Submit Exam?</h2>
+      <div class="submit-stats">
+        <div class="ss-item success">
+          <span class="ss-val">{{ answeredCount }}</span>
+          <span class="ss-label">Answered</span>
+        </div>
+        <div class="ss-item warning">
+          <span class="ss-val">{{ unansweredCount }}</span>
+          <span class="ss-label">Unanswered</span>
+        </div>
+        <div class="ss-item neutral">
+          <span class="ss-val">{{ timerDisplay }}</span>
+          <span class="ss-label">Remaining</span>
+        </div>
+        <div class="ss-item success">
+          <span class="ss-val">{{ liveEarnedPoints() }}/{{ maxPoints }}</span>
+          <span class="ss-label">Current Marks</span>
+        </div>
+      </div>
+      @if (unansweredCount > 0) {
+        <p class="warn-note">
+          You have {{ unansweredCount }} unanswered question{{ unansweredCount !== 1 ? 's' : '' }}.
+          Unanswered questions will be scored as zero.
+        </p>
+      }
+      <p class="confirm-hint">This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="btn-ghost" (click)="cancelSubmit()">Continue Exam</button>
+        <button class="btn-danger" (click)="submitExam()">Submit Now</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showForcedSubmissionModal()) {
+  <div class="modal-overlay forced-overlay">
+    <div class="confirm-modal termination-modal" role="alertdialog" aria-modal="true" aria-labelledby="forced-submit-title">
+      <div class="confirm-icon termination-icon">⚠️</div>
+      <h2 id="forced-submit-title">{{ forcedSubmissionTitle }}</h2>
+      <p class="termination-message">{{ forcedSubmissionMessage }}</p>
+      @if (forcedSubmissionMode === 'submit') {
+        <div class="countdown-chip">Automatic submission in {{ forcedSubmissionCountdown() }}s</div>
+        <p class="termination-note">Your answers recorded up to this point will be submitted and the session will then close.</p>
+      } @else {
+        <p class="termination-note">Select OK to continue to your result page.</p>
+      }
+      <div class="confirm-actions">
+        <button class="btn-danger" (click)="confirmForcedSubmission()">{{ forcedSubmissionActionLabel }}</button>
+      </div>
+    </div>
+  </div>
+}

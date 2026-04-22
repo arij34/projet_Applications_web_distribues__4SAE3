@@ -1,0 +1,356 @@
+<div class="invitations-page">
+  <div class="invitations-container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">My Invitations</h1>
+      <p class="page-sub">Projects you've been invited to participate in</p>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-bar">
+    <button class="tab-btn" [ngClass]="{ active: activeTab === 'all' }" (click)="setTab('all')">
+      <i class="bi bi-grid-3x3-gap-fill"></i> All ({{ invitations.length }})
+    </button>
+    <button class="tab-btn" [ngClass]="{ active: activeTab === 'pending' }" (click)="setTab('pending')">
+      <i class="bi bi-clock-fill"></i> Pending ({{ pendingCount }})
+    </button>
+    <button class="tab-btn" [ngClass]="{ active: activeTab === 'accepted' }" (click)="setTab('accepted')">
+      <i class="bi bi-check-circle-fill"></i> Accepted ({{ acceptedCount }})
+    </button>
+    <button class="tab-btn" [ngClass]="{ active: activeTab === 'declined' }" (click)="setTab('declined')">
+      <i class="bi bi-x-circle-fill"></i> Declined ({{ declinedCount }})
+    </button>
+    <button class="tab-btn tab-trash" [ngClass]="{ active: activeTab === 'trash' }" (click)="setTab('trash')">
+      <i class="bi bi-trash3-fill"></i> Trash ({{ trashCount }})
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading invitations...</p>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" *ngIf="!loading && filteredInvitations.length === 0">
+    <div class="empty-icon">
+      <i class="bi bi-trash3" *ngIf="activeTab === 'trash'"></i>
+      <i class="bi bi-envelope-open" *ngIf="activeTab !== 'trash'"></i>
+    </div>
+    <p>{{ activeTab === 'trash' ? 'Trash is empty' : 'No invitations found' }}</p>
+    <span>
+      {{
+        activeTab === 'trash'
+          ? 'Deleted invitations appear here for 24h'
+          : 'Complete your profile to get matched with projects'
+      }}
+    </span>
+  </div>
+
+  <!-- INVITATIONS LIST -->
+  <div class="invitations-list" *ngIf="!loading && filteredInvitations.length > 0">
+    <div
+      class="invitation-card"
+      *ngFor="let inv of filteredInvitations"
+      [ngClass]="{ 'card-trash': inv.status === 'TRASH' }"
+    >
+
+      <!-- STATUS RIBBON -->
+      <div class="status-ribbon" [ngClass]="'ribbon-' + inv.status.toLowerCase()"></div>
+
+      <!-- CARD CONTENT SIMPLIFIÉ -->
+      <div class="card-body">
+
+        <!-- LEFT : infos principales -->
+        <div class="project-info">
+
+          <div class="project-header">
+            <div class="project-main">
+              <div class="project-icon">
+                <i class="bi bi-briefcase-fill"></i>
+              </div>
+              <div>
+                <h3 class="project-title">{{ inv.projectTitle }}</h3>
+                <p class="client-name">
+                  by {{ inv.clientName }}
+                  <span class="client-email" *ngIf="inv.clientEmail">
+                    ({{ inv.clientEmail }})
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div *ngIf="isExpiringSoon(inv)" class="expire-pill">
+              <i class="bi bi-hourglass-split"></i> Expires soon
+            </div>
+          </div>
+
+          <!-- Date d'envoi -->
+          <p class="invited-at">
+            <i class="bi bi-send"></i> Invited {{ formatDate(inv.invitedAt) }}
+          </p>
+
+          <!-- Bouton pour afficher / cacher les détails -->
+          <button
+            class="btn-details-toggle"
+            type="button"
+            (click)="toggleDetails(inv)"
+          >
+            <i class="bi" [ngClass]="expandedInvitationId === inv.id ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+            {{ expandedInvitationId === inv.id ? 'Hide details' : 'View details' }}
+          </button>
+
+          <!-- DÉTAILS (affichés seulement si expandedInvitationId === inv.id) -->
+          <div class="invitation-details" *ngIf="expandedInvitationId === inv.id">
+
+            <p class="project-desc">{{ inv.projectDescription }}</p>
+
+            <div class="stats-grid">
+              <div class="stat-item">
+                <i class="bi bi-calendar3 stat-icon" style="color: #6366f1;"></i>
+                <div>
+                  <span class="stat-label">Deadline</span>
+                  <span class="stat-val">{{ formatDate(inv.deadline) }}</span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <i class="bi bi-currency-dollar stat-icon" style="color: #10b981;"></i>
+                <div>
+                  <span class="stat-label">Budget</span>
+                  <span class="stat-val">
+                    {{ inv.budget ? ('$' + inv.budget) : 'Not analyzed yet' }}
+                  </span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <i class="bi bi-clock stat-icon" style="color: #f59e0b;"></i>
+                <div>
+                  <span class="stat-label">Duration</span>
+                  <span class="stat-val">
+                    {{ inv.durationWeeks ? (inv.durationWeeks + ' weeks') : 'Not estimated' }}
+                  </span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <i class="bi bi-person-fill stat-icon" style="color: #8b5cf6;"></i>
+                <div>
+                  <span class="stat-label">Client</span>
+                  <span class="stat-val">{{ inv.clientName }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="skills-section">
+              <span class="skills-label">Required Skills:</span>
+              <div class="skills-row">
+                <span class="skill-tag" *ngFor="let skill of inv.requiredSkills">
+                  {{ skill }}
+                </span>
+              </div>
+            </div>
+
+            <p class="trash-date" *ngIf="inv.status === 'TRASH' && inv.trashedAt">
+              <i class="bi bi-trash3-fill"></i>
+              Moved to trash on {{ formatDate(inv.trashedAt) }} — auto-delete in 24h
+            </p>
+          </div>
+
+        </div>
+
+        <!-- RIGHT : Actions PENDING -->
+        <div class="card-actions" *ngIf="inv.status === 'PENDING'">
+          <button class="btn-accept" (click)="openForm(inv)">
+            <i class="bi bi-check-lg"></i> Accept & Apply
+          </button>
+          <button class="btn-decline" (click)="declineInvitation(inv)">
+            <i class="bi bi-x-lg"></i> Decline
+          </button>
+        </div>
+
+        <!-- RIGHT : Status ACCEPTED -->
+        <div class="status-done" *ngIf="inv.status === 'ACCEPTED'">
+          <i class="bi bi-check-circle-fill" style="color: #16a34a; font-size: 16px;"></i>
+          Application sent
+        </div>
+
+        <!-- RIGHT : Status DECLINED (avec actions) -->
+        <div class="status-done status-declined-actions" *ngIf="inv.status === 'DECLINED'">
+          <div class="declined-header">
+            <i class="bi bi-x-circle-fill" style="color: #dc2626; font-size: 16px;"></i>
+            Invitation declined
+          </div>
+          <button
+            class="btn-restore-pending"
+            (click)="restoreFromDeclined(inv)"
+            title="Reconsider"
+          >
+            <i class="bi bi-arrow-counterclockwise"></i> Reconsider
+          </button>
+          <button
+            class="btn-trash"
+            (click)="moveToTrash(inv)"
+            title="Move to trash"
+          >
+            <i class="bi bi-trash3-fill"></i>
+          </button>
+        </div>
+
+        <!-- RIGHT : Actions TRASH -->
+        <div class="trash-actions" *ngIf="inv.status === 'TRASH'">
+          <button class="btn-restore" (click)="restoreInvitation(inv)">
+            <i class="bi bi-arrow-counterclockwise"></i> Restore
+          </button>
+          <button class="btn-delete-permanently" (click)="deletePermanently(inv)">
+            <i class="bi bi-trash3-fill"></i> Delete permanently
+          </button>
+          <span class="trash-info">
+            <i class="bi bi-hourglass-split"></i> Auto-delete in 24h
+          </span>
+        </div>
+
+      </div>
+
+      <!-- FORMULAIRE DYNAMIQUE -->
+      <div class="application-form" *ngIf="activeFormId === inv.id">
+        <div class="form-header">
+          <i class="bi bi-file-earmark-text-fill" style="color: #6366f1; font-size: 18px;"></i>
+          <h4>Application Form — {{ inv.projectTitle }}</h4>
+        </div>
+
+        <!-- Erreur globale -->
+        <div class="form-global-error" *ngIf="globalError">
+          {{ globalError }}
+        </div>
+
+        <!-- questions en chargement -->
+        <div class="loading-state" *ngIf="questions.length === 0">
+          <div class="spinner"></div>
+          <p>Loading questions...</p>
+        </div>
+
+        <!-- MODE QUESTIONS -->
+        <div class="form-body" *ngIf="questions.length > 0 && !reviewMode">
+
+          <p *ngIf="inv.budgetMax" class="form-hint">
+            Maximum budget for this project:
+            <strong>\${{ inv.budgetMax }}</strong>
+            <span class="hint-secondary">
+              (you can also leave the budget empty and discuss it later)
+            </span>
+          </p>
+
+          <p *ngIf="inv.durationWeeks" class="form-hint">
+            Estimated project duration:
+            <strong>{{ inv.durationWeeks }} weeks</strong>
+            <span class="hint-secondary">
+              (your delivery timeline should not exceed this duration)
+            </span>
+          </p>
+
+          <div class="form-question">
+            <label class="q-label">
+              <span class="q-num">{{ currentQuestionIndex + 1 }}</span>
+              {{ questions[currentQuestionIndex].label }}
+            </label>
+
+            <textarea
+              *ngIf="questions[currentQuestionIndex].type === 'TEXTAREA'"
+              class="q-input"
+              rows="3"
+              [(ngModel)]="currentAnswer"
+              placeholder='Your answer... (write "no answer" if you really have nothing to say)'
+            >
+            </textarea>
+
+            <input
+              *ngIf="questions[currentQuestionIndex].type === 'TEXT'"
+              class="q-input-text"
+              [(ngModel)]="currentAnswer"
+              placeholder='Your answer... (write "no answer" if you really have nothing to say)'
+            />
+
+            <input
+              *ngIf="questions[currentQuestionIndex].type === 'NUMBER'"
+              type="number"
+              class="q-input-text"
+              [(ngModel)]="currentAnswer"
+              placeholder="Your answer..."
+            />
+
+            <div class="field-error" *ngIf="currentError">
+              {{ currentError }}
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-cancel-form" (click)="closeForm()">
+              <i class="bi bi-x"></i> Cancel
+            </button>
+
+            <button
+              class="btn-submit-form"
+              (click)="goToNextQuestion(inv)"
+              [disabled]="isSubmitting"
+            >
+              <i class="bi bi-arrow-right-circle"></i>
+              {{
+                currentQuestionIndex === questions.length - 1
+                  ? 'Review your answers'
+                  : 'Next question'
+              }}
+            </button>
+          </div>
+        </div>
+
+        <!-- MODE REVIEW (lecture seule) -->
+        <div class="form-body review-body" *ngIf="questions.length > 0 && reviewMode">
+          <h5 class="review-title">Review your answers before sending</h5>
+
+          <div class="review-list">
+            <div class="review-item" *ngFor="let item of getReviewItems(inv)">
+              <div class="review-question">{{ item.label }}</div>
+              <div class="review-answer">{{ item.value }}</div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <!-- Revenir modifier les réponses (question par question) -->
+            <button
+              class="btn-cancel-form"
+              (click)="backToForm(inv)"
+              *ngIf="canEditMap[inv.id] !== false"
+            >
+              <i class="bi bi-arrow-left"></i> Back to form
+            </button>
+
+            <!-- Sauvegarder en backend (create/update) -->
+            <button
+              class="btn-submit-form"
+              (click)="submitAnswers(inv)"
+              [disabled]="isSubmitting || canEditMap[inv.id] === false"
+            >
+              <i class="bi bi-save"></i>
+              {{ isSubmitting ? 'Saving...' : 'Save answers' }}
+            </button>
+
+            <!-- Confirmer & accepter -->
+            <button
+              class="btn-submit-form"
+              style="margin-left: 8px;"
+              (click)="confirmAndAccept(inv)"
+              [disabled]="isSubmitting"
+            >
+              <i class="bi bi-send"></i>
+              {{ isSubmitting ? 'Submitting...' : 'Validate & Send' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>

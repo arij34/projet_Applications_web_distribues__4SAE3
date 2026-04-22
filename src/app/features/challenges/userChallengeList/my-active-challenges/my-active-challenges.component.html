@@ -1,0 +1,117 @@
+<div class="min-h-screen bg-white">
+  <!-- Header Section -->
+  <div class="bg-gradient-to-br from-[#b3d1fa] to-[#d4e4fc] py-16 px-6 relative overflow-hidden">
+    <!-- Decorative Elements -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-white/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-64 h-64 bg-[#1E3A8A]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+    
+    <div class="max-w-7xl mx-auto relative z-10">
+      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
+        <!-- Left Content -->
+        <div class="flex-1">
+          <a 
+            routerLink="/"
+            class="inline-flex items-center gap-2 text-[#1E3A8A] hover:text-[#1E3A8A]/80 mb-6 transition-colors group no-underline"
+          >
+            <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span class="font-medium">Back to Explore</span>
+          </a>
+          
+          <h1 class="text-5xl font-bold text-[#1F2937] mb-4 leading-tight">
+            My Active Challenges
+          </h1>
+          <p class="text-xl text-[#4B5563] max-w-2xl mb-8 leading-relaxed">
+            Continue working on your active challenges and track your progress. Keep building and learning!
+          </p>
+          
+          <!-- Stats Row -->
+          <div class="flex flex-wrap gap-8 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                <svg class="w-6 h-6 text-[#1E3A8A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-[#1F2937]">{{ activeChallenges.length }}</div>
+                <div class="text-sm text-[#6B7280]">Active</div>
+              </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                <svg class="w-6 h-6 text-[#1E3A8A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-[#1F2937]">{{ averageProgress }}%</div>
+                <div class="text-sm text-[#6B7280]">Avg Progress</div>
+              </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                <svg class="w-6 h-6 text-[#1E3A8A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-[#1F2937]">2h</div>
+                <div class="text-sm text-[#6B7280]">Today</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Actions -->
+        <div class="flex flex-col gap-3 lg:mt-12">
+          <a 
+            routerLink="/"
+            class="bg-white text-[#1E3A8A] px-8 py-4 rounded-xl hover:bg-white/90 transition-all shadow-md hover:shadow-lg font-medium flex items-center gap-2 whitespace-nowrap group border border-[#1E3A8A]/20 no-underline"
+          >
+            <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Browse More Challenges
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-6 py-12">
+    <!-- Active Challenges Grid -->
+    <div class="grid grid-cols-1 gap-6">
+      <app-active-challenge-card
+        *ngFor="let challenge of activeChallenges"
+        [challenge]="challenge"
+      ></app-active-challenge-card>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="activeChallenges.length === 0" class="text-center py-16">
+      <div class="w-24 h-24 bg-[#EBF4FF] rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-12 h-12 text-[#1E3A8A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+      </div>
+      <h3 class="text-2xl font-semibold text-[#1F2937] mb-3">No Active Challenges</h3>
+      <p class="text-[#6B7280] mb-6 max-w-md mx-auto">
+        You haven't started any challenges yet. Browse our collection and start building!
+      </p>
+      <a
+        routerLink="/"
+        class="inline-flex items-center gap-2 bg-[#1E3A8A] text-white px-6 py-3 rounded-[12px] hover:bg-[#1E3A8A]/90 transition-colors font-medium no-underline"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        Explore Challenges
+      </a>
+    </div>
+  </div>
+</div>

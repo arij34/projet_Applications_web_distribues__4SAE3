@@ -1,0 +1,48 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Skills Management</h2>
+    <a routerLink="/admin/skills/form" class="btn-primary-modern">+ Add Skill</a>
+  </div>
+
+  <!-- ✅ BARRE DE RECHERCHE -->
+  <app-search-bar
+    placeholder="Search by name, category..."
+    [filters]="search.config.filters"
+    [totalCount]="allSkills.length"
+    [resultCount]="filteredSkills.length"
+    [currentQuery]="currentQuery"
+    (queryChange)="onSearch($event)"
+    (filterChange)="onFilter($event)"
+    (reset)="onReset()">
+  </app-search-bar>
+
+  <div class="table-card">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Name</th><th>Category</th><th>Normalized</th>
+          <th>Created</th><th class="actions-cell">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let skill of filteredSkills">
+          <td class="fw-600">{{ skill.name }}</td>
+          <td><span class="badge-modern badge-yellow">{{ skill.category }}</span></td>
+          <td>{{ skill.normalizedName }}</td>
+          <td>{{ skill.createdAt | date:'yyyy-MM-dd' }}</td>
+          <td class="actions-cell">
+            <a [routerLink]="['/admin/skills/form', skill.idS]" class="action-icon edit-icon">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <button (click)="deleteSkill(skill.idS!)" class="action-icon delete-icon">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredSkills.length === 0">
+          <td colspan="5" class="empty-state">No skills found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

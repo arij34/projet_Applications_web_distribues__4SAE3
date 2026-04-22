@@ -1,0 +1,32 @@
+<div class="success">
+  <div class="success__card">
+    <svg class="success__icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>
+    </svg>
+    <h1 class="success__title">You're All Set!</h1>
+    <p class="success__subtitle">
+      Your development environment is ready.<br />
+      Repository <strong>{{ repoName }}</strong> has been created and you're good to go.
+    </p>
+    <div class="success__repo-url">
+      <code>{{ repoUrl }}</code>
+    </div>
+    <div class="success__actions">
+      <button class="btn btn--primary" (click)="onFinish()">
+        Start Working
+      </button>
+      <button class="btn btn--outline" (click)="onOpenRepo()">
+        Open Repository
+      </button>
+      <button class="btn btn--outline" (click)="onCopy()">
+        <svg *ngIf="!copied" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+        </svg>
+        <svg *ngIf="copied" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6 9 17l-5-5"/>
+        </svg>
+        {{ copied ? 'Copied!' : 'Copy Clone Command' }}
+      </button>
+    </div>
+  </div>
+</div>

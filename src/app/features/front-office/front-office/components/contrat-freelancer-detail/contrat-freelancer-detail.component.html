@@ -1,0 +1,606 @@
+<!-- ─────────────────────────────────────────────────────────────
+     CONTRAT-FREELANCER-DETAIL  (CORRIGÉ)
+
+     LOGIQUE BARRE D'ACTIONS :
+     ┌──────────────────────────────────────────────────────────┐
+     │ DRAFT            → [Propose changes] [Send changes]     │
+     │                    [Accept client proposal]  ← PRINCIPAL│
+     │                                                          │
+     │ PENDING_SIGNATURE                                        │
+     │   !freelancerSignedAt → [Send changes]                  │
+     │                         [Sign contract]  ← PRINCIPAL    │
+     │   freelancerSignedAt && !clientSignedAt                  │
+     │                       → Badge "Signed — awaiting client" │
+     │                         [Sign as Client] si isClient     │
+     │                                                          │
+     │ ACTIVE            → [Download PDF] [Active Contract ✓]  │
+     └──────────────────────────────────────────────────────────┘
+     ───────────────────────────────────────────────────────────── -->
+
+<div class="cd-page">
+
+  <!-- ══ TOAST ════════════════════════════════════════════════ -->
+  <div class="cd-toast"
+       [class.visible]="showToastVisible"
+       [class.toast-success]="showToastType==='success'"
+       [class.toast-info]="showToastType==='info'"
+       [class.toast-warn]="showToastType==='warn'">
+    <svg *ngIf="showToastType==='success'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6EE7B7" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    <svg *ngIf="showToastType==='info'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <svg *ngIf="showToastType==='warn'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FCD34D" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+    <span>{{ showToastMessage }}</span>
+  </div>
+
+  <!-- ══ LOADING OVERLAY ══════════════════════════════════════ -->
+  <div class="cd-loading-overlay" [class.show]="showLoadingOverlay">
+    <div class="cd-loading-card">
+      <div class="cd-spinner"></div>
+      <div class="cd-loading-title">{{ loadingTitle }}</div>
+      <div class="cd-loading-sub">{{ loadingSub }}</div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL SIGNATURE CLIENT ════════════════════════════════ -->
+  <div class="cd-modal-backdrop" [class.open]="showSignClientModal" (click)="closeSignClientModal()">
+    <div class="cd-modal-box" style="max-width:480px" (click)="$event.stopPropagation()" *ngIf="contract">
+      <div class="cd-modal-head">
+        <div>
+          <div class="cd-modal-title">✍️ Confirm your signature</div>
+          <div class="cd-modal-sub">Electronic signature of the contract</div>
+        </div>
+        <button class="cd-modal-close" (click)="closeSignClientModal()">×</button>
+      </div>
+      <div class="cd-modal-body">
+        <div style="background:#f8fafc;border-radius:10px;padding:14px 16px;margin-bottom:16px;">
+          <div style="font-weight:600;color:#1e293b;margin-bottom:6px;">{{ contract.title }}</div>
+          <div style="font-size:13px;color:#64748b;">
+            💰 {{ formatAmount(contract.totalAmount, contract.currency) }} &nbsp;·&nbsp;
+            🎯 {{ contract.milestones?.length || 0 }} milestones
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+          <div style="flex:1;text-align:center;padding:12px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;">
+            <div style="font-size:20px;">✅</div>
+            <div style="font-size:12px;font-weight:600;color:#166534;margin-top:4px;">Freelancer</div>
+            <div style="font-size:11px;color:#166534;">Signed {{ formatDatetime(contract.freelancerSignedAt) }}</div>
+          </div>
+          <div style="font-size:20px;color:#94a3b8;">→</div>
+          <div style="flex:1;text-align:center;padding:12px;background:#fefce8;border-radius:8px;border:1px solid #fde68a;">
+            <div style="font-size:20px;">⏳</div>
+            <div style="font-size:12px;font-weight:600;color:#92400e;margin-top:4px;">Client (you)</div>
+            <div style="font-size:11px;color:#92400e;">Awaiting your signature</div>
+          </div>
+        </div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;font-size:13px;color:#1e40af;margin-bottom:16px;">
+          <strong>⚖️ Legal value:</strong> By signing, you accept the contract terms.
+          A PDF will be generated and emailed to both parties.
+        </div>
+        <div *ngIf="signClientError" style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px;color:#dc2626;font-size:13px;margin-bottom:12px;">❌ {{ signClientError }}</div>
+        <div *ngIf="signClientSuccess" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px;color:#166534;font-size:13px;margin-bottom:12px;">{{ signClientSuccess }}</div>
+      </div>
+      <div class="cd-modal-foot" *ngIf="!signClientSuccess">
+        <button class="cd-btn cd-btn-ghost" (click)="closeSignClientModal()" [disabled]="isSigningAsClient">Cancel</button>
+        <button class="cd-btn cd-btn-primary" (click)="confirmSignAsClient()" [disabled]="isSigningAsClient" style="background:#2563eb;">
+          <span *ngIf="!isSigningAsClient">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle;">
+              <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+            Confirm my signature
+          </span>
+          <span *ngIf="isSigningAsClient">⏳ Signing…</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PDF MODAL ════════════════════════════════════════════ -->
+  <div class="cd-modal-backdrop" [class.open]="showPdfModal" (click)="closePdfModal()">
+    <div class="cd-modal-box" style="max-width:520px" (click)="$event.stopPropagation()" *ngIf="contract">
+      <div class="cd-modal-head">
+        <div>
+          <div class="cd-modal-title">Contract PDF Preview</div>
+          <div class="cd-modal-sub">{{ getStatusLabel(contract.status) }} · {{ formatDate(contract.createdAt) }}</div>
+        </div>
+        <button class="cd-modal-close" (click)="closePdfModal()">×</button>
+      </div>
+      <div class="cd-modal-body">
+        <div class="pdf-preview">
+          <div class="pdf-watermark" [class.pdf-active]="bothSigned">
+            {{ bothSigned ? 'ACTIVE CONTRACT — SIGNED BY BOTH PARTIES' : 'DRAFT — CONFIDENTIAL' }}
+          </div>
+          <div class="pdf-title">SERVICE AGREEMENT</div>
+          <div class="pdf-ref">Reference: {{ contract.reference || ('CF-' + contract.id) }} · Issued {{ formatDate(contract.createdAt) }}</div>
+          <hr class="pdf-divider">
+          <div class="pdf-section">Parties</div>
+          <div class="pdf-row"><span>Service Provider</span><strong>{{ contract.freelancerName }}</strong></div>
+          <div class="pdf-row"><span>Client</span><strong>{{ contract.clientCompany }} — {{ contract.clientName }}</strong></div>
+          <hr class="pdf-divider">
+          <div class="pdf-section">Scope &amp; Amount</div>
+          <div class="pdf-row"><span>Scope</span><strong>{{ contract.title }}</strong></div>
+          <div class="pdf-row"><span>Total</span><strong>{{ formatAmount(contract.totalAmount, contract.currency) }}</strong></div>
+          <div class="pdf-row"><span>Duration</span><strong>{{ formatDate(contract.startDate) }} → {{ formatDate(contract.endDate) }}</strong></div>
+          <hr class="pdf-divider">
+          <div class="pdf-section">Signatures</div>
+          <div class="pdf-sig-row">
+            <div class="pdf-sig-box">
+              <div class="pdf-sig-name" [class.unsigned]="!freelancerAlreadySigned">{{ freelancerAlreadySigned ? contract.freelancerName : 'Not signed' }}</div>
+              <div class="pdf-sig-label">Freelancer · {{ contract.freelancerName }}</div>
+              <div class="pdf-sig-date" *ngIf="freelancerAlreadySigned">{{ formatDatetime(contract.freelancerSignedAt) }}</div>
+            </div>
+            <div class="pdf-sig-box">
+              <div class="pdf-sig-name" [class.unsigned]="!clientAlreadySigned">{{ clientAlreadySigned ? contract.clientName : 'Not signed' }}</div>
+              <div class="pdf-sig-label">Client · {{ contract.clientName }}</div>
+              <div class="pdf-sig-date" *ngIf="clientAlreadySigned">{{ formatDatetime(contract.clientSignedAt) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cd-modal-foot">
+        <button class="cd-btn cd-btn-ghost" (click)="closePdfModal()">Close</button>
+        <button class="cd-btn cd-btn-primary" (click)="closePdfModal(); downloadPdf()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MILESTONE MODAL ══════════════════════════════════════ -->
+  <div class="cd-modal-backdrop" [class.open]="showMsModal" (click)="closeMsModal()">
+    <div class="cd-modal-box" (click)="$event.stopPropagation()">
+      <div class="cd-modal-head">
+        <div>
+          <div class="cd-modal-title">{{ editingMsIndex >= 0 ? 'Edit milestone' : 'Add a milestone' }}</div>
+          <div class="cd-modal-sub">Define the deliverable, amount and deadline</div>
+        </div>
+        <button class="cd-modal-close" (click)="closeMsModal()">×</button>
+      </div>
+      <div class="cd-modal-body">
+        <div class="cd-field"><label>Milestone title</label><input type="text" [(ngModel)]="msForm.title" placeholder="Ex: UI/UX mockup delivery…"></div>
+        <div class="cd-field-row">
+          <div class="cd-field"><label>Amount ({{ contract?.currency || 'TND' }})</label><input type="number" [(ngModel)]="msForm.amount" placeholder="0" min="0"></div>
+          <div class="cd-field">
+            <label>Deadline</label>
+            <input type="date" [(ngModel)]="msForm.deadline" [min]="formatDateForInput(contract?.startDate)" [max]="formatDateForInput(contract?.endDate)">
+            <div class="cd-field-sub" style="margin-top:6px;font-size:11px;color:#6B7280;">Between {{ formatDate(contract?.startDate) }} and {{ formatDate(contract?.endDate) }}</div>
+          </div>
+        </div>
+        <div class="cd-field"><label>Deliverables description</label><textarea [(ngModel)]="msForm.description" rows="3" placeholder="Describe expected deliverables…"></textarea></div>
+      </div>
+      <div class="cd-modal-foot">
+        <button class="cd-btn cd-btn-ghost" (click)="closeMsModal()">Cancel</button>
+        <button class="cd-btn cd-btn-primary" (click)="saveMilestone()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CLAUSE MODAL ═════════════════════════════════════════ -->
+  <div class="cd-modal-backdrop" [class.open]="showClauseModal" (click)="closeClauseModal()">
+    <div class="cd-modal-box" (click)="$event.stopPropagation()">
+      <div class="cd-modal-head">
+        <div><div class="cd-modal-title">Edit a clause</div><div class="cd-modal-sub">A notification will be sent to the client after saving</div></div>
+        <button class="cd-modal-close" (click)="closeClauseModal()">×</button>
+      </div>
+      <div class="cd-modal-body">
+        <div class="cd-field">
+          <label>Select clause</label>
+          <select (change)="onClauseSelect(+$any($event.target).value)">
+            <option *ngFor="let cl of clauses; let i = index" [value]="i">{{ cl.article }} — {{ cl.title }}</option>
+          </select>
+        </div>
+        <div class="cd-field"><label>Clause text</label><textarea [(ngModel)]="clauseText" rows="5"></textarea></div>
+        <div class="cd-field-warn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          Any modification will be notified to the client and must be accepted to take effect.
+        </div>
+      </div>
+      <div class="cd-modal-foot">
+        <button class="cd-btn cd-btn-ghost" (click)="closeClauseModal()">Cancel</button>
+        <button class="cd-btn cd-btn-primary" (click)="saveClause()">Save &amp; notify</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LOADING STATE ════════════════════════════════════════ -->
+  <div class="cd-center-loading" *ngIf="isLoading"><div class="cd-spinner"></div><p>Loading contract…</p></div>
+  <div class="cd-error-state" *ngIf="errorMessage && !isLoading">{{ errorMessage }}</div>
+
+  <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+  <div *ngIf="!isLoading && contract">
+
+    <!-- TOP NAV -->
+    <div class="cd-topnav">
+      <div class="cd-progress-bar">
+        <div class="cd-prog-step" [class.done]="getProgressStepClass(1)==='done'" [class.active]="getProgressStepClass(1)==='active'">
+          <span class="cd-prog-num">{{ getProgressStepClass(1)==='done' ? '✓' : '1' }}</span>Creation
+        </div>
+        <span class="cd-prog-arrow">›</span>
+        <div class="cd-prog-step" [class.done]="getProgressStepClass(2)==='done'" [class.active]="getProgressStepClass(2)==='active'">
+          <span class="cd-prog-num">{{ getProgressStepClass(2)==='done' ? '✓' : '2' }}</span>Negotiation
+        </div>
+        <span class="cd-prog-arrow">›</span>
+        <div class="cd-prog-step" [class.done]="getProgressStepClass(3)==='done'" [class.active]="getProgressStepClass(3)==='active'">
+          <span class="cd-prog-num">{{ getProgressStepClass(3)==='done' ? '✓' : '3' }}</span>Signature
+        </div>
+        <span class="cd-prog-arrow">›</span>
+        <div class="cd-prog-step" [class.done]="getProgressStepClass(4)==='done'" [class.active]="getProgressStepClass(4)==='active'">
+          <span class="cd-prog-num">{{ getProgressStepClass(4)==='done' ? '✓' : '4' }}</span>Active
+        </div>
+        <span class="cd-prog-arrow">›</span>
+        <div class="cd-prog-step" [class.done]="getProgressStepClass(5)==='done'" [class.active]="getProgressStepClass(5)==='active'">
+          <span class="cd-prog-num">5</span>Completed
+        </div>
+      </div>
+    </div>
+
+    <div class="cd-layout">
+
+      <!-- ▸ LEFT SIDEBAR -->
+      <aside class="cd-sidebar">
+        <div class="cd-sidebar-contract-card">
+          <div class="cd-sidebar-card-top">
+            <div class="cd-sidebar-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+            </div>
+            <div>
+              <div class="cd-sidebar-name">{{ contract.title }}</div>
+              <div class="cd-sidebar-company">{{ contract.clientCompany }}</div>
+            </div>
+          </div>
+          <div class="cd-sidebar-amount-block">
+            <div class="cd-sidebar-amount-lbl">Total Amount</div>
+            <div class="cd-sidebar-amount-val">{{ formatAmount(contract.totalAmount, contract.currency) }}</div>
+          </div>
+          <div class="cd-sidebar-status-block">
+            <span class="cd-status-pill" [ngClass]="getStatusClass(contract.status)">
+              <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px;vertical-align:middle;opacity:.8"></span>
+              {{ getStatusLabel(contract.status) }}
+            </span>
+          </div>
+        </div>
+        <div class="cd-activity-title">Recent Activity</div>
+        <div class="cd-activity-list">
+          <div class="cd-activity-item" *ngFor="let act of activities | slice:0:5; let last = last">
+            <div class="cd-act-icon-wrap">
+              <div class="cd-act-icon-box">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+              <div class="cd-act-line" *ngIf="!last"></div>
+            </div>
+            <div class="cd-act-body" style="padding-bottom:4px">
+              <div class="cd-act-text">{{ act.text }}</div>
+              <div class="cd-act-time">{{ getTimeAgo(act.timestamp) }}</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ▸ CENTER -->
+      <div class="cd-center" role="main">
+        <div class="cd-center-inner">
+
+          <!-- View Header -->
+          <div class="cd-view-header">
+            <div>
+              <div class="cd-view-title">{{ contract.title }}</div>
+              <div class="cd-view-sub">{{ contract.reference || ('CF-' + contract.id) }} · Created {{ formatDate(contract.createdAt) }} · {{ contract.clientCompany }}</div>
+            </div>
+            <span class="cd-status-pill" [class.sp-draft]="contract.status==='DRAFT'" [class.sp-pending]="contract.status==='PENDING_SIGNATURE'" [class.sp-active]="contract.status==='ACTIVE'" [class.sp-done]="contract.status==='COMPLETED'">
+              {{ getStatusLabel(contract.status) }}
+            </span>
+          </div>
+
+          <!-- ── BANNER DRAFT : propositions disponibles ── -->
+          <div class="cd-draft-banner" *ngIf="contract.status === 'DRAFT'">
+            <div class="cd-draft-banner-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <div class="cd-draft-banner-body">
+              <div class="cd-draft-banner-title">Contract received as draft — Action required</div>
+              <div class="cd-draft-banner-msg">
+                {{ contract.clientCompany }} has submitted this contract for
+                <strong>{{ formatAmount(contract.totalAmount, contract.currency) }}</strong>.
+                Review milestones and clauses, then <strong>accept</strong> or propose changes.
+              </div>
+            </div>
+            <button class="cd-draft-banner-cta" (click)="setTab('milestones')">Review →</button>
+          </div>
+
+          <!-- ── BANNER PENDING_SIGNATURE : le freelancer doit signer ── -->
+          <div *ngIf="contract.status === 'PENDING_SIGNATURE' && !freelancerAlreadySigned"
+               style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:10px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px;">
+            <div style="font-size:24px;">✍️</div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#92400e;margin-bottom:2px;">Your signature is required</div>
+              <div style="font-size:13px;color:#b45309;">
+                The contract has been submitted for signature. Sign electronically to notify the client.
+              </div>
+            </div>
+            <button (click)="setTab('signature')"
+                    style="background:#d97706;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+              ✍️ Go to signature
+            </button>
+          </div>
+
+          <!-- ── BANNER : Freelancer signé, en attente client ── -->
+          <div *ngIf="contract.status === 'PENDING_SIGNATURE' && freelancerAlreadySigned && !clientAlreadySigned"
+               style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:10px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px;">
+            <div style="font-size:24px;">✅</div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#166534;margin-bottom:2px;">You signed — awaiting client signature</div>
+              <div style="font-size:13px;color:#16a34a;">
+                Your signature was registered on {{ formatDatetime(contract.freelancerSignedAt) }}.
+                The client received an email and must sign to activate the contract.
+              </div>
+            </div>
+            <!-- Si l'utilisateur connecté EST le client, lui proposer de signer ici -->
+            <button *ngIf="isCurrentUserTheClient"
+                    (click)="setTab('signature'); openSignClientModal()"
+                    style="background:#2563eb;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+              ✍️ Sign as Client
+            </button>
+          </div>
+
+          <!-- ── BANNER : Client doit signer (si user = client) ── -->
+          <div *ngIf="contract.status==='PENDING_SIGNATURE' && freelancerAlreadySigned && !clientAlreadySigned && isCurrentUserTheClient"
+               style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #93c5fd;border-radius:10px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px;">
+            <div style="font-size:24px;">✍️</div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#1e40af;margin-bottom:2px;">Your signature is required (as Client)</div>
+              <div style="font-size:13px;color:#3b82f6;">
+                The freelancer has signed. Only your signature remains to activate this contract.
+              </div>
+            </div>
+            <button (click)="setTab('signature'); openSignClientModal()"
+                    style="background:#2563eb;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+              ✍️ Sign now
+            </button>
+          </div>
+
+          <!-- PANEL TABS -->
+          <div class="cd-panel-tabs">
+            <button class="cd-ptab" [class.active]="activeTab==='details'" (click)="setTab('details')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Details
+            </button>
+            <button class="cd-ptab" [class.active]="activeTab==='milestones'" (click)="setTab('milestones')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Milestones <span class="cd-ptab-count">{{ contract.milestones.length || 0 }}</span>
+            </button>
+            <button class="cd-ptab" [class.active]="activeTab==='clauses'" (click)="setTab('clauses')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Clauses
+            </button>
+            <button class="cd-ptab" [class.active]="activeTab==='signature'" (click)="setTab('signature')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Signature
+              <!-- Badge rouge si action requise -->
+              <span *ngIf="contract.status==='PENDING_SIGNATURE' && !freelancerAlreadySigned"
+                    style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;margin-left:4px;vertical-align:middle;"></span>
+            </button>
+          </div>
+
+          <!-- ═══ TAB: DETAILS ══════════════════════════════════ -->
+          <ng-container *ngIf="activeTab==='details'">
+            <div class="cd-section-lbl" style="margin-bottom:14px">Parties</div>
+            <div class="cd-section-parties">
+              <div class="cd-party-card">
+                <div class="cd-party-inner">
+                  <div class="cd-party-avatar cd-avatar-freelancer">{{ (contract.freelancerName || 'A').substring(0,2).toUpperCase() }}</div>
+                  <div>
+                    <div class="cd-party-name-row"><span class="cd-party-name">{{ contract.freelancerName }}</span><span class="cd-online-dot"></span></div>
+                    <div class="cd-party-role">Freelancer</div>
+                  </div>
+                </div>
+              </div>
+              <div class="cd-party-card">
+                <div class="cd-party-inner">
+                  <div class="cd-party-avatar cd-avatar-client">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  </div>
+                  <div>
+                    <div class="cd-party-name-row"><span class="cd-party-name">{{ contract.clientName }}</span></div>
+                    <div class="cd-party-role">Client</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cd-amountbox">
+              <div class="cd-amount-left">
+                <div class="cd-amount-label">Total contract amount</div>
+                <div class="cd-amount-row">
+                  <span class="cd-amount-value">{{ formatAmount(contract.totalAmount, contract.currency) }}</span>
+                  <span class="cd-amount-ht">excl. VAT</span>
+                </div>
+                <div class="cd-amount-note">VAT not applicable · Article 293B of the Tax Code</div>
+              </div>
+              <div class="cd-amount-right">
+                <div class="cd-amount-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Amount validated</div>
+                <div class="cd-amount-sub">Payment in {{ contract.milestones.length || 0 }} milestones</div>
+              </div>
+            </div>
+
+            <div class="cd-section-lbl" style="margin-bottom:14px">Project information</div>
+            <div class="cd-info-grid">
+              <div class="cd-info-cell">
+                <div class="cd-ic-icon-row"><div class="cd-ic-icon cd-ic-icon-green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><span class="cd-ic-lbl">Duration</span></div>
+                <div class="cd-ic-val">{{ formatDate(contract.startDate) }} → {{ formatDate(contract.endDate) }}</div>
+              </div>
+              <div class="cd-info-cell">
+                <div class="cd-ic-icon-row"><div class="cd-ic-icon cd-ic-icon-amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><span class="cd-ic-lbl">Start date</span></div>
+                <div class="cd-ic-val">{{ formatDate(contract.startDate) }}</div>
+              </div>
+              <div class="cd-info-cell">
+                <div class="cd-ic-icon-row"><div class="cd-ic-icon cd-ic-icon-red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><span class="cd-ic-lbl">End date</span></div>
+                <div class="cd-ic-val">{{ formatDate(contract.endDate) }}</div>
+              </div>
+            </div>
+
+            <div class="cd-section-lbl" style="margin-bottom:14px">Mission description</div>
+            <div class="cd-desc-block" *ngIf="contract.description"><p class="cd-desc-text">{{ contract.description }}</p></div>
+
+            <!-- Confirmation explicite du contenu par le freelancer -->
+            <div style="margin-top:16px; padding:12px 14px; border-radius:10px; background:#eff6ff; border:1px solid #bfdbfe; display:flex; align-items:center; gap:10px;">
+              <div style="font-size:18px;">🔎</div>
+              <div style="flex:1;">
+                <div style="font-weight:600; color:#1d4ed8; margin-bottom:2px;">Review and confirm</div>
+                <div style="font-size:13px; color:#1e40af;">After reading the contract details, you can either confirm that you agree with its content or propose modifications to the client.</div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <button *ngIf="!contentConfirmed"
+                        (click)="confirmContractContent()"
+                        style="background:#1d4ed8; color:#fff; border:none; border-radius:999px; padding:6px 14px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;">
+                  I confirm
+                </button>
+                <button *ngIf="contract.status==='DRAFT' || (contract.status==='PENDING_SIGNATURE' && !contract.freelancerSignedAt)"
+                  (click)="sendModifications()"
+                        style="background:#f97316; color:#fff; border:none; border-radius:999px; padding:6px 14px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap;">
+                  Propose modifications
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- ═══ TAB: MILESTONES ══════════════════════════════ -->
+          <ng-container *ngIf="activeTab==='milestones'">
+            <div class="cd-section-head">
+              <span class="cd-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Payment milestones</span>
+              <button class="cd-small-btn" (click)="openMsModal(-1)" [disabled]="!(contract.status==='DRAFT' || (contract.status==='PENDING_SIGNATURE' && !contract.freelancerSignedAt))">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add
+              </button>
+            </div>
+            <div class="cd-ms-list">
+              <div class="cd-ms-card" *ngFor="let ms of getSortedMilestones; let i = index">
+                <div class="cd-ms-top">
+                  <div style="flex:1">
+                    <div class="cd-ms-title-row">
+                      <span class="cd-ms-title">{{ ms.title }}</span>
+                      <span class="cd-ms-badge" [ngClass]="getMsStatusClass(ms.status)">{{ getMsStatusLabel(ms.status) }}</span>
+                    </div>
+                    <div class="cd-ms-desc" *ngIf="ms.description">{{ ms.description }}</div>
+                  </div>
+                  <div class="cd-ms-actions">
+                    <button class="cd-ms-action-btn" (click)="openMsModal(i); $event.stopPropagation()" [disabled]="!(contract.status==='DRAFT' || (contract.status==='PENDING_SIGNATURE' && !contract.freelancerSignedAt))"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    <button class="cd-ms-action-btn red" (click)="deleteMilestone(i); $event.stopPropagation()" [disabled]="!(contract.status==='DRAFT' || (contract.status==='PENDING_SIGNATURE' && !contract.freelancerSignedAt))"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+                  </div>
+                </div>
+                <div class="cd-ms-footer">
+                  <div class="cd-ms-footer-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span class="cd-ms-amount">{{ formatAmount(ms.amount, contract.currency) }}</span></div>
+                  <div class="cd-ms-footer-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="cd-ms-date">Deadline: {{ formatDate(ms.deadline) }}</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="cd-ms-total-row">
+              <span class="cd-ms-total-lbl">Total milestones</span>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="cd-ms-total-val">{{ formatAmount(milestonesTotal, contract.currency) }}</span>
+                <span class="cd-ms-total-ok" *ngIf="milestonesTotal === contract.totalAmount"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Validated</span>
+                <span class="cd-ms-total-warn" *ngIf="milestonesTotal !== contract.totalAmount">⚠ Difference: {{ formatAmount(Math.abs(milestonesTotal - contract.totalAmount), contract.currency) }}</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- ═══ TAB: CLAUSES ══════════════════════════════════ -->
+          <ng-container *ngIf="activeTab==='clauses'">
+            <div class="cd-section-head">
+              <span class="cd-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Contractual clauses</span>
+              <button class="cd-small-btn" (click)="openClauseModal()" [disabled]="!(contract.status==='DRAFT' || (contract.status==='PENDING_SIGNATURE' && !contract.freelancerSignedAt))"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>
+            </div>
+            <div class="cd-clauses-container">
+              <div class="cd-clauses-header">
+                <div class="cd-clauses-title">General Terms and Conditions</div>
+                <div class="cd-clauses-ref">Service agreement · {{ contract.reference || ('CF-' + contract.id) }}</div>
+              </div>
+              <div class="cd-clause-item" *ngFor="let cl of clauses">
+                <div class="cd-clause-header-row">
+                  <div class="cd-clause-art-title">{{ cl.article }} – {{ cl.title }}</div>
+                  <div class="cd-clause-modified-tag" *ngIf="cl.modified">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    Modified
+                  </div>
+                </div>
+                <div class="cd-clause-text" [innerHTML]="formatClauseText(cl.text)"></div>
+              </div>
+              <div class="cd-clauses-footer"><p>Automatically generated document · {{ contract.reference || ('CF-' + contract.id) }}</p></div>
+            </div>
+          </ng-container>
+
+          <!-- ═══ TAB: SIGNATURE ═══════════════════════════════ -->
+          <ng-container *ngIf="activeTab==='signature'">
+            <!-- AI SUMMARY UNIQUEMENT (section de signature interactive retirée) -->
+            <div class="cd-ai-card" *ngIf="summaryLoaded">
+              <div class="cd-ai-header">
+                <div class="cd-ai-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                <div class="cd-ai-content">
+                  <div class="cd-ai-title-row"><span class="cd-ai-title">Automatic contract summary</span><span class="cd-ai-chip">AI</span></div>
+                  <div class="cd-ai-loading" *ngIf="isSummaryLoading"><div class="cd-spinner-sm"></div><span>Analyzing contract…</span></div>
+                  <ng-container *ngIf="!isSummaryLoading">
+                    <div class="cd-ai-intro">This contract engages <strong>{{ contract.freelancerName }}</strong> and <strong>{{ contract.clientCompany }}</strong> for: {{ contract.title }}.</div>
+                    <div class="cd-ai-pts-title">Key points:</div>
+                    <ul class="cd-ai-pts-list"><li *ngFor="let pt of summary" [innerHTML]="pt"></li></ul>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+            <!-- Messages erreur/succès -->
+            <div *ngIf="signError" style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px 16px;margin-bottom:16px;color:#dc2626;font-size:14px;">❌ {{ signError }}</div>
+            <div *ngIf="signSuccess" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 16px;margin-bottom:16px;color:#166534;font-size:14px;">{{ signSuccess }}</div>
+            <!-- Info: la signature se fait désormais depuis la liste des contrats -->
+            <div style="margin-top:16px;padding:12px 14px;border-radius:10px;background:#f9fafb;border:1px dashed #d1d5db;font-size:13px;color:#4b5563;">
+              Electronic signing is now available from the contracts list using the "Sign electronically" button once you have confirmed the content.
+            </div>
+            </ng-container>
+
+          </div>
+
+      <!-- ▸ RIGHT PANEL -->
+      <aside class="cd-rpanel">
+        <div class="cd-rp-section">
+          <div class="cd-rp-title">Progress</div>
+          <div class="cd-metric-row">
+            <div class="cd-metric-top"><span class="cd-metric-lbl">Milestones</span><span class="cd-metric-val">{{ milestonesCompletedCount }} / {{ contract.milestones.length || 0 }}</span></div>
+            <div class="cd-metric-track"><div class="cd-metric-fill cd-mf-blue" [style.width.%]="milestonesProgress"></div></div>
+          </div>
+          <div class="cd-metric-row">
+            <div class="cd-metric-top"><span class="cd-metric-lbl">Validated amount</span><span class="cd-metric-val">{{ formatAmount(getApprovedMilestonesAmount(), contract.currency) }}</span></div>
+            <div class="cd-metric-track"><div class="cd-metric-fill cd-mf-green" [style.width.%]="getApprovedMilestonesPercentage()"></div></div>
+          </div>
+          <div class="cd-metric-row">
+            <div class="cd-metric-top"><span class="cd-metric-lbl">Signatures</span><span class="cd-metric-val">{{ getSignaturesCount() }} / 2</span></div>
+            <div class="cd-rp-sig-row">
+              <div class="cd-rp-sig-item">
+                <svg [class.ok]="freelancerAlreadySigned" [class.ko]="!freelancerAlreadySigned" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <ng-container *ngIf="freelancerAlreadySigned"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></ng-container>
+                  <ng-container *ngIf="!freelancerAlreadySigned"><circle cx="12" cy="12" r="10"/></ng-container>
+                </svg>
+                Freelancer
+              </div>
+              <div class="cd-rp-sig-item">
+                <svg [class.ok]="clientAlreadySigned" [class.ko]="!clientAlreadySigned" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <ng-container *ngIf="clientAlreadySigned"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></ng-container>
+                  <ng-container *ngIf="!clientAlreadySigned"><circle cx="12" cy="12" r="10"/></ng-container>
+                </svg>
+                Client
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cd-rp-section">
+          <div class="cd-rp-title">Quick actions</div>
+          <button class="cd-qa-btn" (click)="setTab('signature')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Go to signature</button>
+          <button class="cd-qa-btn" (click)="openPdfModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Preview / Download PDF</button>
+          <button class="cd-qa-btn" (click)="toast('Message sent to client','success')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Add comment</button>
+        </div>
+      </aside>
+
+    </div><!-- /cd-layout -->
+  </div>
+</div>

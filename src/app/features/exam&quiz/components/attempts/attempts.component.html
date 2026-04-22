@@ -1,0 +1,117 @@
+<div class="attempts-container">
+  <div class="page-header">
+    <div>
+      <h1>Exam Attempts</h1>
+      <p class="subtitle">Monitor and review all exam attempts</p>
+    </div>
+  </div>
+  <p *ngIf="isLoading" class="subtitle">Loading attempts...</p>
+  <p *ngIf="errorMessage" class="subtitle" style="color:#b91c1c;">{{ errorMessage }}</p>
+
+  <div class="attempts-card">
+    <!-- Filter Header -->
+    <div class="card-header">
+      <div class="filters">
+        <div class="search-box">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input 
+            type="text" 
+            placeholder="Search by user or exam..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+            class="search-input"
+          />
+        </div>
+        <select 
+          [(ngModel)]="filterStatus" 
+          (ngModelChange)="onStatusFilterChange()"
+          class="filter-select"
+        >
+          <option value="all">All Status</option>
+          <option value="Completed">Completed</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Submitted">Submitted</option>
+          <option value="Flagged">Flagged</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card-content">
+      <div class="table-wrapper">
+        <table class="attempts-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Exam</th>
+              <th>Status</th>
+              <th>Score</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Suspicious</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let attempt of filteredAttempts" class="table-row">
+              <td>
+                <p class="user-name">{{ attempt.userName }}</p>
+                <p class="user-email">{{ attempt.userEmail }}</p>
+              </td>
+              <td>
+                <p class="exam-title">{{ attempt.examTitle }}</p>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="getStatusClass(attempt.status)">
+                  {{ attempt.status }}
+                </span>
+              </td>
+              <td>
+                <div *ngIf="attempt.score !== null" class="score-container">
+                  <p class="score-value">{{ attempt.score }}/{{ attempt.totalMarks }}</p>
+                  <div class="progress-bar">
+                    <div 
+                      class="progress-fill" 
+                      [style.width.%]="getScorePercentage(attempt.score, attempt.totalMarks)"
+                    ></div>
+                  </div>
+                </div>
+                <span *ngIf="attempt.score === null" class="table-text-muted">-</span>
+              </td>
+              <td class="table-text">{{ attempt.startTime }}</td>
+              <td class="table-text">
+                <span *ngIf="attempt.endTime; else ongoing">{{ attempt.endTime }}</span>
+                <ng-template #ongoing>
+                  <span class="table-text-muted">Ongoing</span>
+                </ng-template>
+              </td>
+              <td>
+                <div *ngIf="attempt.suspiciousEvents > 0" class="suspicious-flag">
+                  <svg class="alert-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                  </svg>
+                  <span class="suspicious-count">{{ attempt.suspiciousEvents }}</span>
+                </div>
+                <span *ngIf="attempt.suspiciousEvents === 0" class="clean-status">Clean</span>
+              </td>
+              <td>
+                <button class="btn btn-outline btn-sm">
+                  <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  Details
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

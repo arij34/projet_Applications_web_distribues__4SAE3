@@ -1,0 +1,116 @@
+<div class="dashboard-container">
+  <div class="hero-card">
+    <div>
+      <p class="eyebrow">Assessment Administration</p>
+      <h1>Exam Dashboard</h1>
+      <p class="subtitle">
+        Central workspace to manage exams, question quality, candidate attempts, and integrity controls.
+      </p>
+    </div>
+    <a class="hero-cta" [routerLink]="['/admin/exam-quiz/exams/create']">Create New Exam</a>
+  </div>
+
+  <div class="section-header">
+    <h2>Quick Access</h2>
+    <p>Go directly to core exam and quiz functionalities.</p>
+  </div>
+
+  <div class="quick-actions-grid">
+    <a class="quick-action-card" *ngFor="let item of quickActions" [routerLink]="[item.route]">
+      <div>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+      </div>
+      <span class="action-link">{{ item.cta }} <span aria-hidden="true">-></span></span>
+    </a>
+  </div>
+
+  <div class="section-header">
+    <h2>Operational Metrics</h2>
+    <p>Live indicators calculated from current exam attempt data.</p>
+  </div>
+
+  <p class="section-feedback" *ngIf="metricsLoading">Loading metrics...</p>
+  <p class="section-feedback section-feedback-error" *ngIf="metricsError">{{ metricsError }}</p>
+
+  <div class="stats-grid" *ngIf="!metricsLoading && !metricsError">
+    <article class="stat-card">
+      <p class="stat-title">Success Rate</p>
+      <p class="stat-value">{{ formatPercent(metrics.successRate) }}</p>
+      <p class="stat-meta">Scored attempts at or above pass threshold ({{ metrics.totalResults }} results)</p>
+    </article>
+
+    <article class="stat-card">
+      <p class="stat-title">Failure Rate</p>
+      <p class="stat-value">{{ formatPercent(metrics.failureRate) }}</p>
+      <p class="stat-meta">Scored attempts below pass threshold ({{ metrics.totalResults }} results)</p>
+    </article>
+
+    <article class="stat-card">
+      <p class="stat-title">Cheating Rate</p>
+      <p class="stat-value">{{ formatPercent(metrics.cheatingRate) }}</p>
+      <p class="stat-meta">Attempts with flags or suspicious events</p>
+    </article>
+
+    <article class="stat-card">
+      <p class="stat-title">Active Attempts</p>
+      <p class="stat-value">{{ metrics.activeAttempts }}</p>
+      <p class="stat-meta">Candidates currently taking exams</p>
+    </article>
+
+    <article class="stat-card">
+      <p class="stat-title">Avg Suspicious Events</p>
+      <p class="stat-value">{{ metrics.averageSuspiciousEvents | number:'1.1-1' }}</p>
+      <p class="stat-meta">Mean suspicious event count per attempt</p>
+    </article>
+  </div>
+
+  <p class="section-footnote" *ngIf="!metricsLoading && !metricsError && metricsGeneratedAt">
+    Last updated: {{ metricsGeneratedAt }}
+  </p>
+
+  <div class="section-header" *ngIf="!metricsLoading && !metricsError">
+    <h2>Visual Analytics</h2>
+    <p>Graph view of core integrity and performance indicators.</p>
+  </div>
+
+  <div class="graph-grid" *ngIf="!metricsLoading && !metricsError">
+    <article class="graph-card">
+      <h3 class="graph-title">Rate Comparison</h3>
+      <div class="rate-graph">
+        <div class="rate-row" *ngFor="let item of rateGraphItems">
+          <div class="rate-head">
+            <span>{{ item.label }}</span>
+            <span>{{ formatPercent(item.value) }}</span>
+          </div>
+          <div class="rate-track">
+            <div class="rate-fill" [ngStyle]="rateBarStyle(item.value, item.color)"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="graph-card">
+      <h3 class="graph-title">Result Status Distribution</h3>
+      <div class="donut-wrap" *ngIf="hasResultDistribution; else noResultDistribution">
+        <div class="donut-chart" [ngStyle]="resultDistributionStyle">
+          <div class="donut-center">
+            <strong>{{ metrics.totalResults }}</strong>
+            <span>results</span>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-row" *ngFor="let row of resultDistributionLegend">
+            <span class="legend-dot" [style.background]="row.color"></span>
+            <span class="legend-label">{{ row.label }}</span>
+            <span class="legend-count">{{ row.count }}</span>
+          </div>
+        </div>
+      </div>
+      <ng-template #noResultDistribution>
+        <p class="graph-empty">No result data available yet for distribution graph.</p>
+      </ng-template>
+    </article>
+  </div>
+
+</div>

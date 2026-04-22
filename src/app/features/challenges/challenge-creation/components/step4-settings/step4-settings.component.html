@@ -1,0 +1,113 @@
+<div class="step-container">
+    <div class="step-header">
+      <h2 class="step-title">Settings & Limits</h2>
+      <p class="step-description">Configure timing and participation limits for your challenge</p>
+    </div>
+  
+    <form [formGroup]="form">
+      <!-- Dates Row -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="start-date" class="form-label">Start Date *</label>
+          <div class="input-with-icon">
+            <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <input 
+              id="start-date"
+              type="date"
+              formControlName="startDate"
+              [min]="today"
+              class="form-input with-icon">
+          </div>
+          <p class="helper-text">When participants can start joining</p>
+        </div>
+  
+        <div class="form-group">
+          <label for="end-date" class="form-label">End Date *</label>
+          <div class="input-with-icon">
+            <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <input 
+              id="end-date"
+              type="date"
+              formControlName="endDate"
+              [min]="form.value.startDate || today"
+              class="form-input with-icon">
+          </div>
+          <p class="helper-text">Challenge submission deadline</p>
+        </div>
+      </div>
+  
+      <!-- Warning Alert -->
+      <div *ngIf="warning" class="alert alert-error">
+        <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="alert-text">{{ warning }}</p>
+      </div>
+  
+      <!-- Success Info -->
+      <div *ngIf="durationDays && !warning" class="alert alert-success">
+        <p class="alert-text">✓ Challenge duration: <strong>{{ durationDays }} days</strong></p>
+      </div>
+  
+      <!-- Max Participants -->
+      <div class="form-group">
+        <label for="max-participants" class="form-label">Maximum Participants</label>
+        <div class="input-with-icon">
+          <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <input 
+            id="max-participants"
+            type="number"
+            formControlName="maxParticipants"
+            min="1"
+            placeholder="e.g., 100"
+            class="form-input with-icon">
+        </div>
+        <p class="helper-text">Leave empty for unlimited participants. Setting a limit helps manage the challenge scope.</p>
+      </div>
+
+      <!-- Points -->
+      <div class="form-group">
+        <label for="points" class="form-label">Points</label>
+        <div class="input-with-icon">
+          <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <input 
+            id="points"
+            type="number"
+            formControlName="points"
+            min="0"
+            placeholder="e.g., 100"
+            class="form-input with-icon">
+        </div>
+        <p class="helper-text">Points awarded for completing this challenge</p>
+      </div>
+  
+      <!-- Status -->
+      <div class="form-group">
+        <label for="status" class="form-label">Challenge Status *</label>
+        <select id="status" formControlName="status" class="form-select">
+          <option value="draft">🔘 Draft - Not visible to participants</option>
+          <option value="published">🟢 Published - Visible and accepting participants</option>
+          <option value="closed">🔴 Closed - No longer accepting participants</option>
+        </select>
+      </div>
+  
+      <!-- Recommendations -->
+      <div class="tip-card">
+        <h4 class="tip-title">💡 Recommended Settings</h4>
+        <ul class="tip-list">
+          <li>Start challenges at least 2 days in advance for promotion</li>
+          <li>Allow sufficient time for participants to complete all tasks</li>
+          <li>Set participant limits for hands-on mentorship opportunities</li>
+          <li>Save as "Draft" to review everything before publishing</li>
+        </ul>
+      </div>
+    </form>
+  </div>

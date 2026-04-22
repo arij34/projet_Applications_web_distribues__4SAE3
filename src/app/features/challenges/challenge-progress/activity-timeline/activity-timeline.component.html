@@ -1,0 +1,19 @@
+<div class="space-y-4">
+  <h3 class="font-semibold text-[#1F2937]">Activity Timeline</h3>
+  <div class="space-y-3">
+    <div *ngFor="let event of events; let i = index" class="flex gap-3 items-start">
+      <div class="relative">
+        <div class="w-8 h-8 rounded-full bg-[#EBF4FF] flex items-center justify-center">
+          <svg class="w-4 h-4 text-[#1E3A8A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="getIconPath(event.icon)"></path>
+          </svg>
+        </div>
+        <div *ngIf="!isLastEvent(i)" class="absolute left-1/2 top-8 w-0.5 h-6 bg-[#EBF4FF] -translate-x-1/2"></div>
+      </div>
+      <div class="flex-1 pt-1">
+        <p class="text-sm font-medium text-[#1F2937]">{{ event.label }}</p>
+        <p class="text-xs text-[#6B7280] mt-0.5">{{ event.timestamp }}</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="page-container">
+
+  <div class="page-header">
+    <h2>Availability Management</h2>
+    <a [routerLink]="['/front/availability/add']"
+       class="btn-primary-modern">
+       + Add Availability
+    </a>
+  </div>
+
+  <div class="table-card">
+
+    <table class="modern-table">
+
+      <thead>
+        <tr>
+          <th>Hours / Week</th>
+          <th>Status</th>
+          <th class="actions-cell">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let item of items">
+          <td>{{ item.hoursPerWeek }} h</td>
+
+          <td>
+            <span class="badge-modern badge-green">
+              {{ item.status }}
+            </span>
+          </td>
+
+          <td class="actions-cell">
+            <a [routerLink]="['/front/availability/edit', item.id]"
+               class="action-icon edit-icon">
+              <i class="bi bi-pencil"></i>
+            </a>
+
+            <button (click)="deleteItem(item.id!)"
+                    class="action-icon delete-icon">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="items.length === 0">
+          <td colspan="3" class="empty-state">
+            No availability found
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <a routerLink="/front/dashboard-skill"
+     class="btn-back-modern">
+     ← Retour Dashboard
+  </a>
+
+</div>

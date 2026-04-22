@@ -1,0 +1,526 @@
+<!-- LOADING -->
+<div *ngIf="isLoading" class="ws-loading">
+  <div class="ws-spinner"></div>
+  <p>Loading workspace...</p>
+</div>
+
+<!-- ERROR -->
+<div *ngIf="errorMessage && !isLoading" class="ws-error">
+  <span class="material-icons">error_outline</span>
+  {{ errorMessage }}
+</div>
+
+<!-- ── IDENTITY MODAL (temporaire — sera remplacé par Keycloak) ── -->
+<div *ngIf="showNameModal && !isLoading && project" class="ws-modal-overlay">
+  <div class="ws-modal">
+    <div class="ws-modal-icon">
+      <span class="material-icons">forum</span>
+    </div>
+    <h2>Join the discussion</h2>
+    <p>Enter your name and role to participate in the project chat.</p>
+
+    <div class="ws-modal-field">
+      <label>Your name</label>
+      <input
+        type="text"
+        [(ngModel)]="currentUserName"
+        placeholder="e.g. Thomas D."
+        class="ws-modal-input"
+        (keydown.enter)="confirmIdentity()"
+        autofocus
+      />
+    </div>
+
+    <div class="ws-modal-field">
+      <label>Your role</label>
+      <div class="ws-modal-roles">
+        <button class="ws-role-btn" [class.active]="currentUserRole === 'CLIENT'"
+                (click)="currentUserRole = 'CLIENT'">
+          <span class="material-icons">business_center</span>
+          Client
+        </button>
+        <button class="ws-role-btn" [class.active]="currentUserRole === 'FREELANCER'"
+                (click)="currentUserRole = 'FREELANCER'">
+          <span class="material-icons">code</span>
+          Freelancer
+        </button>
+      </div>
+    </div>
+
+    <button class="ws-btn-primary ws-modal-confirm"
+            (click)="confirmIdentity()"
+            [disabled]="!currentUserName.trim()">
+      <span class="material-icons">login</span>
+      Enter workspace
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div *ngIf="project && !isLoading" class="ws-wrapper">
+
+  <!-- ── HEADER ── -->
+  <div class="ws-header">
+    <div class="ws-header-inner">
+      <div class="ws-header-left">
+        <div class="ws-badges">
+          <span class="ws-badge ws-badge-workspace">
+            <span class="material-icons">workspaces</span> Workspace
+          </span>
+          <span class="ws-badge" [ngClass]="getStatusConfig(project.status).cssClass">
+            {{ getStatusConfig(project.status).label }}
+          </span>
+          <span *ngIf="getDaysUntilDeadline(project.deadline) <= 7 && getDaysUntilDeadline(project.deadline) > 0"
+                class="ws-badge ws-badge-urgent">
+            ⚠ {{ getDaysUntilDeadline(project.deadline) }} days remaining
+          </span>
+        </div>
+        <h1 class="ws-title">{{ project.title }}</h1>
+        <p class="ws-subtitle">
+          <span class="material-icons">calendar_today</span>
+          Created on {{ formatDate(project.createdAt) }}
+          &nbsp;·&nbsp;
+          <span class="material-icons">flag</span>
+          Deadline: {{ formatDate(project.deadline) }}
+        </p>
+      </div>
+      <div class="ws-header-actions">
+        <button class="ws-action-btn" title="Edit">
+          <span class="material-icons">edit</span>
+        </button>
+        <button class="ws-action-btn" title="Download">
+          <span class="material-icons">download</span>
+        </button>
+        <button class="ws-action-btn" title="Share">
+          <span class="material-icons">share</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── OVERVIEW CARDS ── -->
+  <div class="ws-overview-grid">
+    <div class="ws-ov-card ov-blue">
+      <div class="ov-icon"><span class="material-icons">pending_actions</span></div>
+      <p class="ov-label">Proposals</p>
+      <p class="ov-value">{{ proposals.length }}</p>
+      <p class="ov-sub">{{ pendingProposals }} pending</p>
+    </div>
+    <div class="ws-ov-card ov-green">
+      <div class="ov-icon"><span class="material-icons">how_to_reg</span></div>
+      <p class="ov-label">Accepted</p>
+      <p class="ov-value">{{ acceptedProposals }}</p>
+    </div>
+    <div class="ws-ov-card ov-purple">
+      <div class="ov-icon"><span class="material-icons">calendar_today</span></div>
+      <p class="ov-label">Deadline</p>
+      <p class="ov-value">{{ formatDate(project.deadline) }}</p>
+    </div>
+    <div class="ws-ov-card" [ngClass]="getDaysUntilDeadline(project.deadline) <= 7 ? 'ov-red' : 'ov-indigo'">
+      <div class="ov-icon"><span class="material-icons">schedule</span></div>
+      <p class="ov-label">Days remaining</p>
+      <p class="ov-value">{{ getDaysUntilDeadline(project.deadline) }}</p>
+    </div>
+  </div>
+
+  <!-- ── TIMELINE ── -->
+<div class="ws-card ws-timeline-card">
+  <h3 class="ws-card-title">Project progress</h3>
+  <div class="ws-timeline">
+    <div *ngFor="let step of timelineSteps; let i = index; let last = last" class="ws-tl-item">
+      <div class="ws-tl-step">
+        <div class="ws-tl-circle" [ngClass]="getStepClass(step.status)">
+          <span class="material-icons">{{ step.icon }}</span>
+        </div>
+        <span class="ws-tl-label" [class.tl-label-current]="step.status === 'current'">
+          {{ step.label }}
+        </span>
+      </div>
+      <div *ngIf="!last" class="ws-tl-line"
+           [class.tl-line-done]="step.status === 'completed'"></div>
+    </div>
+  </div>
+</div>
+
+  <!-- ── MAIN LAYOUT ── -->
+  <div class="ws-layout">
+
+    <!-- LEFT COLUMN -->
+    <div class="ws-left">
+
+      <!-- TABS -->
+      <div class="ws-tabs">
+        <button class="ws-tab" [class.active]="activeTab==='overview'" (click)="setTab('overview')">
+          <span class="material-icons">info</span> Overview
+        </button>
+        <button class="ws-tab" [class.active]="activeTab==='proposals'" (click)="setTab('proposals')">
+          <span class="material-icons">group_add</span> Proposals
+          <span *ngIf="pendingProposals > 0" class="ws-tab-badge">{{ pendingProposals }}</span>
+        </button>
+        <button class="ws-tab" [class.active]="activeTab==='documents'" (click)="setTab('documents')">
+          <span class="material-icons">folder</span> Documents
+          <span *ngIf="documents.length > 0" class="ws-tab-badge">{{ documents.length }}</span>
+        </button>
+        <button class="ws-tab" [class.active]="activeTab==='activity'" (click)="setTab('activity')">
+          <span class="material-icons">history</span> Activity
+        </button>
+      </div>
+
+      <!-- TAB: OVERVIEW -->
+      <div *ngIf="activeTab === 'overview'" class="ws-card">
+        <div class="ws-card-head">
+          <h3 class="ws-card-title">Project description</h3>
+          <button class="ws-btn-sm" (click)="isCompactDescription = !isCompactDescription">
+            <span class="material-icons">bolt</span>
+            {{ isCompactDescription ? 'See all' : 'Summary' }}
+          </button>
+        </div>
+        <div *ngIf="isCompactDescription" class="ws-desc-compact">
+          {{ project.description.substring(0, 250) }}...
+        </div>
+        <div *ngIf="!isCompactDescription" class="ws-desc-full">
+          <div class="ws-desc-row">
+            <div class="ws-desc-icon icon-blue"><span class="material-icons">my_location</span></div>
+            <div>
+              <h4>Objective</h4>
+              <p>{{ project.description }}</p>
+            </div>
+          </div>
+          <div class="ws-desc-row">
+            <div class="ws-desc-icon icon-violet"><span class="material-icons">event</span></div>
+            <div>
+              <h4>Deadline</h4>
+              <p>{{ formatDate(project.deadline) }} — <strong>{{ getDaysUntilDeadline(project.deadline) }} days remaining</strong></p>
+            </div>
+          </div>
+          <div class="ws-desc-row">
+            <div class="ws-desc-icon icon-green"><span class="material-icons">fiber_manual_record</span></div>
+            <div>
+              <h4>Current status</h4>
+              <span class="ws-badge" [ngClass]="getStatusConfig(project.status).cssClass">
+                {{ getStatusConfig(project.status).label }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: PROPOSALS -->
+      <div *ngIf="activeTab === 'proposals'" class="ws-card">
+        <h3 class="ws-card-title">
+          Received proposals
+          <span class="ws-count-badge">{{ proposals.length }}</span>
+        </h3>
+        <div *ngIf="proposals.length === 0" class="ws-empty">
+          <span class="material-icons">inbox</span>
+          <p>No proposals yet</p>
+        </div>
+        <div *ngFor="let p of proposals" class="ws-proposal-card"
+             [class.prop-card-accepted]="p.status === 'ACCEPTED'"
+             [class.prop-card-rejected]="p.status === 'REJECTED'">
+          <div class="prop-head">
+            <div class="ws-mini-avatar">F{{ p.freelancerId }}</div>
+            <div>
+              <p class="prop-name">Freelancer #{{ p.freelancerId }}</p>
+              <p class="prop-date">Submitted on {{ formatDate(p.createdAt) }}</p>
+            </div>
+            <span class="ws-badge ml-auto" [ngClass]="getProposalStatusConfig(p.status).cssClass">
+              {{ getProposalStatusConfig(p.status).label }}
+            </span>
+          </div>
+          <div class="prop-metrics">
+            <div class="prop-metric">
+              <span class="metric-label">Bid</span>
+              <span class="metric-val">${{ p.bidAmount | number }}</span>
+            </div>
+            <div class="prop-metric">
+              <span class="metric-label">Delivery</span>
+              <span class="metric-val">{{ p.deliveryWeeks }} wks</span>
+            </div>
+            <div class="prop-metric">
+              <span class="metric-label">Available</span>
+              <span class="metric-val">{{ p.availableFrom ? formatDate(p.availableFrom) : 'Now' }}</span>
+            </div>
+          </div>
+          <div *ngIf="p.coverLetter" class="prop-cover">
+            <p class="prop-cover-label">Cover letter</p>
+            <p>{{ p.coverLetter }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: DOCUMENTS -->
+      <div *ngIf="activeTab === 'documents'" class="ws-card">
+        <div class="ws-card-head">
+          <h3 class="ws-card-title">
+            Documents
+            <span *ngIf="documents.length > 0" class="ws-count-badge">{{ documents.length }}</span>
+          </h3>
+          <button class="ws-btn-primary" (click)="triggerFileInput()">
+            <span class="material-icons">upload_file</span> Upload
+          </button>
+        </div>
+        <input #fileInput type="file" multiple style="display: none" (change)="onFilesSelected($event)" />
+        <div *ngIf="documents.length === 0"
+             class="ws-drop-zone"
+             [class.ws-drop-zone--active]="isDragging"
+             (click)="triggerFileInput()"
+             (dragover)="onDragOver($event)"
+             (dragleave)="onDragLeave($event)"
+             (drop)="onDrop($event)">
+          <span class="material-icons">cloud_upload</span>
+          <p>Drag & drop files here, or <strong>click to browse</strong></p>
+          <span class="ws-drop-hint">All file types accepted · Multiple files allowed</span>
+        </div>
+        <div *ngIf="documents.length > 0" class="ws-docs-list"
+             [class.ws-drop-zone--active]="isDragging"
+             (dragover)="onDragOver($event)"
+             (dragleave)="onDragLeave($event)"
+             (drop)="onDrop($event)">
+          <div *ngFor="let doc of documents; let i = index" class="ws-doc-row">
+            <div class="ws-doc-icon" [ngClass]="getDocConfig(doc.type).cssClass">
+              <span class="material-icons">{{ getDocConfig(doc.type).icon }}</span>
+            </div>
+            <div class="ws-doc-info">
+              <h4>{{ doc.name }}</h4>
+              <p>{{ doc.size }} · {{ doc.date }}</p>
+            </div>
+            <div class="ws-doc-btns">
+              <button class="ws-btn-icon" title="Preview"  (click)="previewFile(doc)"><span class="material-icons">visibility</span></button>
+              <button class="ws-btn-icon" title="Download" (click)="downloadFile(doc)"><span class="material-icons">download</span></button>
+              <button class="ws-btn-icon ws-btn-icon--danger" title="Remove" (click)="removeFile(i)"><span class="material-icons">delete</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: ACTIVITY -->
+      <div *ngIf="activeTab === 'activity'" class="ws-card">
+        <h3 class="ws-card-title">History & Activity</h3>
+        <div class="ws-activity">
+          <div *ngFor="let act of activities" class="ws-act-item">
+            <div class="ws-act-icon" [ngClass]="getActivityConfig(act.type).cssClass">
+              <span class="material-icons">{{ getActivityConfig(act.type).icon }}</span>
+            </div>
+            <div class="ws-act-body">
+              <p><strong>{{ act.user }}</strong> {{ act.action }}</p>
+              <span>{{ act.time }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end left -->
+
+    <!-- RIGHT COLUMN: CHAT -->
+    <div class="ws-right">
+      <div class="ws-chat">
+
+        <!-- Header chat -->
+<div style="padding:1.25rem 1.5rem;
+            background:linear-gradient(135deg,#2563eb,#7c3aed);
+            display:flex;align-items:center;
+            justify-content:space-between;flex-shrink:0;">
+  <div style="display:flex;align-items:center;gap:.75rem;">
+    <div style="width:38px;height:38px;background:rgba(255,255,255,0.2);
+                border-radius:10px;display:flex;align-items:center;
+                justify-content:center;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+           viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </div>
+    <div>
+      <h3 style="font-size:.9375rem;font-weight:700;color:white;margin:0;">
+        Discussion
+      </h3>
+      <p style="font-size:.72rem;color:rgba(255,255,255,0.7);margin:0;">
+        Client · Freelancers
+      </p>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:.625rem;">
+    <!-- Indicateur Live -->
+    <div style="display:flex;align-items:center;gap:.375rem;">
+      <span [style.background]="isConnected ? '#4ade80' : '#94a3b8'"
+            style="width:8px;height:8px;border-radius:50%;display:inline-block;"></span>
+      <span style="font-size:.72rem;color:rgba(255,255,255,0.8);font-weight:600;">
+        {{ isConnected ? 'Live' : 'Connecting...' }}
+      </span>
+    </div>
+
+    <!-- Bouton AI Summary -->
+    <button (click)="analyzeDiscussion()"
+            [disabled]="isAnalyzing || messages.length === 0"
+            style="padding:.375rem .75rem;background:rgba(255,255,255,0.15);
+                   border:1px solid rgba(255,255,255,0.3);border-radius:8px;
+                   color:white;font-size:.72rem;font-weight:600;cursor:pointer;
+                   display:flex;align-items:center;gap:.375rem;
+                   transition:all .2s;"
+            [style.opacity]="messages.length === 0 ? '0.5' : '1'">
+      <span>⚡</span>
+      {{ isAnalyzing ? 'Analyzing...' : 'AI Summary' }}
+    </button>
+  </div>
+</div>
+
+<!-- Barre identité -->
+<div style="padding:.5rem 1.25rem;background:#f8fafc;
+            border-bottom:1px solid #f1f5f9;
+            display:flex;align-items:center;gap:.5rem;
+            font-size:.78rem;color:#64748b;flex-shrink:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
+  </svg>
+  Chatting as
+  <strong style="color:#0f172a;margin:0 .25rem;">{{ currentUserName }}</strong>
+  <span style="padding:.1rem .5rem;border-radius:99px;font-size:.65rem;
+               font-weight:700;"
+        [style.background]="currentUserRole === 'CLIENT' ? '#dbeafe' : '#f3e8ff'"
+        [style.color]="currentUserRole === 'CLIENT' ? '#1d4ed8' : '#7c3aed'">
+    {{ currentUserRole }}
+  </span>
+</div>
+
+<!-- ── RÉSULTAT ANALYSE IA ── -->
+<div *ngIf="analysisResult"
+     style="padding:1rem 1.25rem;background:white;
+            border-bottom:2px solid #e2e8f0;flex-shrink:0;">
+
+  <!-- Header analyse -->
+  <div style="display:flex;align-items:center;
+              justify-content:space-between;margin-bottom:.75rem;">
+    <div style="display:flex;align-items:center;gap:.5rem;">
+      <span style="font-size:.8rem;font-weight:700;color:#0f172a;">
+        ⚡ AI Analysis
+      </span>
+    </div>
+    <button (click)="closeAnalysis()"
+            style="background:none;border:none;cursor:pointer;
+                   color:#94a3b8;font-size:1rem;">✕</button>
+  </div>
+
+  <!-- Phase + Progress -->
+  <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;">
+    <span style="padding:.3rem .75rem;border-radius:99px;
+                 font-size:.75rem;font-weight:700;"
+          [style.background]="getPhaseConfig(analysisResult.phase).bg"
+          [style.color]="getPhaseConfig(analysisResult.phase).text">
+      {{ getPhaseConfig(analysisResult.phase).icon }}
+      {{ analysisResult.phase }}
+    </span>
+
+    <!-- Barre de progression -->
+    <div style="flex:1;background:#f1f5f9;border-radius:99px;height:6px;">
+      <div style="height:6px;border-radius:99px;transition:width .5s;"
+           [style.width.%]="analysisResult.progress_percent"
+           [style.background]="getPhaseConfig(analysisResult.phase).text">
+      </div>
+    </div>
+    <span style="font-size:.75rem;font-weight:700;color:#64748b;white-space:nowrap;">
+      {{ analysisResult.progress_percent }}%
+    </span>
+  </div>
+
+  <!-- Résumé -->
+  <p style="font-size:.8125rem;color:#374151;line-height:1.6;
+            margin:0 0 .625rem;background:#f8fafc;
+            padding:.625rem;border-radius:8px;border-left:3px solid #2563eb;">
+    {{ analysisResult.summary }}
+  </p>
+
+  <!-- Raison phase -->
+  <p style="font-size:.75rem;color:#64748b;margin:0 0 .625rem;font-style:italic;">
+    📌 {{ analysisResult.phase_reason }}
+  </p>
+
+  <!-- Key points -->
+  <div *ngIf="analysisResult.key_points?.length > 0"
+       style="display:flex;flex-wrap:wrap;gap:.375rem;">
+    <span *ngFor="let point of analysisResult.key_points"
+          style="padding:.25rem .625rem;background:#eff6ff;
+                 color:#1d4ed8;border-radius:6px;font-size:.72rem;
+                 border:1px solid #bfdbfe;">
+      • {{ point }}
+    </span>
+  </div>
+</div>
+
+<!-- Loading analyse -->
+<div *ngIf="isAnalyzing"
+     style="padding:.875rem 1.25rem;background:#eff6ff;
+            border-bottom:1px solid #bfdbfe;flex-shrink:0;
+            display:flex;align-items:center;gap:.75rem;">
+  <div style="width:16px;height:16px;border:2px solid #bfdbfe;
+              border-top-color:#2563eb;border-radius:50%;
+              animation:spin .7s linear infinite;flex-shrink:0;"></div>
+  <span style="font-size:.8rem;color:#1d4ed8;font-weight:500;">
+    AI is analyzing the discussion...
+  </span>
+</div>
+
+            
+
+        <!-- Messages -->
+        <div class="ws-chat-messages" #chatMessages>
+
+          <!-- État vide -->
+          <div *ngIf="messages.length === 0" class="ws-chat-empty">
+            <span class="material-icons">chat_bubble_outline</span>
+            <p>No messages yet. Start the conversation!</p>
+          </div>
+
+          <div *ngFor="let msg of messages"
+               class="ws-msg-row"
+               [class.msg-mine]="isMyMessage(msg)">
+
+            <!-- Avatar (autres utilisateurs) -->
+            <div *ngIf="!isMyMessage(msg)" class="ws-msg-avatar"
+                 [style.background]="getRoleColor(msg.senderRole) === '#2563eb'
+                   ? 'linear-gradient(135deg, #60a5fa, #3b82f6)'
+                   : 'linear-gradient(135deg, #a78bfa, #7c3aed)'">
+              {{ getInitials(msg.senderName) }}
+            </div>
+
+            <div class="ws-msg-bubble" [class.bubble-mine]="isMyMessage(msg)">
+              <!-- Nom + rôle (messages des autres) -->
+              <div *ngIf="!isMyMessage(msg)" class="ws-msg-meta">
+                <span class="msg-sender">{{ msg.senderName }}</span>
+                <span class="ws-role-pill ws-role-pill--sm"
+                      [class.ws-role-client]="msg.senderRole === 'CLIENT'"
+                      [class.ws-role-freelancer]="msg.senderRole === 'FREELANCER'">
+                  {{ msg.senderRole }}
+                </span>
+              </div>
+              <p class="msg-text">{{ msg.content }}</p>
+              <span class="msg-time">{{ formatTime(msg.sentAt) }}</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Input -->
+        <div class="ws-chat-footer">
+          <input
+            type="text"
+            [(ngModel)]="newMessage"
+            (keydown)="onKeyDown($event)"
+            placeholder="Write a message... (Enter to send)"
+            class="ws-chat-input"
+            [disabled]="!isConnected || showNameModal"
+          />
+          <button class="ws-send-btn"
+                  (click)="sendMessage()"
+                  [disabled]="!newMessage.trim() || !isConnected || showNameModal">
+            <span class="material-icons">send</span>
+          </button>
+        </div>
+
+      </div>
+    </div><!-- end right -->
+
+  </div><!-- end layout -->
+</div>

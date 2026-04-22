@@ -1,0 +1,50 @@
+<div class="client-invitations-page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Project Invitations</h1>
+      <p class="page-subtitle">
+        {{ projectTitle || ('Project #' + projectId) }}
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="info-text">Loading invitations...</div>
+  <div *ngIf="errorMessage && !isLoading" class="error-text">{{ errorMessage }}</div>
+
+  <div *ngIf="!isLoading && !errorMessage">
+
+    <div *ngIf="invitations.length === 0" class="info-text">
+      No invitations have been sent for this project yet.
+    </div>
+
+    <div *ngIf="invitations.length > 0" class="table-wrapper">
+      <table class="invitation-table">
+        <thead>
+          <tr>
+            <th>Invitation ID</th>
+            <th>Freelancer</th>
+            <th>Sent At</th>
+            <th>Responded At</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inv of invitations">
+            <td>#{{ inv.id }}</td>
+            <td>{{ inv.freelancerName }}</td>
+            <td>{{ formatDate(inv.invitedAt) }}</td>
+            <td>{{ formatDate(inv.respondedAt) }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="inv.status.toLowerCase()">
+                {{ inv.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>

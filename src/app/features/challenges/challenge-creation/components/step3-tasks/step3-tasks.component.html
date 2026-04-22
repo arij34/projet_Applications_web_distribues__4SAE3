@@ -1,0 +1,114 @@
+<!-- src/app/modules/challenge-creation/components/step3-tasks/step3-tasks.component.html -->
+
+<div class="step-container">
+    <div class="step-header">
+      <h2 class="step-title">Tasks Creation</h2>
+      <p class="step-description">Define the tasks participants need to complete during the challenge</p>
+    </div>
+  
+    <div class="tip-card">
+      <p class="tip-text">
+        💡 <strong>Tip:</strong> Break down the challenge into clear, manageable tasks. You can reorder tasks by dragging them.
+      </p>
+    </div>
+  
+    <!-- Empty State -->
+    <div *ngIf="tasks.length === 0" class="empty-state">
+      <div class="empty-icon-wrapper">
+        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+      </div>
+      <h3 class="empty-title">No tasks yet</h3>
+      <p class="empty-description">Add your first task to get started</p>
+      <button (click)="addTask()" class="btn btn-primary">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Add First Task
+      </button>
+    </div>
+  
+    <!-- Tasks List -->
+    <div *ngIf="tasks.length > 0">
+      <div cdkDropList (cdkDropListDropped)="drop($event)" class="tasks-list">
+        <div *ngFor="let task of tasks; trackBy: trackByTaskId; let i = index" cdkDrag class="task-card">
+          <!-- Drag Handle -->
+          <div class="task-header">
+            <div cdkDragHandle class="drag-handle">
+              <svg class="drag-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+              </svg>
+            </div>
+            
+            <div class="task-title-wrapper">
+              <h4 class="task-card-title">{{ task.title || 'Task ' + (i + 1) }}</h4>
+            </div>
+  
+            <button (click)="toggleExpand(task.id)" class="icon-btn">
+              <svg *ngIf="isExpanded(task.id)" class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+              </svg>
+              <svg *ngIf="!isExpanded(task.id)" class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+  
+            <button (click)="deleteTask(task.id)" class="icon-btn delete-btn">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+            </button>
+          </div>
+  
+          <!-- Task Content -->
+          <div *ngIf="isExpanded(task.id)" class="task-content">
+            <div class="form-group">
+              <label [for]="'title-' + task.id" class="form-label">Task Title *</label>
+              <input 
+                [id]="'title-' + task.id"
+                type="text"
+                [value]="task.title"
+                (input)="updateTask(task.id, { title: $any($event.target).value })"
+                class="form-input"
+                placeholder="e.g., Implement user authentication">
+            </div>
+  
+            <div class="form-group">
+              <label [for]="'description-' + task.id" class="form-label">Description</label>
+              <textarea 
+                [id]="'description-' + task.id"
+                [value]="task.description"
+                (input)="updateTask(task.id, { description: $any($event.target).value })"
+                class="form-textarea"
+                rows="3"
+                placeholder="Describe what needs to be accomplished in this task..."></textarea>
+            </div>
+  
+            <div class="form-group">
+              <label [for]="'deadline-' + task.id" class="form-label">Task Deadline</label>
+              <div class="input-with-icon">
+                <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <input 
+                  [id]="'deadline-' + task.id"
+                  type="date"
+                  [value]="task.deadline"
+                  (input)="updateTask(task.id, { deadline: $any($event.target).value })"
+                  class="form-input with-icon">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <button (click)="addTask()" class="btn btn-outline-dashed full-width">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Add Another Task
+      </button>
+    </div>
+  </div>
+  

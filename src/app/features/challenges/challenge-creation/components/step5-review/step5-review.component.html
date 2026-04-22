@@ -1,0 +1,109 @@
+<div class="step-container">
+  <div class="step-header">
+    <h2 class="step-title">Review & Publish</h2>
+    <p class="step-description">Review your challenge details before publishing</p>
+  </div>
+
+  <!-- Challenge Info Card -->
+  <div class="review-card">
+    <div class="card-header">
+      <div class="header-left">
+        <span class="card-title">Challenge Information</span>
+      </div>
+      <button class="edit-btn" (click)="onEditStep(1)">
+        Edit
+      </button>
+    </div>
+    <div class="card-content">
+      <ng-container *ngIf="challengeInfo?.title">
+        <img *ngIf="challengeInfo?.image" [src]="challengeInfo.image" alt="Challenge" class="banner-img">
+        <p class="content-title">{{ challengeInfo.title }}</p>
+        <p class="content-text">{{ challengeInfo.description }}</p>
+        <div class="badge-row">
+          <span class="badge badge-outline">{{ challengeInfo.category }}</span>
+          <span class="badge badge-default">{{ challengeInfo.difficulty }}</span>
+        </div>
+        <div class="tech-badges" *ngIf="challengeInfo?.technologies?.length">
+          <span *ngFor="let tech of challengeInfo.technologies" class="tech-badge">{{ tech }}</span>
+        </div>
+      </ng-container>
+      <p *ngIf="!challengeInfo?.title" class="empty-text">No challenge information</p>
+    </div>
+  </div>
+
+  <!-- GitHub Card -->
+  <div class="review-card">
+    <div class="card-header">
+      <div class="header-left">
+        <span class="card-title">GitHub</span>
+      </div>
+      <button class="edit-btn" (click)="onEditStep(2)">Edit</button>
+    </div>
+    <div class="card-content">
+      <ng-container *ngIf="githubData?.repositoryUrl">
+        <div class="url-display">
+          <a [href]="githubData.repositoryUrl" target="_blank" rel="noopener" class="url-link">{{ githubData.repositoryUrl }}</a>
+        </div>
+      </ng-container>
+      <p *ngIf="!githubData?.repositoryUrl" class="empty-text">No repository URL</p>
+    </div>
+  </div>
+
+  <!-- Tasks Card -->
+  <div class="review-card">
+    <div class="card-header">
+      <div class="header-left">
+        <span class="card-title">Tasks</span>
+      </div>
+      <button class="edit-btn" (click)="onEditStep(3)">Edit</button>
+    </div>
+    <div class="card-content">
+      <div *ngIf="tasks?.length" class="task-list">
+        <div *ngFor="let task of tasks; let i = index" class="task-item">
+          <span class="task-number">{{ i + 1 }}</span>
+          <div class="task-details">
+            <p class="task-title">{{ task.title || 'Untitled' }}</p>
+            <p class="task-desc" *ngIf="task.description">{{ task.description }}</p>
+          </div>
+        </div>
+      </div>
+      <p *ngIf="!tasks?.length" class="empty-text">No tasks</p>
+    </div>
+  </div>
+
+  <!-- Settings Card -->
+  <div class="review-card">
+    <div class="card-header">
+      <div class="header-left">
+        <span class="card-title">Settings</span>
+      </div>
+      <button class="edit-btn" (click)="onEditStep(4)">Edit</button>
+    </div>
+    <div class="card-content">
+      <ng-container *ngIf="settings">
+        <div class="settings-grid">
+          <div class="setting-item">
+            <span class="setting-label">Start Date</span>
+            <span class="setting-value">{{ settings.startDate || '—' }}</span>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">End Date</span>
+            <span class="setting-value">{{ settings.endDate || '—' }}</span>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Max Participants</span>
+            <span class="setting-value">{{ settings.maxParticipants || '—' }}</span>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Points</span>
+            <span class="setting-value">{{ settings.points || '—' }}</span>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Status</span>
+            <span class="setting-value">{{ settings.status || '—' }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+.logo-slider {
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+  padding: 30px 0;
+  cursor: grab;
+  scroll-behavior: smooth;
+}
+
+.logo-slider:active {
+  cursor: grabbing;
+}
+
+.logo-track {
+  display: flex;
+  gap: 80px;              /* espace entre logos */
+  width: max-content;
+  align-items: center;
+}
+
+/* logo item */
+.logo-item {
+  flex: 0 0 auto;
+  width: 250px;           /* 🔥 plus grand */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* image */
+.logo-item img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.8;
+  transition: 0.3s ease;
+}
+
+.logo-item img:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}

@@ -1,0 +1,20 @@
+<div class="progress-card">
+  <div class="progress-header">
+    <div class="progress-icon-wrapper">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+    </div>
+    <div class="progress-text">
+      <h3>Progress</h3>
+      <p>{{ completed }} of {{ total }} tasks completed</p>
+    </div>
+    <div class="progress-percentage">{{ percentage }}%</div>
+  </div>
+  <div class="progress-bar-wrapper">
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" [style.width.%]="percentage"></div>
+    </div>
+  </div>
+</div>

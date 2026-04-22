@@ -1,0 +1,88 @@
+<div class="exam-page">
+  <p *ngIf="isLoading()" class="subtitle">Loading exam details...</p>
+  <p *ngIf="errorMessage()" class="subtitle error">{{ errorMessage() }}</p>
+  <p *ngIf="successMessage()" class="subtitle success">{{ successMessage() }}</p>
+
+  <header class="page-nav">
+    <button class="nav-back" (click)="goBackToExams()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M10 3L5 8l5 5"/>
+      </svg>
+      Back to exams
+    </button>
+    <div class="page-heading">
+      <h1>Exam details & management</h1>
+      <p>Manage exam information, questions, and security settings</p>
+    </div>
+  </header>
+
+  <div class="page-layout">
+    <div class="main-col">
+      <app-exam-info-card [exam]="exam()" (examUpdated)="onExamUpdated($event)" />
+      <app-question-list
+        [questions]="questions()"
+        (questionDeleted)="onQuestionDeleted($event)"
+        (questionAdded)="onQuestionAdded($event)"
+        (questionUpdated)="onQuestionUpdated($event)"
+      />
+      <app-anti-cheat-settings [config]="antiCheat()" (configSaved)="onAntiCheatSaved($event)" />
+
+      <section class="danger-zone">
+        <div class="danger-zone-copy">
+          <h3>Delete Exam</h3>
+          <p>
+            Permanently remove this exam and its related configuration.
+            This action cannot be undone.
+          </p>
+        </div>
+        <button class="btn-danger-zone" type="button" [disabled]="isDeleting()" (click)="openDeleteConfirm()">
+          Delete This Exam
+        </button>
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <app-exam-stats-sidebar
+        [questions]="questions()"
+        [totalPoints]="totalPoints()"
+        [passingScore]="exam().passingScore"
+      />
+    </aside>
+  </div>
+
+  @if (showDeleteConfirm()) {
+    <div class="delete-modal-overlay" (click)="cancelDeleteConfirm()">
+      <div class="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-exam-title" (click)="$event.stopPropagation()">
+        <h3 id="delete-exam-title">Confirm Exam Deletion</h3>
+        <p class="delete-modal-message">
+          You are about to delete this exam permanently.
+          Related settings and question links may also be removed.
+        </p>
+        <p class="delete-modal-note">Please confirm to continue.</p>
+        <div class="delete-modal-actions">
+          <button type="button" class="btn-modal-cancel" [disabled]="isDeleting()" (click)="cancelDeleteConfirm()">Cancel</button>
+          <button type="button" class="btn-modal-delete" [disabled]="isDeleting()" (click)="confirmDeleteExam()">
+            {{ isDeleting() ? 'Deleting...' : 'Delete Exam' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (showDeleteBlockedNotice()) {
+    <div class="delete-modal-overlay" (click)="closeDeleteBlockedNotice()">
+      <div class="delete-modal delete-modal-info" role="dialog" aria-modal="true" aria-labelledby="delete-blocked-title" (click)="$event.stopPropagation()">
+        <h3 id="delete-blocked-title">Exam Cannot Be Deleted</h3>
+        <p class="delete-modal-message">
+          This exam cannot be deleted because it already has participations linked to it.
+        </p>
+        <p class="delete-modal-note">
+          Remove the related participations first, or keep the exam and archive it instead.
+        </p>
+        <div class="delete-modal-actions">
+          <button type="button" class="btn-modal-primary" (click)="closeDeleteBlockedNotice()">Understood</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

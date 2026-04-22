@@ -1,0 +1,110 @@
+<div class="questions-container">
+  <div class="page-header">
+    <div>
+      <h1>Questions Management</h1>
+      <p class="subtitle">Manage questions across all exams and quizzes</p>
+    </div>
+    <button class="btn btn-primary">
+      <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      Add Question
+    </button>
+  </div>
+  <p *ngIf="isLoading" class="subtitle">Loading questions...</p>
+  <p *ngIf="errorMessage" class="subtitle" style="color:#b91c1c;">{{ errorMessage }}</p>
+
+  <div class="questions-card">
+    <!-- Filter Header -->
+    <div class="card-header">
+      <div class="filters">
+        <div class="search-box">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input 
+            type="text" 
+            placeholder="Search questions..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+            class="search-input"
+          />
+        </div>
+        <select 
+          [(ngModel)]="selectedType" 
+          (ngModelChange)="onTypeChange()"
+          class="filter-select"
+        >
+          <option value="all">All Types</option>
+          <option value="MCQ">MCQ</option>
+          <option value="True/False">True/False</option>
+          <option value="Short">Short Answer</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card-content">
+      <div class="table-wrapper">
+        <table class="questions-table">
+          <thead>
+            <tr>
+              <th>Question</th>
+              <th>Exam</th>
+              <th>Type</th>
+              <th>Answers</th>
+              <th>Correct Answer</th>
+              <th>Points</th>
+              <th>Time Limit</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let question of filteredQuestions" class="table-row">
+              <td>
+                <p class="question-text">{{ question.questionText }}</p>
+              </td>
+              <td>
+                <p class="exam-title">{{ question.examTitle }}</p>
+              </td>
+              <td>
+                <span class="type-badge" [ngClass]="getTypeClass(question.type)">
+                  {{ question.type }}
+                </span>
+              </td>
+              <td class="table-text">{{ question.answers }}</td>
+              <td>
+                <div class="correct-answer">
+                  <svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span class="answer-text">{{ question.correctAnswer }}</span>
+                </div>
+              </td>
+              <td class="table-text">{{ question.points }}</td>
+              <td class="table-text">{{ question.timeLimit ? question.timeLimit + 's' : '-' }}</td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn" title="Edit">
+                    <svg class="action-icon icon-primary" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                  <button class="action-btn" title="Delete" (click)="deleteQuestion(question.id)">
+                    <svg class="action-icon icon-danger" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

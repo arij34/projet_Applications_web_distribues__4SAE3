@@ -1,0 +1,57 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Freelancer Skills</h2>
+    <a [routerLink]="['/front/freelancer-skills/add']" class="btn-primary-modern">
+      + Add Skill
+    </a>
+  </div>
+
+  <app-search-bar
+    placeholder="Search by skill name, level..."
+    [filters]="search.config.filters"
+    [totalCount]="allItems.length"
+    [resultCount]="filteredItems.length"
+    [currentQuery]="currentQuery"
+    (queryChange)="onSearch($event)"
+    (filterChange)="onFilter($event)"
+    (reset)="onReset()">
+  </app-search-bar>
+
+  <div class="table-card">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Skill</th>
+          <th>Level</th>
+          <th>Years</th>
+          <th class="actions-cell">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- ✅ filteredItems au lieu de items -->
+        <tr *ngFor="let item of filteredItems">
+          <td>{{item.customSkillName || item.skill?.name}}</td>
+          <td>
+            <span class="badge-modern" [ngClass]="getLevelInfo(item.level).class">
+              {{ getLevelInfo(item.level).label }}
+            </span>
+          </td>
+          <td>{{ item.yearsExperience }} year(s)</td>
+          <td class="actions-cell">
+            <a [routerLink]="['/front/freelancer-skills/edit', item.id]" class="action-icon edit-icon">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <button (click)="deleteItem(item.id!)" class="action-icon delete-icon">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <!-- ✅ filteredItems au lieu de items -->
+        <tr *ngIf="filteredItems.length === 0">
+          <td colspan="4" class="empty-state">No freelancer skills found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <a routerLink="/front/dashboard-skill" class="btn-back-modern">← Retour Dashboard</a>
+</div>

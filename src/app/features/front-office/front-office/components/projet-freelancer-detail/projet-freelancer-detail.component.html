@@ -1,0 +1,493 @@
+<div class="page-wrapper">
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading project...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-state" *ngIf="errorMessage && !isLoading">
+    <div class="error-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <h3>{{ errorMessage }}</h3>
+    <button class="btn-back" (click)="goBack()">← Go Back</button>
+  </div>
+
+  <!-- CONTENT -->
+  <ng-container *ngIf="!isLoading && !errorMessage && project as p">
+
+    <!-- BACK -->
+    <button class="btn-back-top" (click)="goBack()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="19" y1="12" x2="5" y2="12"/>
+    <polyline points="12 19 5 12 12 5"/>
+  </svg>
+</button>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-top">
+        <div class="hero-left">
+          <div class="hero-badges">
+            <span class="badge-category">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2.5">
+                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+              </svg>
+              Web Development
+            </span>
+            <span class="badge-open">Open</span>
+          </div>
+          <h1 class="hero-title">{{ p.title }}</h1>
+          <div class="hero-meta">
+            <span>Posted {{ formatDate(p.createdAt) }}</span>
+            <span>Client {{ p.clientId }}</span>
+            <span>Intermediate level</span>
+          </div>
+        </div>
+        <div class="progress-circle-wrap">
+          <svg width="110" height="110" viewBox="0 0 110 110">
+            <circle cx="55" cy="55" r="45" fill="none" stroke="#e0e7ff" stroke-width="9"/>
+            <circle cx="55" cy="55" r="45" fill="none" stroke="#2563eb"
+                    stroke-width="9" stroke-linecap="round"
+                    stroke-dasharray="283"
+                    [attr.stroke-dashoffset]="getProgressOffset()"
+                    transform="rotate(-90 55 55)"/>
+          </svg>
+          <div class="prog-text">
+            <span class="prog-value">{{ getProgressValue(p.status) }}%</span>
+            <span class="prog-label">Progress</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAYOUT -->
+    <div class="main-layout">
+
+      <!-- LEFT COLUMN -->
+      <div>
+
+        <!-- OVERVIEW -->
+        <div class="card">
+          <h3 class="card-title">
+            <div class="card-title-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            Project Overview
+          </h3>
+          <p class="description-text">{{ p.description }}</p>
+        </div>
+
+        <!-- SKILLS + INFO ROW -->
+        <div class="card">
+          <h3 class="card-title">
+            <div class="card-title-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </div>
+            Skills Required
+          </h3>
+          <div class="skills-wrap" *ngIf="p.skills && p.skills.length > 0">
+            <span class="skill-tag" *ngFor="let skill of p.skills">{{ skill.skillName }}</span>
+          </div>
+          <p class="no-skills" *ngIf="!p.skills || p.skills.length === 0">
+            No skills specified for this project.
+          </p>
+          <div class="info-row">
+            <div class="info-item-box">
+              <div class="info-item-icon-row">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <span class="info-item-label">Deadline</span>
+              </div>
+              <span class="info-item-value">{{ formatDate(p.deadline) }}</span>
+              <span class="info-item-days"
+                    [ngClass]="{ 'days-urgent': getDaysLeft(p.deadline) <= 7, 'days-ok': getDaysLeft(p.deadline) > 7 }">
+                {{ getDaysLeft(p.deadline) < 0 ? 'Expired' : getDaysLeft(p.deadline) + ' days left' }}
+              </span>
+            </div>
+            <div class="info-item-box">
+              <div class="info-item-icon-row">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span class="info-item-label">Posted</span>
+              </div>
+              <span class="info-item-value">{{ formatDate(p.createdAt) }}</span>
+            </div>
+            <div class="info-item-box">
+              <div class="info-item-icon-row">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <span class="info-item-label">Status</span>
+              </div>
+              <span class="info-item-value status-open">{{ p.status }}</span>
+            </div>
+            <div class="info-item-box">
+              <div class="info-item-icon-row">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span class="info-item-label">Client</span>
+              </div>
+              <span class="info-item-value">Client {{ p.clientId }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PROJECT INSIGHTS (ANALYSE) ── -->
+        <div class="card" *ngIf="analysis">
+          <h3 class="card-title">
+            <div class="card-title-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            Project Insights
+          </h3>
+          <p style="font-size:0.8125rem;color:#94a3b8;margin:0 0 1.25rem 0;">
+            AI-powered analysis to help you evaluate this opportunity.
+          </p>
+
+          <!-- 4 métriques -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.875rem;margin-bottom:1.25rem;">
+
+            <!-- Complexity -->
+            <div style="background:#f8fafc;border-radius:12px;padding:1rem;">
+              <p style="font-size:0.7rem;color:#94a3b8;font-weight:600;
+                         text-transform:uppercase;letter-spacing:.05em;margin:0 0 0.5rem;">
+                Complexity
+              </p>
+              <span [style.background]="getComplexityBg(analysis.complexityLevel)"
+                    [style.color]="getComplexityColor(analysis.complexityLevel)"
+                    style="font-size:0.875rem;font-weight:700;padding:0.25rem 0.75rem;
+                           border-radius:99px;display:inline-block;">
+                {{ analysis.complexityLevel || '-' }}
+              </span>
+            </div>
+
+            <!-- Risk -->
+            <div style="background:#f8fafc;border-radius:12px;padding:1rem;">
+              <p style="font-size:0.7rem;color:#94a3b8;font-weight:600;
+                         text-transform:uppercase;letter-spacing:.05em;margin:0 0 0.5rem;">
+                Risk Level
+              </p>
+              <span [style.background]="getRiskBg(analysis.riskLevel)"
+                    [style.color]="getRiskColor(analysis.riskLevel)"
+                    style="font-size:0.875rem;font-weight:700;padding:0.25rem 0.75rem;
+                           border-radius:99px;display:inline-block;">
+                {{ analysis.riskLevel || '-' }}
+              </span>
+            </div>
+
+            <!-- Duration -->
+            <div style="background:#f8fafc;border-radius:12px;padding:1rem;">
+              <p style="font-size:0.7rem;color:#94a3b8;font-weight:600;
+                         text-transform:uppercase;letter-spacing:.05em;margin:0 0 0.5rem;">
+                Estimated Duration
+              </p>
+              <span style="font-size:0.9375rem;font-weight:700;color:#0f172a;">
+                {{ analysis.durationMinWeeks }}–{{ analysis.durationMaxWeeks }}
+                <span style="font-size:0.75rem;font-weight:500;color:#64748b;">weeks</span>
+              </span>
+            </div>
+
+            <!-- Budget -->
+            <div style="background:#f8fafc;border-radius:12px;padding:1rem;">
+              <p style="font-size:0.7rem;color:#94a3b8;font-weight:600;
+                         text-transform:uppercase;letter-spacing:.05em;margin:0 0 0.5rem;">
+                Budget Range
+              </p>
+              <span style="font-size:0.9375rem;font-weight:700;color:#0f172a;">
+                ${{ analysis.budgetMin | number }} –
+                ${{ analysis.budgetMax | number }}
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Freelancers recherchés -->
+          <div style="background:#eff6ff;border-radius:12px;padding:1rem;
+                      display:flex;align-items:center;gap:0.875rem;">
+            <div style="width:40px;height:40px;background:#dbeafe;border-radius:10px;
+                        display:flex;align-items:center;justify-content:center;
+                        color:#2563eb;flex-shrink:0;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div>
+              <p style="font-size:0.8125rem;font-weight:700;color:#1e40af;margin:0;">
+                {{ analysis.freelancersEstimatedCount || '1' }}
+                freelancer{{ analysis.freelancersEstimatedCount > 1 ? 's' : '' }} needed
+              </p>
+              <p style="font-size:0.75rem;color:#3b82f6;margin:0;">
+                {{ analysis.freelancersAvailability || 'Availability to be confirmed' }}
+              </p>
+            </div>
+          </div>
+
+        </div>
+        <!-- Fin analyse -->
+
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+
+        <!-- CLIENT CARD -->
+        <!-- CLIENT CARD -->
+<div class="side-card">
+  <p class="side-title">Client</p>
+  <div class="client-row">
+    <div class="client-avatar">{{ p.clientId.toString().slice(0, 1).toUpperCase() }}</div>
+    <div>
+      <div class="client-name">Client {{ p.clientId }}</div>
+      <div class="client-rating">★★★★☆ 4.8</div>
+    </div>
+  </div>
+  <div class="client-stats">
+    <div class="client-stat">
+      <div class="client-stat-dot dot-blue"></div>
+      {{ clientStats?.totalProjects || 0 }} projects posted
+    </div>
+    <div class="client-stat">
+      <div class="client-stat-dot dot-indigo"></div>
+      {{ clientStats?.completedProjects || 0 }} completed
+    </div>
+  </div>
+  <button class="btn-view-profile">View Client Profile</button>
+  <!-- Toast notification -->
+<div *ngIf="saveMessage"
+     [style.background]="saveMessage === 'saved' ? '#f0fdf4' : '#fef2f2'"
+     [style.border]="saveMessage === 'saved' ? '1px solid #86efac' : '1px solid #fca5a5'"
+     [style.color]="saveMessage === 'saved' ? '#15803d' : '#dc2626'"
+     style="padding:0.625rem 0.875rem;border-radius:10px;
+            font-size:0.8125rem;font-weight:500;
+            margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+  {{ saveMessage === 'saved' ? '✅ Project saved to your list!' : '🗑 Project removed from list.' }}
+</div>
+
+<!-- Toast -->
+<div *ngIf="saveMessage"
+     [style.background]="saveMessage === 'saved' ? '#f0fdf4' : '#fef2f2'"
+     [style.border]="saveMessage === 'saved' ? '1px solid #86efac' : '1px solid #fca5a5'"
+     [style.color]="saveMessage === 'saved' ? '#15803d' : '#dc2626'"
+     style="padding:0.625rem 0.875rem;border-radius:10px;font-size:0.8125rem;
+            font-weight:500;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+  {{ saveMessage === 'saved' ? '✅ Project saved to your list!' : '🗑 Project removed from list.' }}
+</div>
+
+<button class="btn-save-project"
+        (click)="toggleSave()"
+        [disabled]="isSaving"
+        [style.background]="isSaved ? '#fef2f2' : ''"
+        [style.color]="isSaved ? '#dc2626' : ''"
+        [style.border-color]="isSaved ? '#fca5a5' : ''">
+  <svg *ngIf="!isSaved" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+  </svg>
+  <svg *ngIf="isSaved" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+       viewBox="0 0 24 24" fill="#dc2626" stroke="#dc2626" stroke-width="2">
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+  </svg>
+  {{ isSaving ? 'Processing...' : isSaved ? 'Unsave Project' : 'Save Project' }}
+</button>
+</div>
+
+        
+        <!-- PROPOSAL CARD -->
+<div class="side-card">
+
+  <!-- Déjà soumis -->
+  <ng-container *ngIf="hasProposal">
+    <div style="text-align:center;padding:1rem 0;">
+      <div style="font-size:2.5rem;margin-bottom:.75rem;">
+        {{ getStatusIcon(proposalStatus) }}
+      </div>
+      <p style="font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 .4rem;">
+        Proposal Submitted
+      </p>
+      <p style="font-size:.8125rem;color:#64748b;margin:0 0 1rem;">
+        Your proposal is currently under review.
+      </p>
+      <span style="display:inline-block;padding:.4rem 1.25rem;border-radius:99px;
+                   font-size:.8125rem;font-weight:700;color:white;"
+            [style.background]="getStatusColor(proposalStatus)">
+        {{ proposalStatus }}
+      </span>
+    </div>
+  </ng-container>
+
+  <!-- Formulaire -->
+  <ng-container *ngIf="!hasProposal">
+
+    <p class="proposal-title">Interested in this project?</p>
+    <p class="proposal-sub">
+      {{ proposalCount }} proposal{{ proposalCount !== 1 ? 's' : '' }} submitted so far
+    </p>
+
+    <!-- Success -->
+    <div *ngIf="submitMessage === 'success'"
+         style="background:#f0fdf4;border:1px solid #86efac;color:#15803d;
+                padding:.75rem;border-radius:10px;margin-bottom:1rem;
+                font-size:.8125rem;text-align:center;">
+      ✅ Proposal submitted successfully!
+    </div>
+
+    <!-- Error global -->
+    <div *ngIf="submitError"
+         style="background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;
+                padding:.75rem;border-radius:10px;margin-bottom:1rem;font-size:.8125rem;">
+      ⚠️ {{ submitError }}
+    </div>
+
+    <!-- Bid -->
+    <div class="input-group">
+      <label class="input-label">Bid Amount *</label>
+      <div class="input-with-icon">
+        <span class="input-prefix">$</span>
+        <input class="input-field" type="number" min="1"
+               [(ngModel)]="proposalForm.bidAmount"
+               placeholder="Your price">
+      </div>
+      <!-- Comparaison avec analyse -->
+      <div *ngIf="analysis && proposalForm.bidAmount"
+           style="font-size:.72rem;margin-top:.3rem;"
+           [style.color]="+proposalForm.bidAmount > analysis.budgetMax ? '#dc2626' :
+                          +proposalForm.bidAmount < analysis.budgetMin ? '#d97706' : '#16a34a'">
+        {{ +proposalForm.bidAmount > analysis.budgetMax ? '⚠ Above recommended budget' :
+           +proposalForm.bidAmount < analysis.budgetMin ? '⚠ Below recommended budget' :
+           '✓ Within budget range' }}
+      </div>
+      <div *ngIf="proposalErrors['bid']"
+           style="color:#dc2626;font-size:.72rem;margin-top:.25rem;">
+        ⚠ {{ proposalErrors['bid'] }}
+      </div>
+    </div>
+
+    <!-- Delivery -->
+    <div class="input-group">
+      <label class="input-label">Delivery Time *</label>
+      <div style="position:relative;">
+        <input class="input-field input-full" type="number" min="1"
+               [(ngModel)]="proposalForm.deliveryWeeks"
+               placeholder="Number of weeks">
+        <span style="position:absolute;right:.875rem;top:50%;transform:translateY(-50%);
+                     font-size:.75rem;color:#94a3b8;pointer-events:none;">weeks</span>
+      </div>
+      <!-- Comparaison avec analyse -->
+      <div *ngIf="analysis && proposalForm.deliveryWeeks"
+           style="font-size:.72rem;margin-top:.3rem;"
+           [style.color]="+proposalForm.deliveryWeeks > analysis.durationMaxWeeks ? '#dc2626' : '#16a34a'">
+        {{ +proposalForm.deliveryWeeks > analysis.durationMaxWeeks ?
+           '⚠ Longer than estimated (' + analysis.durationEstimatedWeeks + ' wks)' :
+           '✓ Within estimated duration' }}
+      </div>
+      <div *ngIf="proposalErrors['weeks']"
+           style="color:#dc2626;font-size:.72rem;margin-top:.25rem;">
+        ⚠ {{ proposalErrors['weeks'] }}
+      </div>
+    </div>
+
+    <!-- Available From -->
+    <div class="input-group">
+      <label class="input-label">Available From</label>
+      <input class="input-field input-full" type="date"
+             [(ngModel)]="proposalForm.availableFrom"
+             [min]="today">
+    </div>
+
+    <!-- Portfolio -->
+    <div class="input-group">
+      <label class="input-label">Portfolio / GitHub</label>
+      <input class="input-field input-full" type="url"
+             [(ngModel)]="proposalForm.portfolioUrl"
+             placeholder="https://github.com/yourprofile">
+    </div>
+
+    <!-- Cover Letter -->
+    <div class="input-group">
+      <label class="input-label">
+        Cover Letter *
+        <span style="color:#94a3b8;font-weight:400;margin-left:.4rem;">
+          {{ proposalForm.coverLetter.length }}/50 min
+        </span>
+      </label>
+      <textarea class="textarea-field"
+                [(ngModel)]="proposalForm.coverLetter"
+                placeholder="Explain why you're the best fit for this project..."
+                rows="4"></textarea>
+      <div *ngIf="proposalErrors['cover']"
+           style="color:#dc2626;font-size:.72rem;margin-top:.25rem;">
+        ⚠ {{ proposalErrors['cover'] }}
+      </div>
+    </div>
+
+    <!-- Question to client -->
+    <div class="input-group">
+      <label class="input-label">
+        Question to Client
+        <span style="color:#94a3b8;font-weight:400;"> (optional)</span>
+      </label>
+      <textarea class="textarea-field"
+                [(ngModel)]="proposalForm.questionToClient"
+                placeholder="Any question about the project scope?"
+                rows="2"></textarea>
+    </div>
+
+    <!-- Submit -->
+    <button class="btn-submit"
+            (click)="submitProposal()"
+            [disabled]="isSubmitting"
+            [style.opacity]="isSubmitting ? '0.7' : '1'">
+      {{ isSubmitting ? 'Submitting...' : 'Submit Proposal' }}
+    </button>
+
+    <p class="proposal-note">
+      * Your bid is visible only to you and the client
+    </p>
+
+  </ng-container>
+</div>
+
+      </div>
+    </div>
+
+  </ng-container>
+</div>

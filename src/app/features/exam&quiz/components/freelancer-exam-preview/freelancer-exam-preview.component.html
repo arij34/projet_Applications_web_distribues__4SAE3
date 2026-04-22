@@ -1,0 +1,232 @@
+<app-header></app-header>
+
+@if (isLoading()) {
+  <div class="preview-loading">
+    <div class="spinner"></div>
+    <p>Loading exam details…</p>
+  </div>
+} @else if (exam()) {
+  <div class="preview-page">
+
+    <!-- Page header -->
+    <div class="preview-header">
+      <div class="header-left">
+        <h1 class="preview-title">{{ exam()!.title }}</h1>
+        <p class="preview-dates">
+          Available: {{ exam()!.startDate | date:'MMM d, yyyy' }} — {{ exam()!.endDate | date:'MMM d, yyyy' }}
+        </p>
+      </div>
+
+      <div class="header-right">
+        <div class="header-badges">
+          <span class="type-badge" [ngClass]="'type-' + exam()!.type.toLowerCase()">
+            {{ typeLabel(exam()!.type) }}
+          </span>
+          <span class="status-badge" [ngClass]="exam()!.status === 'PUBLISHED' ? 'status-open' : 'status-closed'">
+            <span class="dot"></span>
+            {{ exam()!.status === 'PUBLISHED' ? 'Open' : 'Closed' }}
+          </span>
+          @if (exam()!.myStatus === 'passed') {
+            <span class="my-badge my-passed">✓ Passed</span>
+          }
+          @if (exam()!.myStatus === 'failed') {
+            <span class="my-badge my-failed">✗ Failed</span>
+          }
+          @if (exam()!.myStatus === 'in_progress') {
+            <span class="my-badge my-progress">● In Progress</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Cards row -->
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="info-text">
+          <span class="info-value">{{ exam()!.duration }} min</span>
+          <span class="info-label">Duration</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div class="info-text">
+          <span class="info-value">{{ exam()!.questionCount }}</span>
+          <span class="info-label">Questions</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="info-text">
+          <span class="info-value">{{ exam()!.passingScore }}%</span>
+          <span class="info-label">Passing Score</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div class="info-text">
+          <span class="info-value">{{ exam()!.pointsToEarn }} pts</span>
+          <span class="info-label">Points to Earn</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+        </div>
+        <div class="info-text">
+          <span class="info-value">{{ exam()!.maxAttempts }}x</span>
+          <span class="info-label">Max Attempts</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        <div class="info-text">
+          <span class="info-value">{{ exam()!.showResult ? 'Yes' : 'No' }}</span>
+          <span class="info-label">Results Shown</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="preview-body">
+
+      <!-- Left: Description + Rules -->
+      <div class="preview-left">
+
+        <!-- Description -->
+        <section class="preview-section">
+          <h2 class="section-title">About this Assessment</h2>
+          <p class="description-text">{{ exam()!.description }}</p>
+        </section>
+
+        <!-- Rules / Anti-cheat -->
+        @if (activeRules.length > 0) {
+          <section class="preview-section">
+            <h2 class="section-title warning-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              Exam Rules & Proctoring
+            </h2>
+            <p class="rules-intro">The following conditions apply during this assessment. Violations may result in disqualification.</p>
+            <div class="rules-grid">
+              <div class="rule-item" *ngFor="let rule of activeRules">
+                <span class="rule-icon">{{ rule.icon }}</span>
+                <div class="rule-text">
+                  <strong>{{ rule.title }}</strong>
+                  <p>{{ rule.description }}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        }
+
+      </div>
+
+      <!-- Right: Checklist + Action -->
+      <aside class="preview-aside">
+        <div class="checklist-card">
+          <h3 class="checklist-title">Before you begin</h3>
+          <ul class="checklist">
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Stable internet connection
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Use a desktop or laptop browser
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Close other tabs and applications
+            </li>
+            @if (exam()!.antiCheat.webcamRequired) {
+              <li>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Webcam must be enabled
+              </li>
+            }
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Allocate {{ exam()!.duration }} uninterrupted minutes
+            </li>
+          </ul>
+
+          @if (ctaState === 'start') {
+            <button class="aside-cta" (click)="startExam()">
+              Start Exam
+            </button>
+          }
+          @if (ctaState === 'continue') {
+            <button class="aside-cta aside-continue" (click)="startExam()">
+              Continue Exam
+            </button>
+          }
+          @if (ctaState === 'view_result') {
+            <a class="aside-cta aside-result" [routerLink]="['/exams', exam()!.id, 'result']">
+              View Result
+            </a>
+          }
+          @if (ctaState === 'no_attempts' || ctaState === 'closed') {
+            <div class="aside-disabled">Not available</div>
+          }
+        </div>
+      </aside>
+    </div>
+
+  </div>
+}
+
+<!-- Confirm Start Modal -->
+@if (confirmModalOpen()) {
+  <div class="modal-overlay" (click)="cancelStart()">
+    <div class="confirm-modal" (click)="$event.stopPropagation()">
+      <div class="confirm-icon">🚀</div>
+      <h2>Ready to begin?</h2>
+      <p>Once started, the <strong>{{ exam()!.duration }}-minute</strong> timer will begin and cannot be paused.</p>
+      <p class="confirm-note">Make sure you are in a distraction-free environment before proceeding.</p>
+      @if (startError()) {
+        <p class="confirm-error">{{ startError() }}</p>
+      }
+      <div class="confirm-actions">
+        <button class="btn-ghost" (click)="cancelStart()" [disabled]="isStarting()">Cancel</button>
+        <button class="btn-start" (click)="confirmStart()" [disabled]="isStarting()">
+          {{ isStarting() ? 'Starting...' : 'Begin Exam' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

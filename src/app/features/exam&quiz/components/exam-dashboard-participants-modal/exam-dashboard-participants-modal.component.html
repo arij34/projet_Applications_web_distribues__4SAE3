@@ -1,0 +1,35 @@
+<div
+  class="modal-overlay open"
+  *ngIf="isOpen && exam"
+  (click)="onOverlayClick($event)"
+  (keydown.escape)="closed.emit()"
+  tabindex="-1"
+>
+  <div class="modal" role="dialog" [attr.aria-label]="exam.title + ' participants'">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">{{ exam.title }}</div>
+        <div class="modal-sub">{{ exam.attempts }} students enrolled</div>
+      </div>
+      <button class="modal-close" (click)="closed.emit()" aria-label="Close">x</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="participant-row" *ngFor="let p of participants">
+        <div class="p-avatar">{{ p.initials }}</div>
+        <div class="p-info">
+          <div class="p-name">{{ p.name }}</div>
+          <div class="p-email">{{ p.email }}</div>
+        </div>
+        <span class="p-score" [ngClass]="scoreClass(p.score)">
+          {{ p.score === null ? 'Pending' : (p.score + '%') }}
+        </span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" (click)="closed.emit()">Close</button>
+      <button class="btn btn-primary">Export CSV</button>
+    </div>
+  </div>
+</div>

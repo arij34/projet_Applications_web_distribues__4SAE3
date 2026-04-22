@@ -1,0 +1,53 @@
+<div class="pay-page">
+  <div class="pay-shell">
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">VIP Payment</h2>
+        <p class="page-subtitle">Secure simulated checkout — upgrade your plan instantly.</p>
+      </div>
+      <div class="price-tag"><span class="price-amount">$29</span><span class="price-label">/ month</span></div>
+    </div>
+
+    <div class="alert-error" *ngIf="error">{{ error }}</div>
+    <div class="alert-success" *ngIf="success">{{ success }}</div>
+
+    <div *ngIf="me" class="pay-layout">
+      <div class="form-card">
+        <div class="field">
+          <label>Card number</label>
+          <input class="field-input" [(ngModel)]="cardNumber" placeholder="4111 1111 1111 1111" maxlength="19" />
+        </div>
+        <div class="field">
+          <label>Cardholder name</label>
+          <input class="field-input" [(ngModel)]="cardHolderName" placeholder="John Doe" />
+        </div>
+        <div class="fields-row">
+          <div class="field">
+            <label>Expiry date</label>
+            <input class="field-input" [(ngModel)]="expiry" placeholder="MM/YY" maxlength="5" />
+          </div>
+          <div class="field">
+            <label>CVV</label>
+            <input class="field-input" [(ngModel)]="cvv" placeholder="***" maxlength="3" type="password" />
+          </div>
+        </div>
+        <button class="btn-pay" (click)="pay()" [disabled]="loading">
+          <span *ngIf="loading" class="spin-ring"></span>
+          {{ loading ? 'Processing payment...' : 'Pay $29 - Activate VIP' }}
+        </button>
+      </div>
+
+      <div class="summary-card">
+        <h4>VIP Plan</h4>
+        <ul>
+          <li>Unlimited project applications</li>
+          <li>Priority in search results</li>
+          <li>Access to VIP challenges</li>
+          <li>Advanced analytics dashboard</li>
+          <li>Dedicated support channel</li>
+        </ul>
+        <div class="total">Total due today: <strong>$29.00</strong></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,938 @@
+<!-- contracts.component.html -->
+<div class="contracts-page">
+  <div class="page-container">
+
+    <a class="back-btn" (click)="goBackToProjects()">
+      <span class="back-icon">&#8592;</span> Back to Projects
+    </a>
+
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Project Contracts</h1>
+        <p class="page-subtitle">Contracts are created automatically when a proposal is accepted</p>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <!-- LEFT -->
+      <div class="left-panel">
+        <div class="filters-bar">
+          <div class="search-wrapper">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" placeholder="Search contracts..." class="search-input"
+              [(ngModel)]="searchQuery" (input)="applyFilters()" />
+          </div>
+          <select class="filter-select" [(ngModel)]="statusFilter" (change)="applyFilters()">
+            <option value="">All Status</option>
+            <option value="DRAFT">Draft</option>
+            <option value="PENDING_SIGNATURE">Pending Signature</option>
+            <option value="ACTIVE">Open</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELLED">Closed</option>
+            <option value="DISPUTED">Disputed</option>
+          </select>
+          <select class="filter-select" [(ngModel)]="sortOrder" (change)="applyFilters()">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="amount_desc">Amount ↓</option>
+            <option value="amount_asc">Amount ↑</option>
+          </select>
+        </div>
+
+        <div class="loading-state" *ngIf="isLoading">
+          <div class="spinner"></div><p>Loading contracts...</p>
+        </div>
+
+        <div class="empty-state" *ngIf="!isLoading && filteredContracts.length === 0">
+          <div class="empty-icon">📄</div>
+          <h3>No contracts yet</h3>
+          <p>Contracts appear automatically when you accept a freelancer's proposal.</p>
+        </div>
+
+        <div class="contracts-list" *ngIf="!isLoading && filteredContracts.length > 0">
+          <div class="contract-card" *ngFor="let contract of filteredContracts"
+            [class.selected]="selectedContract?.id === contract.id"
+            (click)="selectContract(contract)">
+
+            <div class="card-header">
+              <div class="avatar" [style.background]="getAvatarColor(contract.freelancerId)">
+                {{ getInitials(contract.freelancerName || 'F') }}
+              </div>
+              <div class="card-info">
+                <div class="card-title-row">
+                  <h3 class="contract-title">{{ contract.title }}</h3>
+                  <span class="status-badge" [ngClass]="getStatusClass(contract.status)">
+                    {{ formatStatus(contract.status) }}
+                  </span>
+                </div>
+                <p class="freelancer-name">
+                  {{ contract.freelancerName && !contract.freelancerName.startsWith('Freelancer #')
+                     ? contract.freelancerName : 'Freelancer' }}
+                </p>
+                <p class="freelancer-email" *ngIf="contract.freelancerEmail">{{ contract.freelancerEmail }}</p>
+              </div>
+            </div>
+
+            <p class="card-description">{{ getShortDescription(contract.description) }}</p>
+
+            <div class="card-meta">
+              <div class="meta-item"><span class="meta-icon">📅</span><span>{{ contract.endDate | date:'MMM d, y' }}</span></div>
+              <div class="meta-item"><span class="meta-icon">💰</span><span class="amount">{{ contract.totalAmount | number:'1.0-0' }} {{ contract.currency }}</span></div>
+              <div class="meta-item"><span class="meta-icon">🎯</span><span>{{ contract.milestones?.length || 0 }} milestones</span></div>
+            </div>
+
+            <div class="progress-section">
+              <div class="progress-header"><span>Progress</span><span>{{ getProgress(contract) }}%</span></div>
+              <div class="progress-bar"><div class="progress-fill" [style.width]="getProgress(contract) + '%'"></div></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card-actions">
+              <button class="btn-action btn-view" (click)="openContractDetail(contract, $event)" title="View details">
+                👁️ View
+              </button>
+              <button class="btn-action btn-history"
+                      *ngIf="contract.status === 'DISPUTED'"
+                      (click)="openHistoryOnly(contract, $event)"
+                      title="View modification history">
+                ⏱ History
+              </button>
+              <button class="btn-action btn-edit"
+                      (click)="editContract(contract, $event)"
+                      [disabled]="contract.status !== 'DRAFT'"
+                      title="Edit contract">
+                ✏️ Edit
+              </button>
+              <button class="btn-action btn-delete" (click)="confirmDelete(contract, $event)" title="Delete contract">
+                🗑️ Delete
+              </button>
+            </div>
+
+            <!-- ══ Zone statut — visible selon statut ══ -->
+
+            <!-- CAS 0 : DRAFT → Submit for Signature -->
+            <div class="card-draft-zone" *ngIf="contract.status === 'DRAFT'">
+              <span class="draft-icon">📝</span>
+              <span>Contract ready to review —</span>
+              <button class="btn-submit-signature" (click)="submitContractForSignature(contract, $event)">
+                📤 Submit for Signature
+              </button>
+            </div>
+
+            <!-- CAS 1 : Freelancer signé, client pas encore signé -->
+            <div class="card-sign-zone"
+                 *ngIf="contract.status === 'PENDING_SIGNATURE' && contract.freelancerSignedAt && !contract.clientSignedAt">
+              <div class="freelancer-signed-info">
+                <span class="signed-check">✓</span>
+                Freelancer signed on {{ formatDatetime(contract.freelancerSignedAt) }}
+              </div>
+              <button class="btn-sign-client-card" (click)="openSignClientConfirm(contract, $event)">
+                ✍️ Sign now as Client
+              </button>
+            </div>
+
+            <!-- CAS 2 : En attente de la signature du freelancer -->
+            <div class="card-awaiting-freelancer"
+                 *ngIf="contract.status === 'PENDING_SIGNATURE' && !contract.freelancerSignedAt">
+              <span class="awaiting-icon">⏳</span>
+              <span>Awaiting freelancer signature…</span>
+            </div>
+
+            <!-- CAS 3 : Contrat actif avec PDF -->
+            <div class="card-active-zone" *ngIf="contract.status === 'ACTIVE' && contract.pdfUrl">
+              <a [href]="contract.pdfUrl" target="_blank" class="btn-download-pdf">
+                📄 Download signed PDF
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="right-panel">
+        <div class="panel-card">
+          <h3 class="panel-title">Calendar</h3>
+          <div class="calendar">
+            <div class="calendar-nav">
+              <button class="cal-nav-btn" (click)="prevMonth()">&#8249;</button>
+              <span class="cal-month">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
+              <button class="cal-nav-btn" (click)="nextMonth()">&#8250;</button>
+            </div>
+            <div class="cal-days-header">
+              <span *ngFor="let d of dayNames">{{ d }}</span>
+            </div>
+            <div class="cal-days-grid">
+              <span *ngFor="let day of calendarDays" class="cal-day"
+                [class.empty]="!day"
+                [class.start-date]="isContractStartDate(day)"
+                [class.deadline-date]="isContractDeadline(day)"
+                [class.selected-day]="selectedDay === day && !isContractStartDate(day) && !isContractDeadline(day)"
+                (click)="day && (selectedDay = day!)" [title]="getDayTooltip(day)">{{ day }}</span>
+            </div>
+            <div class="cal-legend">
+              <div class="legend-item"><span class="legend-dot start"></span><span>Start date</span></div>
+              <div class="legend-item"><span class="legend-dot deadline"></span><span>Deadline</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-card" *ngIf="selectedContract">
+          <h3 class="panel-title">Contract Details</h3>
+          <div class="detail-header">
+            <div class="avatar small" [style.background]="getAvatarColor(selectedContract.freelancerId)">
+              {{ getInitials(selectedContract.freelancerName || 'F') }}
+            </div>
+            <div>
+              <p class="detail-name">{{ selectedContract.freelancerName && !selectedContract.freelancerName.startsWith('Freelancer #') ? selectedContract.freelancerName : 'Freelancer' }}</p>
+              <p class="detail-sub">{{ selectedContract.title }}</p>
+            </div>
+          </div>
+          <div class="detail-rows">
+            <div class="detail-row"><span class="detail-label">Contract Value</span><span class="detail-value">{{ selectedContract.totalAmount | number:'1.0-0' }} {{ selectedContract.currency }}</span></div>
+            <div class="detail-row"><span class="detail-label">Start Date</span><span class="detail-value">{{ selectedContract.startDate | date:'MMM d, y' }}</span></div>
+            <div class="detail-row"><span class="detail-label">End Date</span><span class="detail-value">{{ selectedContract.endDate | date:'MMM d, y' }}</span></div>
+            <div class="detail-row"><span class="detail-label">Status</span><span class="status-badge" [ngClass]="getStatusClass(selectedContract.status)">{{ formatStatus(selectedContract.status) }}</span></div>
+          </div>
+        </div>
+
+        <div class="panel-card" *ngIf="selectedContract?.milestones?.length">
+          <h3 class="panel-title">Milestones</h3>
+          <div class="milestones-list">
+            <div class="milestone-item" *ngFor="let m of selectedContract!.milestones">
+              <div class="milestone-left">
+                <span class="milestone-icon" [ngClass]="getMilestoneClass(m.status)">{{ getMilestoneIcon(m.status) }}</span>
+                <div class="milestone-text">
+                  <div class="milestone-title">{{ m.title }}</div>
+                  <div class="milestone-deadline" *ngIf="m.deadline">
+                    {{ m.deadline | date:'MMM d, y' }}
+                  </div>
+                </div>
+              </div>
+              <span class="milestone-amount">{{ m.amount | number:'1.0-0' }} {{ selectedContract!.currency }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-card empty-panel" *ngIf="!selectedContract">
+          <div class="empty-panel-icon">📋</div>
+          <p>Select a contract to view details</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ CONTRACT DETAIL MODAL — Paper Document Style ═══ -->
+<div class="modal-overlay" *ngIf="showDetailModal" (click)="closeDetailModal()">
+  <div class="modal modal-contract-paper" (click)="$event.stopPropagation()">
+
+    <div class="modal-header contract-modal-toolbar">
+      <div class="modal-title-group">
+        <div class="avatar medium" [style.background]="getAvatarColor(detailContract?.freelancerId || 0)">
+          {{ getInitials(detailContract?.freelancerName || 'F') }}
+        </div>
+        <div>
+          <h2>{{ detailContract?.title }}</h2>
+          <p class="modal-subtitle">
+            {{ detailContract?.freelancerName &&
+               !detailContract?.freelancerName?.startsWith('Freelancer #')
+               ? detailContract?.freelancerName : 'Freelancer' }}
+            &nbsp;·&nbsp;
+            <span class="status-badge" [ngClass]="getStatusClass(detailContract?.status || '')">
+              {{ formatStatus(detailContract?.status || '') }}
+            </span>
+          </p>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeDetailModal()">✕</button>
+    </div>
+
+    <div class="modal-body contract-paper-body" *ngIf="detailContract">
+      <div class="contract-paper">
+
+        <div class="paper-watermark" *ngIf="!isHistoryOnly">CONTRACT</div>
+
+        <div class="paper-header-bar" *ngIf="!isHistoryOnly">
+          <div class="paper-logo-zone">
+            <div class="paper-logo-icon">⚖</div>
+            <div>
+              <div class="paper-logo-title">CONTRACT AGREEMENT</div>
+              <div class="paper-logo-sub">Professional Services</div>
+            </div>
+          </div>
+          <div class="paper-ref-zone">
+            <div class="paper-ref-item">
+              <span class="paper-ref-label">Contract ID</span>
+              <span class="paper-ref-value">#{{ detailContract.id || '—' }}</span>
+            </div>
+            <div class="paper-ref-item">
+              <span class="paper-ref-label">Issue Date</span>
+              <span class="paper-ref-value">{{ detailContract.startDate | date:'dd MMM yyyy' }}</span>
+            </div>
+            <div class="paper-ref-item">
+              <span class="paper-ref-label">Status</span>
+              <span class="status-badge" [ngClass]="getStatusClass(detailContract.status)">
+                {{ formatStatus(detailContract.status) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="paper-divider-gold" *ngIf="!isHistoryOnly"></div>
+
+        <div class="paper-parties" *ngIf="!isHistoryOnly">
+          <div class="paper-party client-party">
+            <div class="party-role-label">CLIENT</div>
+            <div class="party-name">Client</div>
+            <div class="party-meta">Project Owner</div>
+          </div>
+          <div class="paper-and-badge">AND</div>
+          <div class="paper-party freelancer-party">
+            <div class="party-role-label">FREELANCER</div>
+            <div class="party-name">
+              {{ detailContract.freelancerName &&
+                 !detailContract.freelancerName.startsWith('Freelancer #')
+                 ? detailContract.freelancerName : 'Freelancer' }}
+            </div>
+            <div class="party-meta" *ngIf="detailContract.freelancerEmail">
+              {{ detailContract.freelancerEmail }}
+            </div>
+          </div>
+        </div>
+
+        <div class="paper-divider" *ngIf="!isHistoryOnly"></div>
+
+        <div class="paper-project-title-row" *ngIf="!isHistoryOnly">
+          <div class="paper-section-eyebrow">SUBJECT OF CONTRACT</div>
+          <h2 class="paper-project-title">{{ detailContract.title }}</h2>
+        </div>
+
+        <div class="paper-terms-grid" *ngIf="!isHistoryOnly">
+          <div class="paper-term-cell">
+            <div class="term-icon"></div>
+            <div class="term-body">
+              <div class="term-label">Contract Value</div>
+              <div class="term-value">{{ detailContract.totalAmount | number:'1.0-0' }} {{ detailContract.currency }}</div>
+            </div>
+          </div>
+          <div class="paper-term-cell">
+            <div class="term-icon"></div>
+            <div class="term-body">
+              <div class="term-label">Start Date</div>
+              <div class="term-value">{{ detailContract.startDate | date:'MMMM d, y' }}</div>
+            </div>
+          </div>
+          <div class="paper-term-cell">
+            <div class="term-icon"></div>
+            <div class="term-body">
+              <div class="term-label">End Date</div>
+              <div class="term-value">{{ detailContract.endDate | date:'MMMM d, y' }}</div>
+            </div>
+          </div>
+          <div class="paper-term-cell">
+            <div class="term-icon"></div>
+            <div class="term-body">
+              <div class="term-label">Milestones</div>
+              <div class="term-value">{{ detailContract.milestones?.length || 0 }} phases</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="paper-section" *ngIf="detailContract.description && !isHistoryOnly">
+          <div class="paper-section-title">
+            <span class="section-number">§</span> PREAMBLE
+          </div>
+          <div class="paper-description-text">
+            {{ getContractPreamble(detailContract.description) }}
+          </div>
+        </div>
+
+        <div class="paper-section" *ngIf="detailContract.clauses?.length && !isHistoryOnly; else legacyClauses">
+          <div class="paper-section-title">
+            <span class="section-number">§</span> CONTRACTUAL CLAUSES
+          </div>
+          <div class="paper-clauses-list">
+            <div class="paper-clause" *ngFor="let cl of detailContract.clauses; let i = index">
+              <div class="clause-number">{{ i + 1 }}</div>
+              <div class="clause-text">{{ cl.article }} – {{ cl.title }} — {{ cl.text }}</div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #legacyClauses>
+          <div class="paper-section" *ngIf="detailContract.description && !isHistoryOnly">
+            <div class="paper-section-title">
+              <span class="section-number">§</span> CONTRACTUAL CLAUSES
+            </div>
+            <div class="paper-clauses-list">
+              <div class="paper-clause"
+                   *ngFor="let clause of getContractClauses(detailContract.description); let i = index">
+                <div class="clause-number">{{ i + 1 }}</div>
+                <div class="clause-text">{{ clause }}</div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="paper-section" *ngIf="detailHistory.length">
+          <div class="paper-section-title">
+            <span class="section-number">§</span> MODIFICATION HISTORY
+          </div>
+          <div class="paper-history-list">
+            <div class="paper-history-item" *ngFor="let h of detailHistory | slice:0:5">
+              <div class="history-main">{{ h.aiSummary || h.newValue || h.oldValue || h.action }}</div>
+              <div class="history-meta">
+                {{ h.performedAt | date:'dd/MM/yyyy HH:mm' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions d'acceptation / refus visibles aussi en mode History-only -->
+          <div class="disputed-actions" *ngIf="detailContract.status === 'DISPUTED'">
+            <button
+              class="btn-accept-mods"
+              (click)="acceptFreelancerModifications(detailContract, $event)"
+              title="Accepter les modifications">
+              ✅
+            </button>
+            <button
+              class="btn-reject-mods"
+              (click)="rejectFreelancerModifications(detailContract, $event)"
+              title="Refuser et fermer le contrat">
+              ❌
+            </button>
+          </div>
+        </div>
+
+        <div class="paper-section" *ngIf="detailContract.milestones?.length && !isHistoryOnly">
+          <div class="paper-section-title">
+            <span class="section-number">§</span> DELIVERY SCHEDULE &amp; MILESTONES
+          </div>
+
+          <div class="paper-progress-row">
+            <div class="paper-progress-label">Overall Completion</div>
+            <div class="paper-progress-track">
+              <div class="paper-progress-fill" [style.width]="getProgress(detailContract) + '%'"></div>
+            </div>
+            <div class="paper-progress-pct">{{ getProgress(detailContract) }}%</div>
+          </div>
+
+          <table class="paper-milestones-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Phase</th>
+                <th>Deliverables</th>
+                <th>Deadline</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let m of detailContract.milestones; let i = index"
+                  [class.row-done]="m.status === 'PAID' || m.status === 'APPROVED'"
+                  [class.row-active]="m.status === 'IN_PROGRESS' || m.status === 'SUBMITTED'">
+                <td class="ms-num-cell">{{ i + 1 }}</td>
+                <td class="ms-title-cell">{{ m.title }}</td>
+                <td class="ms-desc-cell">{{ m.description || '—' }}</td>
+                <td class="ms-date-cell">
+                  <span *ngIf="m.deadline" class="deadline-chip"
+                        [class.deadline-last]="i === (detailContract.milestones?.length || 0) - 1">
+                    {{ m.deadline | date:'MMM d, y' }}
+                  </span>
+                  <span *ngIf="!m.deadline">—</span>
+                </td>
+                <td class="ms-amount-cell">
+                  {{ m.amount | number:'1.0-0' }} {{ detailContract.currency }}
+                </td>
+                <td class="ms-status-cell">
+                  <span class="status-badge" [ngClass]="getMilestoneStatusClass(m.status)">
+                    {{ getMilestoneStatusLabel(m.status) }}
+                  </span>
+                  <!-- Bouton de paiement fictif visible pour toute milestone non payée
+                       tant que le contrat est ACTIF (Open) -->
+                  <button
+                    class="btn-pay-milestone"
+                    *ngIf="detailContract.status === 'ACTIVE' && m.status !== 'PAID'"
+                    (click)="payMilestone(m, detailContract, $event)">
+                    💳 Pay
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="table-total-row">
+                <td colspan="4" class="total-label">TOTAL CONTRACT VALUE</td>
+                <td class="total-amount">
+                  {{ detailContract.totalAmount | number:'1.0-0' }} {{ detailContract.currency }}
+                </td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Signature Block -->
+        <div class="paper-signature-block" *ngIf="!isHistoryOnly">
+          <div class="sig-col">
+            <div class="sig-label">CLIENT SIGNATURE</div>
+            <div class="sig-line" *ngIf="!detailContract.clientSignedAt"></div>
+            <div class="sig-checkmark" *ngIf="detailContract.clientSignedAt">✓ SIGNED</div>
+            <div class="sig-name">Client</div>
+            <div class="sig-date">Date: {{ detailContract.clientSignedAt ? (detailContract.clientSignedAt | date:'MMM d, y HH:mm') : '______________' }}</div>
+          </div>
+          <div class="sig-col">
+            <div class="sig-label">FREELANCER SIGNATURE</div>
+            <div class="sig-line" *ngIf="!detailContract.freelancerSignedAt"></div>
+            <div class="sig-checkmark" *ngIf="detailContract.freelancerSignedAt">✓ SIGNED</div>
+            <div class="sig-name">
+              {{ detailContract.freelancerName &&
+                 !detailContract.freelancerName.startsWith('Freelancer #')
+                 ? detailContract.freelancerName : 'Freelancer' }}
+            </div>
+            <div class="sig-date">Date: {{ detailContract.freelancerSignedAt ? (detailContract.freelancerSignedAt | date:'MMM d, y HH:mm') : '______________' }}</div>
+          </div>
+        </div>
+
+        <!-- Actions zone dans le modal détail -->
+        <div class="paper-sign-action-zone" *ngIf="!isHistoryOnly">
+
+          <!-- DRAFT → bouton Submit for Signature dans le modal -->
+          <button
+            *ngIf="detailContract.status === 'DRAFT'"
+            (click)="submitContractForSignature(detailContract, $event)"
+            class="btn-submit-client">
+            📤 Submit for Signature
+          </button>
+
+          <!-- PENDING_SIGNATURE + freelancer signé + client pas encore signé -->
+          <button
+            *ngIf="detailContract.status === 'PENDING_SIGNATURE' && detailContract.freelancerSignedAt && !detailContract.clientSignedAt"
+            (click)="openSignClientConfirm(detailContract, $event)"
+            class="btn-sign-client">
+            ✍️ Signer le contrat
+          </button>
+
+          <!-- DISPUTED → le client doit décider : accepter ou refuser les modifications -->
+          <div class="disputed-actions" *ngIf="detailContract.status === 'DISPUTED'">
+            <button
+              class="btn-accept-mods"
+              (click)="acceptFreelancerModifications(detailContract, $event)">
+              ✅ Accepter les modifications
+            </button>
+            <button
+              class="btn-reject-mods"
+              (click)="rejectFreelancerModifications(detailContract, $event)">
+              ❌ Refuser et fermer le contrat
+            </button>
+          </div>
+
+          <!-- Contrat actif avec PDF -->
+          <div *ngIf="detailContract.status === 'ACTIVE' && detailContract.pdfUrl" class="contract-active-badge">
+            ✅ Contrat ACTIF —
+            <a [href]="detailContract.pdfUrl" target="_blank">Télécharger le PDF</a>
+          </div>
+
+          <!-- Progression signatures -->
+          <div *ngIf="detailContract.status === 'PENDING_SIGNATURE'" class="signature-progress">
+            <span [class.signed]="detailContract.freelancerSignedAt">
+              ✍️ Freelancer {{ detailContract.freelancerSignedAt ? '(signé)' : '(en attente)' }}
+            </span>
+            <span class="arrow">→</span>
+            <span [class.signed]="detailContract.clientSignedAt">
+              🏢 Client {{ detailContract.clientSignedAt ? '(signé)' : '(en attente)' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="paper-footer-strip" *ngIf="!isHistoryOnly">
+          <span>Contract #{{ detailContract.id || '—' }}</span>
+          <span>·</span>
+          <span>{{ detailContract.title }}</span>
+          <span>·</span>
+          <span>{{ detailContract.totalAmount | number:'1.0-0' }} {{ detailContract.currency }}</span>
+          <span>·</span>
+          <span>Valid until {{ detailContract.endDate | date:'MMMM d, y' }}</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODAL SIGNATURE ÉLECTRONIQUE CLIENT  (draw → confirm → done)
+     ══════════════════════════════════════════════════════════════ -->
+<div class="esign-overlay" *ngIf="showSignClientConfirm" (click)="closeSignClientConfirm()">
+  <div class="esign-modal" (click)="$event.stopPropagation()">
+
+    <div class="esign-header">
+      <div class="esign-header-left">
+        <div class="esign-header-icon">✍️</div>
+        <div>
+          <h2 class="esign-title">Electronic Signature</h2>
+          <p class="esign-subtitle">{{ contractToSignAsClient?.title }}</p>
+        </div>
+      </div>
+      <button class="esign-close" (click)="closeSignClientConfirm()" [disabled]="isSigningAsClient">✕</button>
+    </div>
+
+    <div class="esign-steps" *ngIf="esignStep !== 'done'">
+      <div class="esign-step" [class.active]="esignStep === 'draw'" [class.completed]="esignStep === 'confirm'">
+        <div class="esign-step-dot">
+          <span *ngIf="esignStep === 'draw'">1</span>
+          <svg *ngIf="esignStep !== 'draw'" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <span>Draw signature</span>
+      </div>
+      <div class="esign-step-line" [class.active]="esignStep === 'confirm'"></div>
+      <div class="esign-step" [class.active]="esignStep === 'confirm'">
+        <div class="esign-step-dot">2</div>
+        <span>Confirm &amp; activate</span>
+      </div>
+    </div>
+
+    <!-- STEP 1 : DESSINER -->
+    <div class="esign-body" *ngIf="esignStep === 'draw'">
+      <div class="esign-sign-progress">
+        <div class="esign-party signed">
+          <div class="esign-party-avatar">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <span class="esign-party-role">Freelancer</span>
+            <span class="esign-party-status">Signed ✓</span>
+          </div>
+        </div>
+        <div class="esign-party-connector active"></div>
+        <div class="esign-party">
+          <div class="esign-party-avatar pending">2</div>
+          <div>
+            <span class="esign-party-role">Client (you)</span>
+            <span class="esign-party-status">Pending…</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="esign-instruction">Draw your signature in the box below using your mouse or finger.</p>
+
+      <div class="esign-canvas-wrapper">
+        <canvas id="clientSignCanvas" class="esign-canvas"
+          (mousedown)="esignMouseDown($event)"
+          (mousemove)="esignMouseMove($event)"
+          (mouseup)="esignMouseUp()"
+          (mouseleave)="esignMouseLeave()"
+          (touchstart)="esignTouchStart($event)"
+          (touchmove)="esignTouchMove($event)"
+          (touchend)="esignTouchEnd()">
+        </canvas>
+        <div class="esign-canvas-hint" *ngIf="!esignHasDrawn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+            <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+          <span>Sign here</span>
+        </div>
+      </div>
+
+      <div class="esign-canvas-actions">
+        <button class="esign-btn-clear" (click)="esignClear()" [disabled]="!esignHasDrawn">🗑 Clear</button>
+      </div>
+
+      <div class="esign-info-box">
+        <span>ℹ️</span>
+        <span>Once you confirm, the contract will be activated and both parties will receive the signed PDF by email.</span>
+      </div>
+    </div>
+
+    <!-- STEP 2 : CONFIRMER -->
+    <div class="esign-body" *ngIf="esignStep === 'confirm'">
+      <div class="esign-alert-error" *ngIf="signClientError">
+        <span>❌</span><span>{{ signClientError }}</span>
+      </div>
+
+      <div class="esign-recap">
+        <div class="esign-recap-row">
+          <span class="esign-recap-label">Contract</span>
+          <span class="esign-recap-value">{{ contractToSignAsClient?.title }}</span>
+        </div>
+        <div class="esign-recap-row">
+          <span class="esign-recap-label">Amount</span>
+          <span class="esign-recap-value esign-recap-amount">
+            {{ contractToSignAsClient?.totalAmount | number }} {{ contractToSignAsClient?.currency }}
+          </span>
+        </div>
+        <div class="esign-recap-row">
+          <span class="esign-recap-label">Milestones</span>
+          <span class="esign-recap-value">{{ contractToSignAsClient?.milestones?.length || 0 }} milestones</span>
+        </div>
+        <div class="esign-recap-row">
+          <span class="esign-recap-label">Freelancer signed</span>
+          <span class="esign-recap-value" style="color:#16a34a;">
+            ✓ {{ formatDatetime(contractToSignAsClient?.freelancerSignedAt) }}
+          </span>
+        </div>
+      </div>
+
+      <div class="esign-preview-label">Your signature preview</div>
+      <div class="esign-preview-box">
+        <canvas id="clientSignPreview" class="esign-preview-canvas" width="380" height="100"></canvas>
+      </div>
+
+      <div class="esign-legal">
+        <span>⚖️</span>
+        <span>
+          By clicking <strong>"Confirm & Activate"</strong>, you legally bind yourself to this contract.
+          It will be activated immediately and both parties will receive the signed PDF by email.
+        </span>
+      </div>
+
+      <div class="esign-loading" *ngIf="isSigningAsClient">
+        <div class="esign-spinner"></div>
+        <p>Activating contract and sending emails…</p>
+      </div>
+    </div>
+
+    <!-- STEP 3 : SUCCÈS -->
+    <div class="esign-body esign-body-success" *ngIf="esignStep === 'done'">
+      <div class="esign-success-icon">🎉</div>
+      <h3 class="esign-success-title">Contract activated!</h3>
+      <p class="esign-success-msg">{{ signClientSuccess }}</p>
+      <div class="esign-success-next">
+        <div class="esign-next-step">
+          <span class="esign-next-icon">📧</span>
+          <div>
+            <strong>PDF sent by email</strong><br>
+            <span>Both parties received the signed contract by email.</span>
+          </div>
+        </div>
+        <div class="esign-next-step">
+          <span class="esign-next-icon">✅</span>
+          <div>
+            <strong>Contract is now ACTIVE</strong><br>
+            <span>Work can officially begin. Track milestones from your dashboard.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="esign-footer">
+      <ng-container *ngIf="esignStep === 'draw'">
+        <button class="esign-btn-secondary" (click)="closeSignClientConfirm()">Cancel</button>
+        <button class="esign-btn-primary" (click)="esignGoToConfirm()" [disabled]="!esignHasDrawn">
+          Next → Review
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="esignStep === 'confirm'">
+        <button class="esign-btn-secondary" (click)="esignBackToDraw()" [disabled]="isSigningAsClient">← Back</button>
+        <button class="esign-btn-primary" (click)="confirmSignAsClient()" [disabled]="isSigningAsClient">
+          <span *ngIf="!isSigningAsClient">✅ Confirm &amp; Activate</span>
+          <span *ngIf="isSigningAsClient" class="esign-btn-loading">
+            <span class="esign-small-spinner"></span> Activating…
+          </span>
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="esignStep === 'done'">
+        <button class="esign-btn-primary esign-btn-full" (click)="closeSignClientConfirm()">Close</button>
+      </ng-container>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══ EDIT MODAL ═══ -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal modal-wide" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <h2>✏️ Edit Contract</h2>
+        <p class="modal-subtitle" *ngIf="datesContextLabel" style="margin-top:4px;">
+          📅 {{ datesContextLabel }}
+        </p>
+      </div>
+      <button class="modal-close" (click)="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="dates-info-banner" *ngIf="minStartDate">
+        <span>📌</span>
+        <span>
+          Date de début disponible à partir du <strong>{{ minStartDate | date:'dd MMM yyyy' }}</strong>.
+          Les dates de fin et deadlines milestones doivent rester dans la fenêtre du contrat.
+        </span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>Contract Title <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="contractForm.title" placeholder="Contract title" />
+        </div>
+
+        <div class="form-group full-width">
+          <label>Description</label>
+          <textarea [(ngModel)]="contractForm.description" rows="3" placeholder="Description"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Total Amount <span class="required">*</span></label>
+          <input type="number" [(ngModel)]="contractForm.totalAmount" placeholder="0.00" step="0.01" min="0.01" />
+        </div>
+        <div class="form-group">
+          <label>Currency</label>
+          <select [(ngModel)]="contractForm.currency">
+            <option value="TND">TND</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Start Date <span class="required">*</span></label>
+          <input type="date" [(ngModel)]="contractForm.startDate"
+                 [min]="minStartDate"
+                 (change)="onStartDateChange()" />
+          <span class="field-hint">≥ {{ minStartDate | date:'dd/MM/yyyy' }}</span>
+        </div>
+
+        <div class="form-group">
+          <label>End Date <span class="required">*</span></label>
+          <input type="date" [(ngModel)]="contractForm.endDate"
+                 [min]="minEndDate"
+                 (change)="onEndDateChange()" />
+          <span class="field-hint">Doit être après la date de début</span>
+        </div>
+
+        <div class="form-group">
+          <label>Global Deadline <span class="optional">(optionnelle)</span></label>
+          <input type="date" [(ngModel)]="contractForm.deadline" [min]="minDeadline" />
+          <span class="field-hint" *ngIf="minDeadline">Doit être après {{ minDeadline | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+
+      <!-- MILESTONES SECTION -->
+      <div class="milestones-section">
+        <div class="milestones-header">
+          <h4>🎯 Milestones</h4>
+          <button type="button" class="btn-add-milestone" (click)="addMilestone()">+ Add Milestone</button>
+        </div>
+
+        <div class="milestone-date-range-hint" *ngIf="contractForm.startDate && contractForm.endDate">
+          📌 Les deadlines de milestones doivent être comprises entre
+          <strong>{{ contractForm.startDate | date:'dd/MM/yyyy' }}</strong> et
+          <strong>{{ contractForm.endDate | date:'dd/MM/yyyy' }}</strong>
+        </div>
+
+        <div class="milestone-form" *ngFor="let m of contractForm.milestones; let i = index">
+          <div class="milestone-form-header">
+            <span>Milestone {{ i + 1 }}</span>
+            <button type="button" class="btn-remove" (click)="removeMilestone(i)">✕ Remove</button>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>Title <span class="required">*</span></label>
+              <input type="text" [(ngModel)]="m.title" placeholder="Milestone title" />
+            </div>
+
+            <div class="form-group full-width">
+              <label>Description</label>
+              <textarea [(ngModel)]="m.description" rows="2" placeholder="Description (optionnel)"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Amount <span class="required">*</span></label>
+              <input type="number" [(ngModel)]="m.amount" placeholder="0.00" step="0.01" min="0.01" />
+            </div>
+
+            <div class="form-group">
+              <label>Deadline <span class="required">*</span></label>
+              <input type="date" [(ngModel)]="m.deadline"
+                     [min]="milestoneMinDate"
+                     [max]="milestoneMaxDate"
+                     [class.input-error]="m.deadline && !isMilestoneDeadlineValid(m.deadline)" />
+              <span class="field-error" *ngIf="m.deadline && !isMilestoneDeadlineValid(m.deadline)">
+                ⚠️ {{ getMilestoneDeadlineError(m.deadline) }}
+              </span>
+              <span class="field-hint" *ngIf="!m.deadline">Entre start et end date du contrat</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="milestone-warning" *ngIf="contractForm.milestones.length > 0">
+          <span>Total milestones :</span>
+          <strong [class.success-text]="getMilestonesTotal() === contractForm.totalAmount"
+                  [class.warning-text]="getMilestonesTotal() !== contractForm.totalAmount">
+            {{ getMilestonesTotal() | number:'1.0-2' }} {{ contractForm.currency }}
+          </strong>
+          <span>/</span>
+          <strong>{{ contractForm.totalAmount | number:'1.0-2' }} {{ contractForm.currency }}</strong>
+          <span class="success-text" *ngIf="getMilestonesTotal() === contractForm.totalAmount">✅ Équilibré</span>
+          <span class="warning-text" *ngIf="getMilestonesTotal() !== contractForm.totalAmount">⚠️ Différence : {{ (contractForm.totalAmount || 0) - getMilestonesTotal() | number:'1.0-2' }}</span>
+        </div>
+      </div>
+
+      <div class="error-msg" *ngIf="errorMessage">⚠️ {{ errorMessage }}</div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+      <button class="btn-primary" (click)="submitForm()" [disabled]="isSubmitting">
+        <span *ngIf="isSubmitting" class="spinner-sm"></span>
+        {{ isSubmitting ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" *ngIf="showDeleteModal" (click)="showDeleteModal = false">
+  <div class="modal modal-sm" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Delete Contract</h2>
+      <button class="modal-close" (click)="showDeleteModal = false">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="delete-confirm">
+        <div class="delete-icon">🗑️</div>
+        <p>Are you sure you want to delete <strong>{{ contractToDelete?.title }}</strong>?</p>
+        <p class="delete-warning">This action cannot be undone.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="showDeleteModal = false">Cancel</button>
+      <button class="btn-danger" (click)="deleteContract()" [disabled]="isSubmitting">
+        <span *ngIf="isSubmitting" class="spinner-sm"></span>
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast -->
+<div class="toast" *ngIf="toastMessage"
+     [class.toast-success]="toastType === 'success'"
+     [class.toast-error]="toastType === 'error'">
+  {{ toastMessage }}
+</div>
+
+
+<!-- ═══ SIGNATURE MODAL (DocuSign eSignature) ═══ -->
+<app-signature-modal
+  *ngIf="contractForSignature"
+  [contractId]="contractForSignature.id || 0"
+  [contractTitle]="contractForSignature.title"
+  [freelancerEmail]="contractForSignature.freelancerEmail || ''"
+  [freelancerName]="contractForSignature.freelancerName || ''"
+  [isOpen]="showSignatureModal"
+  (close)="closeSignatureModal()"
+  (signatureCompleted)="onSignatureCompleted()">
+</app-signature-modal>

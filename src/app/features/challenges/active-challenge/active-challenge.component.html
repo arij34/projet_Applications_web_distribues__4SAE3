@@ -1,0 +1,46 @@
+<app-header></app-header>
+<div class="min-h-screen bg-[#EBF4FF] pt-28">
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Filter Bar -->
+    <app-filter-bar
+      (searchChange)="onSearchChange($event)"
+      (difficultyChange)="onDifficultyChange($event)"
+      (technologyChange)="onTechnologyChange($event)"
+      (durationChange)="onDurationChange($event)"
+      (statusChange)="onStatusChange($event)"
+    ></app-filter-bar>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-16">
+      <div class="w-10 h-10 border-2 border-[#1E3A8A] border-t-transparent rounded-full animate-spin mb-4"></div>
+      <p class="text-[#6B7280]">Loading challenges...</p>
+    </div>
+
+    <!-- Challenge List -->
+    <div *ngIf="!isLoading" class="flex flex-col gap-4">
+      <app-challenge-cards
+        *ngFor="let challenge of filteredChallenges"
+        [challengeId]="challenge.participationStatus === 'SUBMITTED' ? challenge.participationId : challenge.id"
+        [title]="challenge.title"
+        [description]="challenge.description"
+        [difficulty]="challenge.difficulty"
+        [tags]="challenge.tags"
+        [participants]="challenge.participants"
+        [startDate]="challenge.startDate || ''"
+        [endDate]="challenge.endDate || ''"
+        [duration]="challenge.estimatedTime"
+        [points]="challenge.points || 0"
+        [imageUrl]="challenge.imageUrl"
+        [buttonLabel]="challenge.participationStatus === 'SUBMITTED' ? 'View Results' : 'Continue'"
+        [navigateTo]="challenge.participationStatus === 'SUBMITTED' ? '/challenges/analysis' : '/challenges/progress'"
+      ></app-challenge-cards>
+    </div>
+
+    <!-- No Results -->
+    <div *ngIf="!isLoading && filteredChallenges.length === 0" class="text-center py-16">
+      <p class="text-[#6B7280] text-lg">
+        No challenges found. Try adjusting your filters.
+      </p>
+    </div>
+  </div>
+</div>

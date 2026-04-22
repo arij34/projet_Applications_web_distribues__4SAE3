@@ -1,0 +1,77 @@
+<div class="card">
+  <div class="card-head">
+    <span class="card-label">Anti-cheating settings</span>
+  </div>
+
+  <div class="card-body">
+    @for (row of rows; track row.key; let last = $last) {
+      <div class="ac-row" [class.last]="last">
+        <div class="ac-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path [attr.d]="row.icon"/>
+          </svg>
+        </div>
+        <div class="ac-info">
+          <div class="ac-label">{{ row.label }}</div>
+          <div class="ac-desc">{{ row.description }}</div>
+        </div>
+        <button
+          class="toggle"
+          [class.on]="local()[row.key]"
+          (click)="toggle(row.key)"
+          [attr.aria-pressed]="local()[row.key]"
+          [attr.aria-label]="row.label"
+        ></button>
+      </div>
+    }
+
+    <div class="advanced-grid">
+      <div class="advanced-field">
+        <label class="advanced-label">Suspicious Score Threshold</label>
+        <input
+          class="advanced-input"
+          type="number"
+          min="1"
+          step="0.5"
+          [value]="local().suspiciousScoreThreshold"
+          (input)="onThresholdChanged($any($event.target).value)"
+        />
+      </div>
+
+      <div class="advanced-field">
+        <label class="advanced-label">Strictness Level</label>
+        <select
+          class="advanced-select"
+          [value]="local().strictnessLevel"
+          (change)="onStrictnessChanged($any($event.target).value)"
+        >
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="advanced-field cooldown-field">
+      <label class="advanced-label">Minutes Between Attempts</label>
+      <input
+        class="advanced-input"
+        type="number"
+        min="0"
+        [value]="local().minutesBetweenAttempts"
+        (input)="onMinutesChanged($any($event.target).value)"
+      />
+    </div>
+
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="onSave()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8">
+          <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Save settings
+      </button>
+    </div>
+  </div>
+</div>

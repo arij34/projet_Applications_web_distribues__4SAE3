@@ -1,0 +1,41 @@
+<div class="space-y-6">
+  <!-- Charts Row -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Popular Challenge Categories -->
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <h3 class="text-lg font-medium mb-4">Popular Challenge Categories</h3>
+      <div class="h-[300px]">
+        <canvas
+          *ngIf="categoryData"
+          baseChart
+          [data]="categoryData"
+          [options]="categoryOptions"
+          [type]="'bar'">
+        </canvas>
+        <div *ngIf="!categoryData" class="h-full flex items-center justify-center bg-gray-50 rounded-lg">
+          <p class="text-gray-500 text-sm">Loading chart...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technology Popularity -->
+    <app-technology-chart></app-technology-chart>
+
+    <!-- Completion Challenges - Full Width -->
+    <div class="bg-white rounded-xl border border-gray-200 p-6 lg:col-span-2">
+      <h3 class="text-lg font-medium mb-4">Completion Challenges</h3>
+      <div class="h-[300px]">
+        <canvas
+          *ngIf="completionTrendsData"
+          baseChart
+          [data]="completionTrendsData"
+          [options]="completionTrendsOptions"
+          [type]="'bar'">
+        </canvas>
+        <div *ngIf="!completionTrendsData" class="h-full flex items-center justify-center bg-gray-50 rounded-lg">
+          <p class="text-gray-500 text-sm">Loading chart...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

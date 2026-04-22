@@ -1,0 +1,226 @@
+<div class="result-page">
+
+  @if (isLoading()) {
+    <div class="breakdown-card">
+      <h2 class="section-title">Loading Result</h2>
+      <p class="result-sub">Preparing your recorded exam result...</p>
+    </div>
+  }
+
+  @if (loadError()) {
+    <div class="breakdown-card">
+      <h2 class="section-title">Result Notice</h2>
+      <p class="result-sub">{{ loadError() }}</p>
+    </div>
+  }
+
+  @if (!isLoading() && results().length > 0) {
+  <!-- Header -->
+  <div class="result-header" [class.header-pass]="passed()" [class.header-fail]="!passed()">
+    <a class="back-link" [routerLink]="['/exams']">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Back to Assessments
+    </a>
+
+    <div class="header-content">
+      <div class="header-left">
+        <p class="header-eyebrow">{{ examTitle }}</p>
+        <h1 class="result-verdict">
+          {{ passed() ? '🎉 Congratulations!' : '📋 Exam Completed' }}
+        </h1>
+        <p class="result-sub">
+          {{ passed()
+            ? 'You passed this assessment. Your result has been recorded on your profile.'
+            : 'You did not meet the passing threshold this time. Review your answers and try again.'
+          }}
+        </p>
+        <div class="verdict-badge" [class.badge-pass]="passed()" [class.badge-fail]="!passed()">
+          {{ passed() ? '✓ PASSED' : '✗ FAILED' }}
+        </div>
+      </div>
+
+      <!-- Score Ring -->
+      <div class="score-ring-container">
+        <svg class="score-ring" viewBox="0 0 120 120" width="120" height="120">
+          <circle class="ring-track" cx="60" cy="60" r="52" />
+          <circle
+            class="ring-fill"
+            [class.ring-pass]="passed()"
+            [class.ring-fail]="!passed()"
+            cx="60" cy="60" r="52"
+            [style.stroke-dasharray]="'327'"
+            [style.stroke-dashoffset]="327 - (327 * percentScore() / 100)"
+          />
+        </svg>
+        <div class="ring-label">
+          <span class="ring-pct" [class.pct-pass]="passed()" [class.pct-fail]="!passed()">{{ percentScore() }}%</span>
+          <span class="ring-sub">Score</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Strip -->
+  <div class="stats-strip">
+    <div class="stat-block">
+      <span class="stat-val">{{ earnedTotal() }}<span class="stat-denom">/{{ maxTotal() }}</span></span>
+      <span class="stat-label">Points Earned</span>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="stat-block">
+      <span class="stat-val success">{{ correctCount() }}</span>
+      <span class="stat-label">Correct</span>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="stat-block">
+      <span class="stat-val danger">{{ wrongCount() }}</span>
+      <span class="stat-label">Wrong</span>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="stat-block">
+      <span class="stat-val partial">{{ partialCount() }}</span>
+      <span class="stat-label">Partial</span>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="stat-block">
+      <span class="stat-val muted">{{ skippedCount() }}</span>
+      <span class="stat-label">Skipped</span>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="stat-block">
+      <span class="stat-val neutral">{{ timeTaken }}</span>
+      <span class="stat-label">Time Taken</span>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="stat-block">
+      <span class="stat-val neutral">{{ passingScore }}%</span>
+      <span class="stat-label">Passing Threshold</span>
+    </div>
+  </div>
+
+  <!-- Score Bar Breakdown -->
+  <div class="breakdown-card">
+    <h2 class="section-title">Score Breakdown</h2>
+    <div class="score-bar-track">
+      <div
+        class="score-bar-correct"
+        [style.width.%]="(correctCount() / results().length) * 100"
+      ></div>
+      <div
+        class="score-bar-partial"
+        [style.width.%]="(partialCount() / results().length) * 100"
+      ></div>
+      <div
+        class="score-bar-wrong"
+        [style.width.%]="(wrongCount() / results().length) * 100"
+      ></div>
+      <div
+        class="score-bar-skipped"
+        [style.width.%]="(skippedCount() / results().length) * 100"
+      ></div>
+    </div>
+    <div class="bar-legend">
+      <span class="bl-item bl-correct">Correct ({{ correctCount() }})</span>
+      <span class="bl-item bl-partial">Partial ({{ partialCount() }})</span>
+      <span class="bl-item bl-wrong">Wrong ({{ wrongCount() }})</span>
+      <span class="bl-item bl-skipped">Skipped ({{ skippedCount() }})</span>
+    </div>
+    <div class="passing-indicator">
+      <span class="pi-label">Passing threshold: {{ passingScore }}%</span>
+      <div class="pi-bar">
+        <div class="pi-fill" [style.width.%]="percentScore()" [class.pi-pass]="passed()" [class.pi-fail]="!passed()"></div>
+        <div class="pi-marker" [style.left.%]="passingScore"></div>
+      </div>
+      <div class="pi-labels">
+        <span>0%</span>
+        <span [style.margin-left.%]="passingScore - 4">{{ passingScore }}% min</span>
+        <span>100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question Review Accordion -->
+  <div class="review-section">
+    <button class="review-toggle" (click)="toggleReview()">
+      <span>Question-by-Question Review</span>
+      <svg
+        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        [style.transform]="expandedReview() ? 'rotate(180deg)' : 'rotate(0)'"
+        style="transition: transform 0.2s"
+      >
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+
+    @if (expandedReview()) {
+      <div class="review-list">
+        @for (q of results(); track q.id) {
+          <div class="review-item" [ngClass]="'item-' + q.status">
+            <button class="review-item-header" (click)="toggleQuestion(q.id)">
+              <div class="rih-left">
+                <span class="q-num-badge" [ngClass]="'badge-' + q.status">{{ q.number }}</span>
+                <span class="rih-text">{{ q.text }}</span>
+              </div>
+              <div class="rih-right">
+                <span class="q-diff-chip" [ngClass]="difficultyClass(q.difficulty)">{{ q.difficulty | titlecase }}</span>
+                <span class="q-pts-chip" [ngClass]="'pts-' + q.status">
+                  +{{ q.earnedPoints }}/{{ q.points }}
+                </span>
+                <span class="status-chip" [ngClass]="'chip-' + q.status">{{ statusLabel(q.status) }}</span>
+                <svg
+                  width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  [style.transform]="expandedQuestion() === q.id ? 'rotate(180deg)' : 'rotate(0)'"
+                  style="transition: transform 0.2s; color: #9aa0b0; flex-shrink: 0"
+                >
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </div>
+            </button>
+
+            @if (expandedQuestion() === q.id) {
+              <div class="review-item-body">
+                @if (q.yourAnswer) {
+                  <div class="answer-row your-answer" [ngClass]="'your-' + q.status">
+                    <span class="answer-row-label">Your answer</span>
+                    <span class="answer-row-val">{{ q.yourAnswer }}</span>
+                  </div>
+                } @else {
+                  <div class="answer-row your-answer your-skipped">
+                    <span class="answer-row-label">Your answer</span>
+                    <span class="answer-row-val muted">No answer provided</span>
+                  </div>
+                }
+                @if (q.correctAnswer && q.status !== 'correct' && q.status !== 'partial') {
+                  <div class="answer-row correct-answer">
+                    <span class="answer-row-label">Correct answer</span>
+                    <span class="answer-row-val">{{ q.correctAnswer }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+  }
+
+  <!-- Action Footer -->
+  <div class="result-actions">
+    <a class="btn-back" [routerLink]="['/exams']">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Back to Assessments
+    </a>
+    <a *ngIf="!passed()" class="btn-retry" [routerLink]="['/exams', examId]">
+      Try Again
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+      </svg>
+    </a>
+  </div>
+
+</div>

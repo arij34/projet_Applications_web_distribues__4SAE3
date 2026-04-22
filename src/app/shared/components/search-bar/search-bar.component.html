@@ -1,0 +1,50 @@
+<div class="search-bar-wrapper">
+
+  <!-- Barre de recherche -->
+  <div class="search-input-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <circle cx="11" cy="11" r="8"/>
+      <path stroke-linecap="round" stroke-width="2" d="M21 21l-4.35-4.35"/>
+    </svg>
+
+    <input
+      type="text"
+      class="search-input"
+      [placeholder]="placeholder"
+      [value]="currentQuery"
+      (input)="onQueryChange($event)"
+      autocomplete="off">
+
+    <!-- Bouton reset -->
+    <button *ngIf="currentQuery"
+            class="search-clear"
+            (click)="onReset()"
+            title="Clear">
+      ×
+    </button>
+  </div>
+
+  <!-- Filtres dynamiques -->
+  <div class="search-filters" *ngIf="filters && filters.length > 0">
+    <select
+      *ngFor="let filter of filters"
+      class="filter-select"
+      (change)="onFilterChange(filter.field, $event)">
+      <option value="">{{ filter.label }} (All)</option>
+      <option *ngFor="let opt of filter.options" [value]="opt">
+        {{ opt }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Compteur résultats -->
+  <div class="search-count" *ngIf="totalCount !== undefined">
+    <span *ngIf="currentQuery || hasActiveFilter">
+      {{ resultCount }} result(s) found
+    </span>
+    <span *ngIf="!currentQuery && !hasActiveFilter">
+      {{ totalCount }} total
+    </span>
+  </div>
+
+</div>

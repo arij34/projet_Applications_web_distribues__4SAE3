@@ -1,0 +1,81 @@
+<div class="sub-page">
+<div class="sub-shell">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Subscription</h2>
+      <p class="page-subtitle">Manage your current plan and billing.</p>
+    </div>
+    <button class="btn-upgrade" type="button" (click)="goToVipPayment()">Upgrade to VIP</button>
+  </div>
+
+  <div class="loading-row" *ngIf="loading"><span class="spin-ring"></span> Loading...</div>
+  <div class="alert-error" *ngIf="error">{{ error }}</div>
+
+  <div class="user-card" *ngIf="me">
+    <div class="user-avatar">{{ me.firstName[0] }}{{ me.lastName[0] }}</div>
+    <div class="user-info"><div class="user-name">{{ me.firstName }} {{ me.lastName }}</div></div>
+    <div class="user-plan" [class.vip]="subscription?.type === 'VIP'">{{ subscription?.type || 'FREE' }}</div>
+  </div>
+
+  <div class="discount-card" *ngIf="me">
+    <div class="discount-header">
+      <div>
+        <div class="discount-title">Reduction VIP</div>
+        <div class="discount-sub">Pay 5 VIP subscriptions and get -50% on the next one.</div>
+      </div>
+      <div class="discount-count" [class.done]="discountEligible">{{ discountProgress }}/5</div>
+    </div>
+    <div class="discount-loading" *ngIf="discountLoading"><span class="spin-ring"></span> Loading...</div>
+    <div class="discount-error" *ngIf="!discountLoading && discountError">{{ discountError }}</div>
+    <div *ngIf="!discountLoading && !discountError" class="discount-body">
+      <div class="discount-bar"><div class="discount-bar-fill" [style.width.%]="(discountProgress / 5) * 100"></div></div>
+      <div class="discount-hint" *ngIf="!discountEligible">
+        Remaining <strong>{{ discountRemaining }}</strong> VIP payment(s) for the discount.
+      </div>
+      <div class="discount-congrats" *ngIf="discountEligible">
+        <div class="congrats-title">Congratulations!</div>
+        <div class="congrats-text">You won <strong>-50%</strong> discount on the next VIP payment.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card" *ngIf="subscription">
+    <div class="plan-hero" [class.vip-hero]="subscription.type === 'VIP'">
+      <div class="plan-hero-content">
+        <div class="plan-badge" [class.vip-badge]="subscription.type === 'VIP'">{{ subscription.type }}</div>
+        <div class="plan-name">Current Plan</div>
+      </div>
+      <div class="plan-curve"></div>
+    </div>
+
+    <div class="dates-row">
+      <div class="date-item">
+        <div class="date-label">Start date</div>
+        <div class="date-value">{{ subscription.startDate | date:'MMM d, yyyy' }}</div>
+      </div>
+      <div class="date-sep">→</div>
+      <div class="date-item">
+        <div class="date-label">End date</div>
+        <div class="date-value" [class.no-end]="!subscription.endDate">
+          {{ subscription.endDate ? (subscription.endDate | date:'MMM d, yyyy') : 'No expiry' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">Update plan type</div>
+    <div class="form-row">
+      <div class="field">
+        <label>Plan type</label>
+        <select class="field-select" [(ngModel)]="type">
+          <option value="FREE">FREE</option>
+          <option value="VIP">VIP</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" (click)="updateType()" [disabled]="loading">
+        <span *ngIf="loading" class="spin-ring-sm"></span>
+        {{ loading ? 'Saving...' : 'Update Plan' }}
+      </button>
+    </div>
+  </div>
+</div>
+</div>

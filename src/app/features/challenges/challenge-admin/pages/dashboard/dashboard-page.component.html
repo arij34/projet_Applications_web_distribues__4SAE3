@@ -1,0 +1,39 @@
+<div class="flex h-screen bg-gray-50">
+  <app-backoffice-sidebar
+    [activeTab]="'Challenge'"
+    [isOpen]="isSidebarOpen"
+    [isMobile]="isMobile"
+    (tabChange)="onTabChange($event)"
+    (toggleSidebar)="onToggleSidebar()">
+  </app-backoffice-sidebar>
+
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <app-backoffice-header (menuClick)="onToggleSidebar()"></app-backoffice-header>
+
+    <main class="flex-1 overflow-y-auto">
+      <div class="max-w-[1600px] mx-auto px-6 py-8 space-y-8">
+        <section>
+          <app-quick-action-cards
+            (createChallenge)="onCreateChallenge()"
+            (aiGenerate)="onAIGenerate()">
+          </app-quick-action-cards>
+        </section>
+
+        <section>
+          <app-participant-analytics></app-participant-analytics>
+        </section>
+
+        <section>
+          <app-deadline-analytics></app-deadline-analytics>
+        </section>
+
+        <section>
+          <app-challenges-preview
+            [challenges]="challenges"
+            (viewAll)="onViewAllChallenges()">
+          </app-challenges-preview>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>

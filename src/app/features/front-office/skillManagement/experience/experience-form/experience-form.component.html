@@ -1,0 +1,158 @@
+<div class="form-wrapper">
+
+  <div class="form-card">
+
+    <!-- HEADER -->
+    <div class="form-header">
+      <h3 class="form-title">
+        <i class="bi bi-briefcase-fill me-2"></i>
+        {{ isEditMode ? 'Edit Experience' : 'Add Experience' }}
+      </h3>
+    </div>
+
+    <!-- BODY -->
+    <div class="form-body">
+
+      <!-- Global Error -->
+      <div *ngIf="errorMessage" class="form-preview-box">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorMessage }}
+      </div>
+
+      <!-- Loader -->
+      <div *ngIf="loading" class="text-center py-4">
+        <div class="spinner-border text-primary"></div>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #f="ngForm" *ngIf="!loading">
+
+        <!-- ===================== -->
+        <!-- JOB TITLE -->
+        <!-- ===================== -->
+        <div class="form-group">
+          <label>Job Title *</label>
+
+          <input type="text"
+                 class="form-control"
+                 [(ngModel)]="item.title"
+                 name="title"
+                 required
+                 minlength="3"
+                 #title="ngModel"
+                 placeholder="Ex: Full Stack Developer">
+
+          <small *ngIf="title.invalid && title.touched">
+            Minimum 3 characters required
+          </small>
+        </div>
+
+        <!-- ===================== -->
+        <!-- COMPANY -->
+        <!-- ===================== -->
+        <div class="form-group">
+          <label>Company *</label>
+
+          <input type="text"
+                 class="form-control"
+                 [(ngModel)]="item.company"
+                 name="company"
+                 required
+                 minlength="2"
+                 #company="ngModel"
+                 placeholder="Ex: Google">
+
+          <small *ngIf="company.invalid && company.touched">
+            Minimum 2 characters required
+          </small>
+        </div>
+
+        <!-- ===================== -->
+        <!-- DESCRIPTION -->
+        <!-- ===================== -->
+        <div class="form-group">
+          <label>Description</label>
+
+          <textarea class="form-control"
+                    rows="3"
+                    [(ngModel)]="item.description"
+                    name="description"
+                    placeholder="Describe your responsibilities and achievements">
+          </textarea>
+        </div>
+
+        <!-- ===================== -->
+        <!-- DATES -->
+        <!-- ===================== -->
+        <div class="form-row">
+
+          <!-- Start Date -->
+          <div class="form-group">
+            <label>Start Date *</label>
+
+            <input type="date"
+                   class="form-control"
+                   [(ngModel)]="item.startDate"
+                   name="startDate"
+                   required
+                   #startDate="ngModel"
+                   (change)="validateDates()">
+
+            <small *ngIf="startDate.invalid && startDate.touched">
+              Start date is required
+            </small>
+          </div>
+
+          <!-- End Date -->
+          <div class="form-group">
+            <label>End Date</label>
+
+            <input type="date"
+                   class="form-control"
+                   [(ngModel)]="item.endDate"
+                   name="endDate"
+                   (change)="validateDates()">
+
+            <small *ngIf="dateError">
+              {{ dateError }}
+            </small>
+          </div>
+
+        </div>
+
+        <!-- ===================== -->
+        <!-- DURATION PREVIEW -->
+        <!-- ===================== -->
+        <div *ngIf="calculatedDuration > 0 && !dateError"
+             class="form-preview-box">
+
+          <i class="bi bi-clock-history me-1"></i>
+          {{ calculatedDuration }} year(s) of experience
+        </div>
+
+        <!-- ===================== -->
+        <!-- ACTION BUTTONS -->
+        <!-- ===================== -->
+        <div class="form-actions">
+
+          <button type="submit"
+                  [disabled]="f.invalid || dateError"
+                  class="btn-primary-modern">
+
+            <i class="bi bi-check-circle me-1"></i>
+            {{ isEditMode ? 'Update Experience' : 'Create Experience' }}
+          </button>
+
+          <a routerLink="/front/experience"
+             class="btn-secondary-modern">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Cancel
+          </a>
+
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>

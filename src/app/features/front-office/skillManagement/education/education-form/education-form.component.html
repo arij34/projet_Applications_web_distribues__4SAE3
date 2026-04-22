@@ -1,0 +1,70 @@
+<div class="form-wrapper">
+  <div class="form-card">
+
+    <div class="form-header">
+      <h2 class="form-title">
+        {{ isEditMode ? 'Edit Education' : 'Add Education' }}
+      </h2>
+    </div>
+
+    <div class="form-body">
+
+      <form (ngSubmit)="onSubmit()" #f="ngForm">
+
+        <div class="form-group">
+          <label>Degree *</label>
+          <select [(ngModel)]="item.degree"
+                  name="degree"
+                  required
+                  class="form-control">
+            <option value="">Select Degree</option>
+            <option *ngFor="let d of degrees" [value]="d">
+              {{ d.replace('_',' ') }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Field of Study *</label>
+          <input type="text"
+                 [(ngModel)]="item.fieldOfStudy"
+                 name="fieldOfStudy"
+                 required
+                 class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>Institution *</label>
+          <input type="text"
+                 [(ngModel)]="item.institution"
+                 name="institution"
+                 required
+                 class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>Graduation Year *</label>
+          <input type="number"
+                 [(ngModel)]="item.year"
+                 name="year"
+                 required
+                 class="form-control">
+        </div>
+
+        <div class="form-actions">
+          <a routerLink="/front/education"
+             class="btn-secondary-modern">
+            Cancel
+          </a>
+
+          <button type="submit"
+                  class="btn-primary-modern"
+                  [disabled]="f.invalid">
+            {{ isEditMode ? 'Update' : 'Create' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

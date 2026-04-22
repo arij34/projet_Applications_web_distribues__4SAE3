@@ -1,0 +1,399 @@
+<div class="create-exam-container">
+  <div class="page-header">
+    <div>
+      <h1>Create New Exam</h1>
+      <p class="subtitle">Set up a new exam with questions and security settings</p>
+    </div>
+    <button class="btn btn-ghost" (click)="goBack()">
+      <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Back to Exams
+    </button>
+  </div>
+
+  <!-- Progress Indicator -->
+  <div class="progress-indicator">
+    <div *ngFor="let step of steps; let i = index" class="step-wrapper">
+      <div class="step-content">
+        <div class="step-circle" [ngClass]="{
+          'step-completed': currentStep > step.id,
+          'step-active': currentStep === step.id,
+          'step-inactive': currentStep < step.id
+        }">
+          <svg *ngIf="currentStep > step.id" class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span *ngIf="currentStep <= step.id">{{ step.id }}</span>
+        </div>
+        <span class="step-label">{{ step.name }}</span>
+      </div>
+      <div *ngIf="i < steps.length - 1" class="step-connector" [ngClass]="{
+        'connector-active': currentStep > step.id
+      }"></div>
+    </div>
+  </div>
+
+  <!-- Step Content -->
+  <div class="content-card">
+    <div class="card-header">
+      <h2 class="card-title">{{ steps[currentStep - 1].name }}</h2>
+    </div>
+    <div class="card-content">
+      <div *ngIf="saveError" class="info-alert error-alert">
+        <p>{{ saveError }}</p>
+      </div>
+      <div *ngIf="saveSuccess" class="info-alert success-alert">
+        <p>{{ saveSuccess }}</p>
+      </div>
+      
+      <!-- Step 1: Basic Info -->
+      <div *ngIf="currentStep === 1" class="step-form">
+        <div class="form-group">
+          <label class="form-label">Exam Title</label>
+          <input 
+            type="text" 
+            class="form-input" 
+            placeholder="e.g., Mathematics Final Exam 2026"
+            [(ngModel)]="formData.title"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea 
+            class="form-textarea" 
+            rows="3"
+            placeholder="Provide a detailed description of the exam..."
+            [(ngModel)]="formData.description"
+          ></textarea>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Exam Type</label>
+            <select class="form-select" [(ngModel)]="formData.examType">
+              <option value="Exam">Exam</option>
+              <option value="Quiz">Quiz</option>
+              <option value="Practice">Practice Test</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration (minutes)</label>
+            <input 
+              type="number" 
+              class="form-input" 
+              [(ngModel)]="formData.duration"
+            />
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Max Attempts per User</label>
+            <input 
+              type="number" 
+              class="form-input" 
+              [(ngModel)]="formData.maxAttempts"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Passing Score (%)</label>
+            <input 
+              type="number" 
+              min="0"
+              max="100"
+              class="form-input" 
+              [(ngModel)]="formData.passingScore"
+            />
+          </div>
+        </div>
+        
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.showResult" />
+            <span>Show results immediately after submission</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.oneQuestionPerPage" />
+            <span>Display one question per page</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Step 2: Questions -->
+      <div *ngIf="currentStep === 2" class="step-form">
+        <div *ngIf="questions.length === 0" class="empty-state">
+          <p class="empty-message">No questions added yet</p>
+          <button class="btn btn-primary" (click)="addQuestion()">
+            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add First Question
+          </button>
+        </div>
+
+        <div *ngIf="questions.length > 0" class="questions-list">
+          <div *ngFor="let question of questions; let i = index" class="question-card">
+            <div class="question-header">
+              <div class="question-title-group">
+                <label class="form-label">Question {{ i + 1 }}</label>
+                <textarea 
+                  class="form-textarea" 
+                  rows="2"
+                  placeholder="Enter your question..."
+                  [(ngModel)]="question.text"
+                ></textarea>
+                <div class="form-group">
+                  <label class="form-label">Difficulty Level</label>
+                  <select class="form-select" [(ngModel)]="question.difficultyLevel">
+                    <option value="EASY">Easy</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HARD">Hard</option>
+                  </select>
+                </div>
+              </div>
+              <button class="delete-btn" (click)="removeQuestion(question.id)">
+                <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="answers-section">
+              <label class="form-label">Answers (click to mark as correct)</label>
+              <div *ngFor="let answer of question.answers; let j = index" class="answer-row">
+                <input 
+                  type="radio" 
+                  [name]="'question-' + question.id"
+                  [checked]="answer.isCorrect"
+                  (change)="toggleCorrectAnswer(question.id, answer.id)"
+                  class="radio-input"
+                />
+                <input 
+                  type="text" 
+                  class="answer-input"
+                  [ngClass]="{'answer-correct': answer.isCorrect}"
+                  [placeholder]="'Answer ' + (j + 1)"
+                  [value]="answer.text"
+                  (input)="updateAnswerText(question.id, answer.id, $any($event.target).value)"
+                />
+              </div>
+              <button class="btn btn-outline btn-sm" (click)="addAnswer(question.id)">
+                <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Answer
+              </button>
+            </div>
+          </div>
+
+          <button class="btn btn-outline" (click)="addQuestion()">
+            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add Another Question
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Anti-Cheating Settings -->
+      <div *ngIf="currentStep === 3" class="step-form">
+        <div class="info-alert">
+          <p>Configure anti-cheating measures to maintain exam integrity</p>
+        </div>
+        
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.requireFullscreen" />
+            <span>Require fullscreen mode</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.preventTabSwitch" />
+            <span>Prevent tab switching</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.preventCopyPaste" />
+            <span>Prevent copy/paste</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.webcamRequired" />
+            <span>Require webcam monitoring</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.autoSubmitOnTabSwitch" />
+            <span>Auto-submit on tab switch</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.ipRestriction" />
+            <span>Enable IP address restriction</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.oneAttemptPerUser" />
+            <span>Allow only one attempt per user</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.deviceFingerprintRequired" />
+            <span>Require device fingerprint verification</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.enableSecureSessionToken" />
+            <span>Enable secure session token validation</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.enableDeviceFingerprinting" />
+            <span>Enable device fingerprinting checks</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.autoSubmitOnHighScore" />
+            <span>Auto-submit when suspicious score is too high</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.detectScreenRecording" />
+            <span>Detect possible screen recording</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.detectVpnProxy" />
+            <span>Detect VPN/Proxy usage</span>
+          </label>
+        </div>
+
+        <div class="form-group" *ngIf="formData.preventTabSwitch">
+          <label class="form-label">Tab Switch Limit</label>
+          <input 
+            type="number" 
+            class="form-input" 
+            [(ngModel)]="formData.tabSwitchLimit"
+          />
+          <p class="form-help">Number of allowed tab switches before flagging</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Suspicious Score Threshold</label>
+            <input
+              type="number"
+              class="form-input"
+              min="1"
+              step="0.5"
+              [(ngModel)]="formData.suspiciousScoreThreshold"
+            />
+            <p class="form-help">Threshold to trigger flagging/auto-submit actions</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Strictness Level</label>
+            <select class="form-select" [(ngModel)]="formData.strictnessLevel">
+              <option value="LOW">Low</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HIGH">High</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="formData.oneAttemptPerUser">
+          <label class="form-label">Minutes Between Attempts</label>
+          <input
+            type="number"
+            class="form-input"
+            min="0"
+            [(ngModel)]="formData.minutesBetweenAttempts"
+          />
+          <p class="form-help">Use 0 to disable cooldown period</p>
+        </div>
+      </div>
+
+      <!-- Step 4: Exam Settings -->
+      <div *ngIf="currentStep === 4" class="step-form">
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.randomizeQuestions" />
+            <span>Randomize question order</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.randomizeAnswers" />
+            <span>Randomize answer order</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.timedQuestions" />
+            <span>Enable time limit per question</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" [(ngModel)]="formData.practiceMode" />
+            <span>Enable practice mode</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Step 5: Review -->
+      <div *ngIf="currentStep === 5" class="step-form">
+        <div class="review-section">
+          <h3 class="review-heading">Review Your Exam</h3>
+          
+          <div class="review-item">
+            <span class="review-label">Title:</span>
+            <span class="review-value">{{ formData.title || '(Not set)' }}</span>
+          </div>
+          <div class="review-item">
+            <span class="review-label">Type:</span>
+            <span class="review-value">{{ formData.examType }}</span>
+          </div>
+          <div class="review-item">
+            <span class="review-label">Duration:</span>
+            <span class="review-value">{{ formData.duration }} minutes</span>
+          </div>
+          <div class="review-item">
+            <span class="review-label">Questions:</span>
+            <span class="review-value">{{ questions.length }} question(s)</span>
+          </div>
+          <div class="review-item">
+            <span class="review-label">Anti-Cheating:</span>
+            <span class="review-value">
+              {{ formData.requireFullscreen || formData.preventTabSwitch || formData.webcamRequired ? 'Enabled' : 'Disabled' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="card-footer">
+      <button 
+        class="btn btn-outline" 
+        (click)="previousStep()" 
+        [disabled]="currentStep === 1"
+      >
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Previous
+      </button>
+      
+      <button 
+        *ngIf="currentStep < steps.length"
+        class="btn btn-primary" 
+        (click)="nextStep()"
+      >
+        Next
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+      
+      <button 
+        *ngIf="currentStep === steps.length"
+        class="btn btn-primary" 
+        (click)="saveExam()"
+        [disabled]="isSaving"
+      >
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        {{ isSaving ? 'Creating...' : 'Create Exam' }}
+      </button>
+    </div>
+  </div>
+</div>

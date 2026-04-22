@@ -1,0 +1,133 @@
+<!-- src/app/modules/challenge-creation/components/challenge-wizard/challenge-wizard.component.html -->
+
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white border-b border-gray-200">
+      <div class="max-w-5xl mx-auto px-6 py-6">
+        <div class="flex items-center gap-3">
+          <div class="header-icon-box">
+            <svg class="header-star" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="heading-primary">Create New Challenge</h1>
+            <p class="header-subtitle">Admin Challenge Management Platform</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Stepper -->
+    <div class="bg-white border-b border-gray-200">
+      <div class="max-w-5xl mx-auto px-6">
+        <app-stepper [steps]="steps" [currentStep]="currentStep"></app-stepper>
+      </div>
+    </div>
+  
+    <!-- Main Content -->
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 min-h-[600px]">
+        <div [@slideAnimation]="currentStep">
+          <app-step1-challenge-info 
+            *ngIf="currentStep === 1"
+            [data]="formData.challengeInfo">
+          </app-step1-challenge-info>
+  
+          <app-step2-github 
+            *ngIf="currentStep === 2"
+            [data]="formData.githubData">
+          </app-step2-github>
+  
+          <app-step3-tasks 
+            *ngIf="currentStep === 3"
+            [data]="formData.tasks">
+          </app-step3-tasks>
+  
+          <app-step4-settings 
+            *ngIf="currentStep === 4"
+            [data]="formData.settings">
+          </app-step4-settings>
+  
+          <app-step5-review 
+            *ngIf="currentStep === 5"
+            [challengeInfo]="formData.challengeInfo"
+            [githubData]="formData.githubData"
+            [tasks]="formData.tasks"
+            [settings]="formData.settings"
+            (editStep)="goToStep($event)">
+          </app-step5-review>
+        </div>
+      </div>
+  
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="flex items-center justify-between mt-6">
+        <div class="flex items-center gap-3">
+          <button 
+            class="btn btn-outline"
+            [disabled]="submitting"
+            (click)="handleCancel()">
+            Cancel
+          </button>
+          <button 
+            *ngIf="currentStep > 1"
+            class="btn btn-outline"
+            (click)="handleBack()">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back
+          </button>
+        </div>
+  
+        <div class="flex items-center gap-3">
+          <button 
+            class="btn btn-outline"
+            [disabled]="submitting"
+            (click)="handleSaveDraft()">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+            </svg>
+            Save Draft
+          </button>
+  
+          <button 
+            *ngIf="currentStep < steps.length"
+            class="btn btn-primary"
+            [disabled]="!isStepValid() || submitting"
+            (click)="handleNext()">
+            Next Step
+            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+  
+          <button 
+            *ngIf="currentStep === steps.length"
+            class="btn btn-accent"
+            [disabled]="!isStepValid() || submitting"
+            (click)="handlePublish()">
+            <svg class="btn-send-icon w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+            Save Challenge
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Success Modal -->
+    <app-success-modal
+      [isOpen]="showSuccessModal"
+      [challengeTitle]="formData.challengeInfo.title"
+      [challengeId]="createdChallengeId"
+      (close)="handleCloseSuccess()"
+      (viewPage)="handleViewPage()">
+    </app-success-modal>
+  </div>
+  

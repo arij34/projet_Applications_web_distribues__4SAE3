@@ -1,0 +1,175 @@
+<!-- Signature Modal Overlay -->
+<div class="signature-modal-overlay" *ngIf="isOpen" (click)="closeModal()">
+  <div class="signature-modal" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="signature-modal-header">
+      <div class="header-content">
+        <h2>🔐 Signature Électronique</h2>
+        <p class="subtitle">{{ contractTitle }}</p>
+      </div>
+      <button class="close-btn" (click)="closeModal()">✕</button>
+    </div>
+
+    <!-- Body -->
+    <div class="signature-modal-body">
+      
+      <!-- Phase 1: Formulaire de signature -->
+      <div class="signature-phase" *ngIf="!signingUrl">
+        
+        <!-- Messages -->
+        <div class="alert alert-info" *ngIf="!success && !error">
+          <span>📋</span>
+          <span>Veuillez confirmer les informations du signataire</span>
+        </div>
+
+        <div class="alert alert-success" *ngIf="success">
+          <span>✅</span>
+          <span>{{ success }}</span>
+        </div>
+
+        <div class="alert alert-error" *ngIf="error">
+          <span>❌</span>
+          <span>{{ error }}</span>
+        </div>
+
+        <!-- Form -->
+        <div class="signature-form">
+          
+          <div class="form-group">
+            <label for="signerName">Nom du signataire *</label>
+            <input 
+              id="signerName"
+              type="text" 
+              [(ngModel)]="signerName"
+              placeholder="Ex: Jean Dupont"
+              [disabled]="isLoading"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="signerEmail">Email du signataire *</label>
+            <input 
+              id="signerEmail"
+              type="email" 
+              [(ngModel)]="signerEmail"
+              placeholder="jean.dupont@example.com"
+              [disabled]="isLoading"
+              class="form-input">
+          </div>
+
+          <div class="info-box">
+            <span class="info-icon">ℹ️</span>
+            <span>
+              Une URL de signature sera envoyée à cette adresse email.
+              Le signataire devra cliquer sur le lien pour signer électroniquement le contrat.
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Phase 2: En cours de signature -->
+      <div class="signature-phase" *ngIf="signingUrl && isPolling">
+        <div class="signing-in-progress">
+          <div class="spinner"></div>
+          <h3>Signature en cours...</h3>
+          <p>Le contrat est actuellement en cours de signature</p>
+          <p class="tentatives">Vérification du statut ({{ pollingCount }}/{{ maxPollingAttempts }})</p>
+        </div>
+      </div>
+
+      <!-- Phase 3: Signature complète -->
+      <div class="signature-phase" *ngIf="signingUrl && signatureStatus?.signatureStatus === 'SIGNED'">
+        <div class="success-box">
+          <div class="success-icon">✅</div>
+          <h3>Contrat signé avec succès !</h3>
+          <p>Le document a été signée par {{ signerName }}</p>
+          <p class="timestamp" *ngIf="signatureStatus?.signedAt">
+            Signé le: {{ signatureStatus?.signedAt | date:'dd MMMM yyyy à HH:mm' }}
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="signature-modal-footer">
+      
+      <!-- Boutons Phase 1 -->
+      <div class="button-group" *ngIf="!signingUrl">
+        <button class="btn btn-secondary" (click)="closeModal()" [disabled]="isLoading">
+          Annuler
+        </button>
+        <button class="btn btn-primary" (click)="submitForSignature()" [disabled]="isLoading">
+          <span *ngIf="!isLoading">📤 Envoyer pour signature</span>
+          <span *ngIf="isLoading">
+            <span class="small-spinner"></span> En cours...
+          </span>
+        </button>
+      </div>
+
+      <!-- Boutons Phase 2 & 3 -->
+      <div class="button-group" *ngIf="signingUrl">
+        
+        <!-- En attente de signature -->
+        <div class="signature-step" *ngIf="!signatureStatus || signatureStatus?.signatureStatus === 'PENDING'">
+          <p class="step-title">✉️ Lien de signature envoyé !</p>
+          <p class="step-description">
+            Un email a été envoyé à <strong>{{ signerEmail }}</strong>.<br>
+            Cliquez sur le lien dans l'email pour signer le contrat.
+          </p>
+          
+          <div class="signature-actions">
+            <button class="btn btn-primary" (click)="openSigningInNewTab()">
+              🔗 Ouvrir le lien de signature
+            </button>
+          </div>
+
+          <div class="status-check">
+            <p class="check-label">Chercher la signature...</p>
+            <button class="btn btn-outline" (click)="startPollingSignatureStatus()">
+              🔄 Vérifier le statut
+            </button>
+          </div>
+        </div>
+
+        <!-- Signature réussie -->
+        <div class="signature-step" *ngIf="signatureStatus?.signatureStatus === 'SIGNED'">
+          <p class="step-title">✅ Contrat signé avec succès !</p>
+          
+          <div class="signature-actions">
+            <button class="btn btn-primary" (click)="downloadSignedDocument()" [disabled]="isLoading">
+              <span *ngIf="!isLoading">⬇️ Télécharger le PDF signé</span>
+              <span *ngIf="isLoading">
+                <span class="small-spinner"></span> Téléchargement...
+              </span>
+            </button>
+            <button class="btn btn-secondary" (click)="closeModal()">
+              Fermer
+            </button>
+          </div>
+        </div>
+
+        <!-- Signature rejetée ou expirée -->
+        <div class="signature-step" *ngIf="signatureStatus?.signatureStatus === 'REJECTED' || signatureStatus?.signatureStatus === 'EXPIRED'">
+          <p class="step-title error">
+            {{ signatureStatus?.signatureStatus === 'REJECTED' ? '❌ Signature rejetée' : '⏰ Signature expirée' }}
+          </p>
+          
+          <div class="signature-actions">
+            <button class="btn btn-primary" (click)="submitForSignature()">
+              🔄 Renvoyer pour signature
+            </button>
+            <button class="btn btn-secondary" (click)="closeModal()">
+              Fermer
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

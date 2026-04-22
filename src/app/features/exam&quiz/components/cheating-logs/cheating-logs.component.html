@@ -1,0 +1,231 @@
+<div class="monitor-page">
+  <section class="monitor-header">
+    <div class="monitor-title-block">
+      <p class="kicker">Exam Integrity Command Center</p>
+      <h1>Live Proctoring Monitor</h1>
+      <p class="subtitle">
+        Observe active candidates, warning activity, and suspicious behaviors in real time.
+      </p>
+    </div>
+
+    <div class="monitor-controls">
+      <label for="examSelect" class="control-label">Exam</label>
+      <select
+        id="examSelect"
+        class="select"
+        [ngModel]="selectedExamId"
+        (ngModelChange)="selectExam($event)">
+        <option [ngValue]="null" disabled>Select an exam</option>
+        <option *ngFor="let exam of exams" [ngValue]="+exam.id">{{ exam.title }}</option>
+      </select>
+
+      <button class="btn btn-refresh" (click)="refreshNow()">Refresh</button>
+
+      <span class="stream-pill" [class.live]="streamStatus === 'live'" [class.polling]="streamStatus === 'polling'" [class.connecting]="streamStatus === 'connecting'">
+        <span class="dot"></span>
+        {{ streamStatus === 'live' ? 'Live stream' : streamStatus === 'polling' ? 'Polling fallback' : streamStatus === 'connecting' ? 'Connecting...' : 'Offline' }}
+      </span>
+    </div>
+  </section>
+
+  <p class="feedback" *ngIf="isLoading">Loading monitoring data...</p>
+  <p class="feedback error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <p class="feedback success" *ngIf="successMessage">{{ successMessage }}</p>
+
+  <section class="kpi-grid">
+    <article class="kpi-card">
+      <p class="kpi-label">Active candidates</p>
+      <p class="kpi-value">{{ totalCandidates }}</p>
+      <p class="kpi-note">Snapshot time: {{ formatDateTime(generatedAt) }}</p>
+    </article>
+
+    <article class="kpi-card danger">
+      <p class="kpi-label">High risk candidates</p>
+      <p class="kpi-value">{{ highRiskCount }}</p>
+      <p class="kpi-note">Suspicious score ≥ 8</p>
+    </article>
+
+    <article class="kpi-card warn">
+      <p class="kpi-label">Candidates warned</p>
+      <p class="kpi-value">{{ warningCount }}</p>
+      <p class="kpi-note">At least one warning on record</p>
+    </article>
+
+    <article class="kpi-card neutral">
+      <p class="kpi-label">Auto-submitted</p>
+      <p class="kpi-value">{{ autoSubmittedCount }}</p>
+      <p class="kpi-note">System ended attempt automatically</p>
+    </article>
+  </section>
+
+  <section class="filters-bar">
+    <div class="search-wrap">
+      <input
+        class="search"
+        type="text"
+        placeholder="Search by user, ID, status, attempt, event details"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onFilterChange()" />
+    </div>
+
+    <select class="select" [(ngModel)]="sourceFilter" (ngModelChange)="onFilterChange()">
+      <option value="all">All sources</option>
+      <option value="VIOLATION">Violation</option>
+      <option value="CHEATING_LOG">Cheating log</option>
+    </select>
+
+    <select class="select" [(ngModel)]="severityFilter" (ngModelChange)="onFilterChange()">
+      <option value="all">All severities</option>
+      <option value="CRITICAL">Critical</option>
+      <option value="HIGH">High</option>
+      <option value="MEDIUM">Medium</option>
+      <option value="LOW">Low</option>
+      <option value="INFO">Info</option>
+      <option value="WARNING">Warning</option>
+      <option value="UNKNOWN">Unknown</option>
+    </select>
+
+    <select class="select compact" [(ngModel)]="sinceMinutes" (ngModelChange)="refreshNow()">
+      <option [ngValue]="15">Last 15 min</option>
+      <option [ngValue]="30">Last 30 min</option>
+      <option [ngValue]="60">Last 60 min</option>
+      <option [ngValue]="180">Last 3 hours</option>
+    </select>
+
+    <select class="select compact" [(ngModel)]="eventLimit" (ngModelChange)="refreshNow()">
+      <option [ngValue]="25">25 events</option>
+      <option [ngValue]="50">50 events</option>
+      <option [ngValue]="100">100 events</option>
+    </select>
+  </section>
+
+  <section class="layout-grid">
+    <article class="panel panel-candidates">
+      <header class="panel-head">
+        <h2>Active Candidates</h2>
+        <p>{{ filteredCandidateRows.length }} rows</p>
+      </header>
+
+      <div class="table-scroll" *ngIf="filteredCandidateRows.length; else emptyCandidates">
+        <table class="candidate-table">
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Status</th>
+              <th>Risk</th>
+              <th>Progress</th>
+              <th>Warnings</th>
+              <th>Last Activity</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let candidate of filteredCandidateRows">
+              <td>
+                <div class="user-main">{{ getUserLabel(candidate.userId) }}</div>
+                <div class="user-sub" *ngIf="getUserEmail(candidate.userId)">{{ getUserEmail(candidate.userId) }}</div>
+                <div class="muted">Attempt #{{ candidate.attemptId }}</div>
+              </td>
+              <td>
+                <span class="status-label status-auto" *ngIf="candidate.autoSubmitted; else candidateStatus">Auto-submitted</span>
+                <ng-template #candidateStatus>
+                  <span class="status-label" [ngClass]="candidateStatusClass(candidate.attemptStatus)">
+                    {{ candidate.attemptStatus || 'UNKNOWN' }}
+                  </span>
+                </ng-template>
+                <div class="muted" *ngIf="candidate.startedAt">Started {{ formatRelative(candidate.startedAt) }}</div>
+              </td>
+              <td>
+                <span class="risk-value" [ngClass]="riskClass(candidate.suspiciousScore)">
+                  {{ candidate.suspiciousScore ?? 0 | number:'1.0-1' }}
+                </span>
+                <div class="muted">Suspicion score</div>
+              </td>
+              <td>
+                <div class="user-main">{{ candidate.answeredQuestions ?? 0 }} answered</div>
+                <div class="muted">Violations {{ candidate.violationCount ?? 0 }} • Logs {{ candidate.cheatingEventsCount ?? 0 }}</div>
+              </td>
+              <td>
+                <div class="user-main">{{ candidate.lastWarningType || '-' }}</div>
+                <div class="muted">{{ candidate.lastWarningAction || 'No action' }}</div>
+              </td>
+              <td>
+                <div class="user-main">{{ formatRelative(candidate.lastActivityTime) }}</div>
+                <div class="muted">{{ formatDateTime(candidate.lastActivityTime) }}</div>
+              </td>
+              <td>
+                <div class="action-block">
+                  <button
+                    class="action-link"
+                    type="button"
+                    (click)="blockCandidate(candidate)"
+                    [disabled]="isForceSubmitDisabled(candidate)">
+                    {{ isAttemptSubmitting(candidate.attemptId) ? 'Blocking...' : 'Block' }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #emptyCandidates>
+        <div class="empty-state">No active candidates for this exam right now.</div>
+      </ng-template>
+    </article>
+
+    <article class="panel panel-events">
+      <header class="panel-head">
+        <h2>Recent Events</h2>
+        <p>{{ filteredEvents.length }} events</p>
+      </header>
+
+      <div class="event-list" *ngIf="filteredEvents.length; else emptyEvents">
+        <div class="event-item" *ngFor="let event of filteredEvents">
+          <div class="event-top">
+            <span class="source-pill" [ngClass]="sourceClass(event.source)">{{ event.source }}</span>
+            <span class="severity-pill" [ngClass]="severityClass(event.severity)">{{ event.severity || 'UNKNOWN' }}</span>
+          </div>
+
+          <div class="event-title">{{ event.type }}</div>
+          <div class="event-meta">
+            <span>{{ getUserLabel(event.userId) }}</span>
+            <span *ngIf="getUserEmail(event.userId)">•</span>
+            <span *ngIf="getUserEmail(event.userId)">{{ getUserEmail(event.userId) }}</span>
+            <span>•</span>
+            <span>Attempt #{{ event.attemptId }}</span>
+          </div>
+
+          <div class="event-details" *ngIf="event.details">{{ event.details }}</div>
+
+          <div class="event-bottom">
+            <span class="muted">Action: {{ event.action || '-' }}</span>
+            <span class="muted">{{ formatDateTime(event.timestamp) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #emptyEvents>
+        <div class="empty-state">No events found for current filters.</div>
+      </ng-template>
+    </article>
+  </section>
+</div>
+
+@if (blockConfirmOpen && blockConfirmCandidate) {
+  <div class="admin-modal-overlay" (click)="cancelBlockConfirm()">
+    <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="block-confirm-title" (click)="$event.stopPropagation()">
+      <h3 id="block-confirm-title">Confirm Candidate Block</h3>
+      <p class="admin-modal-message">
+        You are going to remove this user and submit this exam attempt immediately.
+      </p>
+      <p class="admin-modal-note">
+        The candidate will be informed that access was blocked by the admin due to suspicious behaviours.
+      </p>
+      <div class="admin-modal-actions">
+        <button type="button" class="btn btn-modal-secondary" (click)="cancelBlockConfirm()">Cancel</button>
+        <button type="button" class="btn btn-modal-danger" (click)="confirmBlockCandidate()">Confirm Block</button>
+      </div>
+    </div>
+  </div>
+}

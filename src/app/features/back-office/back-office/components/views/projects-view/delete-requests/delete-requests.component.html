@@ -1,0 +1,193 @@
+<div class="dr-container">
+
+  <!-- HEADER -->
+  <div class="dr-header">
+    <div>
+      <h2 class="dr-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Delete Requests
+      </h2>
+      <p class="dr-subtitle">Review and manage client deletion requests</p>
+    </div>
+    <div class="dr-count" *ngIf="requests.length > 0">
+      {{ requests.length }} pending request{{ requests.length > 1 ? 's' : '' }}
+    </div>
+  </div>
+
+  <!-- SUCCESS MESSAGE -->
+  <div class="success-msg" *ngIf="successMessage">{{ successMessage }}</div>
+
+  <!-- ERROR -->
+  <div class="error-msg" *ngIf="errorMessage && !isLoading">{{ errorMessage }}</div>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading requests...</p>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-container" *ngIf="!isLoading && !errorMessage">
+
+    <!-- EMPTY -->
+    <div class="empty-state" *ngIf="requests.length === 0">
+      <div class="empty-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <h3>No pending requests</h3>
+      <p>All delete requests have been processed.</p>
+    </div>
+
+    <table class="dr-table" *ngIf="requests.length > 0">
+      <thead>
+        <tr>
+          <th>Project Title</th>
+          <th>Description</th>
+          <th>Client ID</th>
+          <th>Status</th>
+          <th>Deadline</th>
+          <th>Requested</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let project of requests" class="dr-row"
+            [style.opacity]="processedMap[project.id!] ? '0.6' : '1'"
+            [style.transition]="'opacity 0.4s ease'">
+
+          <td class="td-title">{{ project.title }}</td>
+          <td class="td-desc">{{ project.description }}</td>
+          <td class="td-client">Client {{ project.clientId }}</td>
+          <td>
+            <span class="badge" [ngClass]="statusConfig[project.status || 'OPEN'].cssClass">
+              {{ statusConfig[project.status || 'OPEN'].label }}
+            </span>
+          </td>
+          <td class="td-date">{{ formatDate(project.deadline) }}</td>
+          <td class="td-date">{{ formatDate(project.createdAt) }}</td>
+
+          <td class="td-actions">
+
+            <!-- RÉSULTAT : icône ✓ ou ✗ après traitement -->
+            <div *ngIf="processedMap[project.id!]" style="display:flex;justify-content:center;">
+              <!-- Approved -->
+              <div *ngIf="processedMap[project.id!] === 'approved'"
+                   style="width:36px;height:36px;border-radius:50%;background:#dcfce7;
+                          display:flex;align-items:center;justify-content:center;color:#16a34a;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+              <!-- Rejected -->
+              <div *ngIf="processedMap[project.id!] === 'rejected'"
+                   style="width:36px;height:36px;border-radius:50%;background:#fee2e2;
+                          display:flex;align-items:center;justify-content:center;color:#dc2626;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </div>
+            </div>
+
+      <div class="action-btns" *ngIf="!processedMap[project.id!]">
+  <!-- APPROVE -->
+  <button class="btn-approve" (click)="openConfirm(project, 'approve')"
+          title="Approve deletion"
+          style="width:40px;height:40px;border-radius:50%;background:#dcfce7;
+                 border:none;cursor:pointer;display:flex;align-items:center;
+                 justify-content:center;color:#16a34a;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </button>
+  <!-- REJECT -->
+  <button class="btn-reject" (click)="openConfirm(project, 'reject')"
+          title="Reject deletion"
+          style="width:40px;height:40px;border-radius:50%;background:#fee2e2;
+                 border:none;cursor:pointer;display:flex;align-items:center;
+                 justify-content:center;color:#dc2626;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+</div>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMATION -->
+<div *ngIf="showConfirmModal"
+     style="position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(0,0,0,0.5);display:flex;align-items:center;
+            justify-content:center;z-index:99999;"
+     (click)="closeConfirm()">
+  <div style="background:white;border-radius:20px;padding:2rem;max-width:420px;
+              width:90%;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,0.2);"
+       (click)="$event.stopPropagation()">
+
+    <!-- Icon -->
+    <div [style]="actionType === 'approve' ?
+      'width:64px;height:64px;background:#f0fdf4;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:#16a34a;' :
+      'width:64px;height:64px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:#dc2626;'">
+      <svg *ngIf="actionType === 'approve'" xmlns="http://www.w3.org/2000/svg"
+           width="28" height="28" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      <svg *ngIf="actionType === 'reject'" xmlns="http://www.w3.org/2000/svg"
+           width="28" height="28" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </div>
+
+    <h3 style="font-size:1.25rem;font-weight:700;color:#111827;margin:0 0 0.75rem 0;">
+      {{ actionType === 'approve' ? 'Approve Deletion' : 'Reject Request' }}
+    </h3>
+    <p style="color:#6b7280;font-size:0.9375rem;margin:0 0 1.5rem 0;line-height:1.6;">
+      <span *ngIf="actionType === 'approve'">
+        Are you sure you want to <strong>permanently delete</strong>
+        <strong style="color:#111827;"> {{ selectedProject?.title }}</strong> ?
+        This action cannot be undone.
+      </span>
+      <span *ngIf="actionType === 'reject'">
+        Are you sure you want to <strong>reject</strong> the deletion request for
+        <strong style="color:#111827;"> {{ selectedProject?.title }}</strong> ?
+        The project will remain active.
+      </span>
+    </p>
+
+    <div style="display:flex;gap:0.75rem;">
+      <button (click)="closeConfirm()" [disabled]="isProcessing"
+              style="flex:1;padding:0.75rem;background:white;border:2px solid #e5e7eb;
+                     border-radius:12px;font-weight:500;color:#374151;cursor:pointer;">
+        Cancel
+      </button>
+      <button (click)="confirmAction()" [disabled]="isProcessing"
+              [style]="actionType === 'approve' ?
+                'flex:1;padding:0.75rem;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:12px;font-weight:500;color:white;cursor:pointer;' :
+                'flex:1;padding:0.75rem;background:linear-gradient(135deg,#ef4444,#dc2626);border:none;border-radius:12px;font-weight:500;color:white;cursor:pointer;'">
+        {{ isProcessing ? 'Processing...' : (actionType === 'approve' ? 'Approve' : 'Reject') }}
+      </button>
+    </div>
+  </div>
+</div>

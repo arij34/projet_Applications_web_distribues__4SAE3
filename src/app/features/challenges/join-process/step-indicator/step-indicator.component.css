@@ -1,0 +1,56 @@
+.step-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.step-indicator__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.step-indicator__circle {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+}
+
+.step-indicator__circle--inactive {
+  background-color: #E5E7EB;
+  color: #6B7280;
+}
+
+.step-indicator__circle--active {
+  background-color: #1E3A8A;
+  color: white;
+}
+
+.step-indicator__circle--completed {
+  background-color: #16A34A;
+  color: white;
+}
+
+.step-indicator__text {
+  font-size: 0.875rem;
+  transition: color 0.3s;
+}
+
+.step-indicator__text--inactive {
+  color: #6B7280;
+}
+
+.step-indicator__text--active {
+  color: #1E3A8A;
+  font-weight: 500;
+}
+
+.step-indicator__text--completed {
+  color: #16A34A;
+}

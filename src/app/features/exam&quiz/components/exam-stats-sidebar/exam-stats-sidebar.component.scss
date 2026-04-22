@@ -1,0 +1,55 @@
+@use '../variables' as v;
+
+.card { @extend %card; }
+.card-accent { height: 3px; background: v.$accent; }
+.card-head { @extend %card-head; }
+.card-label { @extend %card-label; }
+.card-body { padding: 4px 20px 20px; }
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid v.$border;
+  &:last-of-type { border-bottom: none; }
+}
+
+.stat-key { font-size: 12px; color: v.$text-3; }
+.stat-num {
+  font-family: v.$font-mono;
+  font-size: 22px;
+  font-weight: 500;
+  color: v.$text-1;
+  line-height: 1;
+  &.sm { font-size: 17px; }
+}
+
+.diff-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid v.$border; }
+.diff-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: v.$text-3;
+  margin-bottom: 10px;
+}
+.diff-track { display: flex; height: 5px; border-radius: 3px; overflow: hidden; gap: 2px; }
+.seg {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  &-easy { background: v.$easy; }
+  &-medium { background: #d97706; }
+  &-hard { background: #dc2626; }
+}
+.diff-legend { display: flex; gap: 14px; margin-top: 10px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: v.$text-3; }
+.legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  &.dot-easy { background: v.$easy; }
+  &.dot-medium { background: #d97706; }
+  &.dot-hard { background: #dc2626; }
+}

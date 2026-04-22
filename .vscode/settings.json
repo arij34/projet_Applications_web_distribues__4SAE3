@@ -1,0 +1,19 @@
+{
+  // Ensure VS Code Java language server picks the correct Maven/JDK
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.import.maven.enabled": true,
+  "java.import.gradle.enabled": false,
+
+  // Prefer a stable JDK (17+) if installed.
+  // If you have JDK 17 installed, add its path here.
+  // Example:
+  "java.configuration.runtimes": [
+    { "name": "JavaSE-17", "path": "C:/Program Files/Java/jdk-17" }
+  ],
+
+  // Force VS Code to use Java 17 for the language server
+  "java.jdt.ls.java.home": "C:/Program Files/Java/jdk-17",
+
+  // Avoid noisy null-analysis errors
+  "java.compile.nullAnalysis.mode": "disabled"
+}

@@ -1,0 +1,147 @@
+<div class="bo-page">
+
+  <!-- Header -->
+  <div class="bo-header">
+    <div>
+      <h1 class="bo-title">Matching & Invitations</h1>
+      <p class="bo-subtitle">
+        Vue globale des scores de matching et des invitations envoyées.
+      </p>
+    </div>
+  </div>
+
+  <!-- Cartes de stats globales -->
+  <div class="bo-stats-row" *ngIf="stats">
+    <div class="bo-stat-card">
+      <div class="stat-label">Total Invitations</div>
+      <div class="stat-value">{{ stats.totalInvitations }}</div>
+      <div class="stat-sub">
+        Pending: {{ stats.pendingInvitations }},
+        Accepted: {{ stats.acceptedInvitations }},
+        Declined: {{ stats.declinedInvitations }},
+        Trash: {{ stats.trashInvitations }}
+      </div>
+    </div>
+
+    <div class="bo-stat-card">
+      <div class="stat-label">Total Matchings</div>
+      <div class="stat-value">{{ stats.totalMatchings }}</div>
+      <div class="stat-sub">
+        Avg score: {{ stats.avgFinalScore | number:'1.0-2' }}
+      </div>
+    </div>
+
+    <div class="bo-stat-card">
+      <div class="stat-label">Best Match</div>
+      <div class="stat-value">
+        {{ stats.maxFinalScore | number:'1.0-2' }}%
+      </div>
+      <div class="stat-sub">
+        Min: {{ stats.minFinalScore | number:'1.0-2' }}%
+      </div>
+    </div>
+  </div>
+
+  <!-- Sous-onglets -->
+  <div class="bo-subtabs">
+    <button
+      class="subtab-btn"
+      [class.active]="activeSubTab === 'matching'"
+      (click)="switchSubTab('matching')">
+      Matching Table
+    </button>
+    <button
+      class="subtab-btn"
+      [class.active]="activeSubTab === 'invitations'"
+      (click)="switchSubTab('invitations')">
+      Invitations Table
+    </button>
+  </div>
+
+  <!-- Loading / Erreur -->
+  <div *ngIf="isLoading" class="bo-loading">Chargement...</div>
+  <div *ngIf="errorMessage && !isLoading" class="bo-error">{{ errorMessage }}</div>
+
+  <!-- TABLE MATCHING -->
+  <div *ngIf="!isLoading && activeSubTab === 'matching'">
+
+    <div class="bo-section-header">
+      <h2>Matching Table</h2>
+      <span class="bo-count">{{ matchings.length }} lignes</span>
+    </div>
+
+    <div class="bo-table-wrapper" *ngIf="matchings.length > 0; else noMatching">
+      <table class="bo-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Project ID</th>
+          <th>Freelancer ID</th>
+          <th>Skills</th>
+          <th>Experience</th>
+          <th>Education</th>
+          <th>Availability</th>
+          <th>Final Score</th>
+          <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of matchings">
+          <td>{{ row.id }}</td>
+          <td>{{ row.projectId }}</td>
+          <td>{{ row.freelancerId }}</td>
+          <td>{{ row.scoreSkills | number:'1.0-2' }}</td>
+          <td>{{ row.scoreExperience | number:'1.0-2' }}</td>
+          <td>{{ row.scoreEducation | number:'1.0-2' }}</td>
+          <td>{{ row.scoreAvailability | number:'1.0-2' }}</td>
+          <td>{{ row.scoreFinal | number:'1.0-2' }}</td>
+          <td>{{ row.status }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noMatching>
+      <div class="bo-empty">Aucune ligne de matching trouvée.</div>
+    </ng-template>
+  </div>
+
+  <!-- TABLE INVITATIONS -->
+  <div *ngIf="!isLoading && activeSubTab === 'invitations'">
+
+    <div class="bo-section-header">
+      <h2>Invitations Table</h2>
+      <span class="bo-count">{{ invitations.length }} invitations</span>
+    </div>
+
+    <div class="bo-table-wrapper" *ngIf="invitations.length > 0; else noInvitations">
+      <table class="bo-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Project ID</th>
+          <th>Freelancer ID</th>
+          <th>Status</th>
+          <th>Invited At</th>
+          <th>Trashed At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let inv of invitations">
+          <td>{{ inv.id }}</td>
+          <td>{{ inv.projectId }}</td>
+          <td>{{ inv.freelancerId }}</td>
+          <td>{{ inv.status }}</td>
+          <td>{{ formatDate(inv.createdAt) }}</td>
+          <td>{{ inv.trashedAt ? formatDate(inv.trashedAt) : '-' }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noInvitations>
+      <div class="bo-empty">Aucune invitation trouvée.</div>
+    </ng-template>
+  </div>
+
+</div>

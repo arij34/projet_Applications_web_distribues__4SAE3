@@ -1,0 +1,192 @@
+<app-header></app-header>
+
+<div class="catalog-page">
+
+  <section class="command-board" aria-label="Assessment controls and analytics">
+    <div class="board-head">
+      <div>
+        <p class="board-kicker">Assessment Operations</p>
+        <h2 class="board-title">Exam Central</h2>
+      </div>
+      <div class="board-count">{{ filteredExams().length }} live results</div>
+    </div>
+
+    <div class="board-layout">
+      <div class="board-main-left">
+        <div class="board-controls">
+          <div class="board-search">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input
+              id="catalog-search"
+              type="text"
+              class="search-input"
+              placeholder="Search by title, technology, or assessment type"
+              [value]="searchTerm()"
+              (input)="searchTerm.set($any($event.target).value)"
+            />
+          </div>
+
+          <div class="board-sort">
+            <select id="catalog-sort" class="sort-select" [value]="sortBy()" (change)="sortBy.set($any($event.target).value)">
+              <optgroup label="Date">
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+              </optgroup>
+              <optgroup label="Duration">
+                <option value="duration_asc">Duration: Short → Long</option>
+                <option value="duration_desc">Duration: Long → Short</option>
+              </optgroup>
+              <optgroup label="Points">
+                <option value="points_asc">Points: Low → High</option>
+                <option value="points_desc">Points: High → Low</option>
+              </optgroup>
+              <optgroup label="Required Score">
+                <option value="reqScore_asc">Required Score: Low → High</option>
+                <option value="reqScore_desc">Required Score: High → Low</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <div class="board-tabs">
+          <button
+            *ngFor="let tab of tabs"
+            class="filter-tab"
+            [class.active]="activeFilter() === tab.key"
+            (click)="activeFilter.set(tab.key)"
+          >
+            {{ tab.label }}
+          </button>
+        </div>
+      </div>
+
+      <div class="board-metrics" aria-label="Assessment key performance indicators">
+        <div class="spectrum-head">
+          <div>
+            <span>Assessment Distribution</span>
+            <strong>Total {{ stats.total }}</strong>
+          </div>
+          <div class="user-points">
+            <p class="points-label">Your Points</p>
+            <strong class="points-value">{{ userExperiencePoints() }}</strong>
+          </div>
+        </div>
+
+        <div class="spectrum-track" role="img" aria-label="Distribution of available, passed, and other assessments">
+          <span class="seg seg-available" [style.width.%]="stats.total ? (stats.available / stats.total) * 100 : 0"></span>
+          <span class="seg seg-passed" [style.width.%]="stats.total ? (stats.passed / stats.total) * 100 : 0"></span>
+          <span
+            class="seg seg-other"
+            [style.width.%]="stats.total ? ((stats.total - stats.available - stats.passed) / stats.total) * 100 : 0"
+          ></span>
+        </div>
+
+        <div class="spectrum-legend">
+          <div class="legend-item">
+            <span class="legend-dot seg-available"></span>
+            <span class="legend-label">Available</span>
+            <span class="legend-value">{{ stats.available }}</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot seg-passed"></span>
+            <span class="legend-label">Passed</span>
+            <span class="legend-value">{{ stats.passed }}</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot seg-other"></span>
+            <span class="legend-label">Other</span>
+            <span class="legend-value">{{ stats.total - stats.available - stats.passed }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Exam Cards Grid -->
+  <div class="exam-grid" *ngIf="filteredExams().length > 0; else emptyState">
+    <div
+      class="exam-card"
+      *ngFor="let exam of filteredExams(); trackBy: trackById"
+      [class.card-closed]="exam.status === 'CLOSED'"
+    >
+      <div class="card-stripe" [ngClass]="'stripe-' + exam.type.toLowerCase()"></div>
+
+      <div class="card-body">
+        <div class="badges-row">
+          <span class="type-badge" [ngClass]="'type-' + exam.type.toLowerCase()">
+            {{ typeIcon(exam.type) }} {{ exam.type | titlecase }}
+          </span>
+          <span class="status-tag" [ngClass]="statusMeta(exam).cls">
+            <span class="dot"></span>
+            {{ statusMeta(exam).label }}
+          </span>
+          <span *ngIf="exam.myScore !== undefined" class="score-chip">
+            {{ exam.myScore }}%
+          </span>
+        </div>
+
+        <h3 class="card-title">{{ exam.title }}</h3>
+        <p class="card-desc">{{ descriptionPreview(exam.description) }}</p>
+
+        <div class="meta-chips">
+          <span class="chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            {{ exam.duration }} min
+          </span>
+          <span class="chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            </svg>
+            {{ exam.questionCount }} questions
+          </span>
+          <span class="chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Pass: {{ exam.passingScore }}%
+          </span>
+          <span class="chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            </svg>
+            {{ exam.totalMarks }} pts
+          </span>
+        </div>
+
+        <div class="deadline-row" *ngIf="exam.status === 'PUBLISHED'">
+          @if (daysLeft(exam.endDate) > 7) {
+            <span class="deadline normal">Closes {{ exam.endDate | date:'MMM d, yyyy' }}</span>
+          } @else if (daysLeft(exam.endDate) > 0) {
+            <span class="deadline urgent">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              {{ daysLeft(exam.endDate) }} day{{ daysLeft(exam.endDate) !== 1 ? 's' : '' }} left
+            </span>
+          } @else {
+            <span class="deadline closed-label">Closed</span>
+          }
+        </div>
+
+        <div class="card-footer">
+          <a class="more-details-link" [routerLink]="ctaRoute(exam)">{{ ctaLabel(exam) }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <h3>No assessments found</h3>
+      <p>Try adjusting your search term or filter selection.</p>
+      <button class="btn-soft" (click)="searchTerm.set(''); activeFilter.set('ALL')">Clear filters</button>
+    </div>
+  </ng-template>
+
+</div>

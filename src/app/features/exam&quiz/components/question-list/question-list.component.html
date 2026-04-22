@@ -1,0 +1,165 @@
+<div class="card">
+  <div class="card-head">
+    <span class="card-label">Questions & answers</span>
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input class="search-input" placeholder="Search questions..." (input)="onSearch($event)">
+      </div>
+      <select class="filter-sel" (change)="onFilterDiff($event)">
+        <option value="all">All difficulties</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+      <select class="filter-sel" (change)="onFilterType($event)">
+        <option value="all">All types</option>
+        <option value="single_choice">Single choice</option>
+        <option value="multiple_choice">Multi choice</option>
+        <option value="true_false">True / false</option>
+        <option value="short_answer">Short answer</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="q-list">
+      @for (q of filtered(); track q.id) {
+        <div class="q-row" (click)="openQuestionModal(q)">
+          <span class="q-num">Q{{ q.number }}</span>
+          <div class="diff-bar" [ngClass]="'diff-' + q.difficulty"></div>
+          <div class="q-content">
+            <div class="q-text">{{ q.text }}</div>
+            <div class="q-sub">
+              <span class="diff-tag" [ngClass]="'tag-' + q.difficulty">{{ q.difficulty | titlecase }}</span>
+              <span class="q-type">{{ typeLabel(q.type) }}</span>
+            </div>
+          </div>
+          <div class="q-pts">{{ q.points }} pts</div>
+          <div class="q-actions">
+            <button class="icon-btn" title="Edit" (click)="$event.stopPropagation(); openQuestionModal(q)">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M11 2l3 3-9 9H2v-3L11 2z"/>
+              </svg>
+            </button>
+            <button class="icon-btn" title="Duplicate" (click)="$event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="4" y="4" width="9" height="10" rx="1.5"/>
+                <path d="M7 4V2h3v2"/>
+              </svg>
+            </button>
+            <button class="icon-btn danger" title="Delete" (click)="$event.stopPropagation(); onDelete(q.id)">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 5h10M6 5V3h4v2M6 8v5M10 8v5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+      @if (filtered().length === 0) {
+        <div class="empty">No questions match your filters.</div>
+      }
+    </div>
+
+    <div class="card-footer">
+      <button class="btn btn-primary">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2">
+          <path d="M8 2v12M2 8h12"/>
+        </svg>
+        Add question
+      </button>
+    </div>
+  </div>
+</div>
+
+@if (isModalOpen) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <section class="question-modal" (click)="$event.stopPropagation()" aria-label="Question editor dialog">
+      <header class="modal-header">
+        <div>
+          <h3>Question Editor</h3>
+          <p>Review and update question content and answers</p>
+        </div>
+        <button class="icon-btn" title="Close" (click)="closeModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </header>
+
+      @if (modalError) {
+        <div class="modal-alert">{{ modalError }}</div>
+      }
+
+      <div class="modal-body">
+        <div class="field-block">
+          <label>Question</label>
+          <textarea rows="3" [(ngModel)]="editModel.text" placeholder="Enter question statement"></textarea>
+        </div>
+
+        <div class="field-grid">
+          <div class="field-block">
+            <label>Type</label>
+            <select [(ngModel)]="editModel.type">
+              <option value="single_choice">Single choice</option>
+              <option value="multiple_choice">Multiple choice</option>
+              <option value="true_false">True / false</option>
+              <option value="short_answer">Short answer</option>
+            </select>
+          </div>
+          <div class="field-block">
+            <label>Difficulty</label>
+            <select [(ngModel)]="editModel.difficulty">
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+          <div class="field-block">
+            <label>Points</label>
+            <input type="number" min="1" [(ngModel)]="editModel.points" />
+          </div>
+        </div>
+
+        <div class="answers-panel">
+          <div class="answers-title-row">
+            <h4>Answers</h4>
+            <button class="btn btn-soft" (click)="addAnswer()">Add answer</button>
+          </div>
+
+          @if (isLoadingAnswers) {
+            <div class="answers-empty">Loading answers...</div>
+          } @else {
+            <div class="answers-list">
+              @for (answer of editableAnswers; track $index) {
+                <div class="answer-item" [class.answer-correct]="answer.isCorrect">
+                  <button class="correct-toggle" (click)="markAsCorrect($index)" [attr.aria-pressed]="answer.isCorrect">
+                    <span></span>
+                  </button>
+                  <input type="text" [(ngModel)]="answer.text" placeholder="Answer text" />
+                  @if (answer.isCorrect) {
+                    <span class="correct-badge">Correct</span>
+                  }
+                  <button class="icon-btn danger" title="Remove answer" (click)="removeAnswer($index)">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M3 5h10M6 5V3h4v2M6 8v5M10 8v5"/>
+                    </svg>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <footer class="modal-footer">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-primary" [disabled]="isSaving" (click)="saveQuestionChanges()">
+          {{ isSaving ? 'Saving...' : 'Save changes' }}
+        </button>
+      </footer>
+    </section>
+  </div>
+}

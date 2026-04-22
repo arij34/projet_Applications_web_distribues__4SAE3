@@ -1,0 +1,84 @@
+<div class="bg-white rounded-[12px] shadow-sm p-6 mb-8">
+  <div class="flex flex-col gap-6">
+    <!-- Search Bar -->
+    <div class="w-full">
+      <div class="relative">
+        <svg
+          class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1E3A8A]"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </svg>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+          placeholder="Search by title, technology, or keyword..."
+          class="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#B3D1F0] focus:border-transparent"
+        />
+      </div>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="flex flex-wrap gap-4">
+      <!-- Technology -->
+      <div class="flex flex-col gap-2 min-w-[160px]">
+        <label class="text-xs font-medium text-[#6B7280]">Technology</label>
+        <select
+          [(ngModel)]="selectedTechnology"
+          (change)="onTechnologyChange()"
+          class="px-3 py-2 border border-gray-200 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#B3D1F0] focus:border-transparent bg-white"
+        >
+          <option value="">All Technologies</option>
+          <option *ngFor="let tech of technologies" [value]="tech">{{ tech }}</option>
+        </select>
+      </div>
+
+      <!-- Estimated Duration -->
+      <div class="flex flex-col gap-2 min-w-[160px]">
+        <label class="text-xs font-medium text-[#6B7280]">Estimated Duration</label>
+        <select
+          [(ngModel)]="selectedDuration"
+          (change)="onDurationChange()"
+          class="px-3 py-2 border border-gray-200 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#B3D1F0] focus:border-transparent bg-white"
+        >
+          <option value="">Any Duration</option>
+          <option *ngFor="let duration of durations" [value]="duration">{{ duration }}</option>
+        </select>
+      </div>
+
+      <!-- Status -->
+      <div class="flex flex-col gap-2 min-w-[160px]">
+        <label class="text-xs font-medium text-[#6B7280]">Status</label>
+        <select
+          [(ngModel)]="selectedStatus"
+          (change)="onStatusChange()"
+          class="px-3 py-2 border border-gray-200 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#B3D1F0] focus:border-transparent bg-white"
+        >
+          <option value="">All Status</option>
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+
+      <!-- Difficulty -->
+      <div class="flex flex-col gap-2 min-w-[200px]">
+        <label class="text-xs font-medium text-[#6B7280]">Difficulty</label>
+        <div class="flex flex-wrap gap-2">
+          <button
+            *ngFor="let difficulty of difficulties"
+            (click)="onDifficultyChange(difficulty)"
+            [class]="getDifficultyClasses(difficulty)"
+          >
+            {{ difficulty }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

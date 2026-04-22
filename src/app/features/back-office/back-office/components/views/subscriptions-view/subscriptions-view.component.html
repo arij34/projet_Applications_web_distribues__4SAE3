@@ -1,0 +1,192 @@
+<div class="s-card">
+  <div class="s-header">
+    <div>
+      <h2 class="s-title">Subscriptions</h2>
+      <p class="s-subtitle">Manage all platform subscriptions</p>
+    </div>
+    <div class="s-actions">
+      <div class="s-search-wrap">
+        <span class="s-search-icon">⌕</span>
+        <input
+          class="s-search"
+          type="text"
+          placeholder="Search by id, userId, type, status..."
+          [(ngModel)]="q"
+          [disabled]="loading" />
+      </div>
+      <button class="s-btn s-btn-refresh" (click)="load()" [disabled]="loading">
+        <span *ngIf="loading" class="s-spin"></span>
+        <span *ngIf="!loading">⟳</span>
+        {{ loading ? 'Loading...' : 'Refresh' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="s-alert s-alert-error" *ngIf="error">
+    <span>✕</span> {{ error }}
+  </div>
+
+  <div class="s-loading" *ngIf="loading">
+    <span class="s-spin s-spin-lg"></span> Loading subscriptions...
+  </div>
+
+  <div class="s-table-wrap" *ngIf="!loading">
+    <table class="s-table">
+      <thead>
+        <tr>
+          <th class="sortable" (click)="setSort('id')">#ID</th>
+          <th class="sortable" (click)="setSort('userId')">User ID</th>
+          <th class="sortable" (click)="setSort('type')">Plan</th>
+          <th class="sortable" (click)="setSort('status')">Status</th>
+          <th class="sortable" (click)="setSort('startDate')">Start</th>
+          <th class="sortable" (click)="setSort('endDate')">End</th>
+          <th class="col-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of filteredSubs">
+          <td><span class="s-mono s-id">#{{ s.id }}</span></td>
+          <td><span class="s-mono s-uid" [title]="s.userId">{{ s.userId }}</span></td>
+          <td><span [class]="typeBadgeClass(s.type)"><span *ngIf="s.type === 'VIP'">⭐</span> {{ s.type }}</span></td>
+          <td>
+            <span class="s-status-wrap">
+              <span class="s-dot"
+                    [class.s-dot-active]="s.status === 'ACTIVE'"
+                    [class.s-dot-expired]="s.status === 'EXPIRED'"></span>
+              <span [class]="statusBadgeClass(s.status)">{{ s.status }}</span>
+            </span>
+          </td>
+          <td><span class="s-date">{{ formatDate(s.startDate) }}</span></td>
+          <td><span class="s-date" [class.s-no-date]="!s.endDate">{{ formatDate(s.endDate ?? null) }}</span></td>
+          <td class="col-right">
+            <div class="s-row-actions">
+              <button class="s-btn s-btn-edit"  (click)="openEdit(s)"           [disabled]="loading">Edit</button>
+              <button class="s-btn s-btn-pay"   (click)="openPayments(s.userId)" [disabled]="loading">Payments</button>
+              <button class="s-btn s-btn-del"   (click)="onDelete(s.id)"         [disabled]="loading">Delete</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="filteredSubs.length === 0">
+          <td colspan="7">
+            <div class="s-empty">
+              <span class="s-empty-icon">📋</span>
+              No subscriptions found.
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="s-overlay" *ngIf="editOpen" (click)="closeEdit()">
+  <div class="s-modal" (click)="$event.stopPropagation()">
+    <div class="s-modal-header">
+      <div>
+        <span class="s-modal-title">Edit Subscription</span>
+        <div class="s-modal-meta">#{{ editSub?.id }} · user {{ editSub?.userId }}</div>
+      </div>
+      <button class="s-modal-close" (click)="closeEdit()">✕</button>
+    </div>
+
+    <div class="s-modal-body">
+      <div class="s-alert s-alert-error" *ngIf="editError" style="margin-bottom:14px;">
+        <span>✕</span> {{ editError }}
+      </div>
+      <div class="s-form-grid">
+        <div class="s-field">
+          <label class="s-label">Plan type</label>
+          <select class="s-input" [(ngModel)]="editType">
+            <option value="FREE">FREE</option>
+            <option value="VIP">VIP</option>
+          </select>
+        </div>
+        <div class="s-field">
+          <label class="s-label">Status</label>
+          <select class="s-input" [(ngModel)]="editStatus">
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="EXPIRED">EXPIRED</option>
+          </select>
+        </div>
+        <div class="s-field s-span-3">
+          <label class="s-label">End date <span class="s-opt">(optional)</span></label>
+          <input type="date" class="s-input" [(ngModel)]="editEndDate" />
+        </div>
+      </div>
+    </div>
+
+    <div class="s-modal-footer">
+      <button class="s-btn s-btn-ghost" (click)="closeEdit()">Cancel</button>
+      <button class="s-btn s-btn-primary" (click)="saveEdit()" [disabled]="loading">
+        <span *ngIf="loading" class="s-spin s-spin-sm"></span>
+        {{ loading ? 'Saving...' : 'Save changes' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="s-overlay" *ngIf="paymentsOpen" (click)="closePayments()">
+  <div class="s-modal s-modal-wide" (click)="$event.stopPropagation()">
+    <div class="s-modal-header">
+      <div>
+        <span class="s-modal-title">Payment History</span>
+        <div class="s-modal-meta">user {{ paymentsUserId }}</div>
+      </div>
+      <button class="s-modal-close" (click)="closePayments()">✕</button>
+    </div>
+
+    <div class="s-modal-body">
+      <div class="s-alert s-alert-error" *ngIf="paymentsError" style="margin-bottom:14px;">
+        <span>✕</span> {{ paymentsError }}
+      </div>
+      <div class="s-loading" *ngIf="loading">
+        <span class="s-spin s-spin-lg"></span> Loading payments...
+      </div>
+      <div class="s-empty" *ngIf="!loading && !paymentsError && payments.length === 0">
+        <span class="s-empty-icon">💳</span> No payments found.
+      </div>
+
+      <div class="s-table-wrap" *ngIf="!loading && payments.length > 0">
+        <table class="s-table">
+          <thead>
+            <tr>
+              <th>#ID</th>
+              <th>Plan</th>
+              <th>Status</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th class="col-right">Card</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of payments">
+              <td><span class="s-mono s-id">#{{ p.id }}</span></td>
+              <td>
+                <span [class]="'badge ' + (p.plan === 'VIP' ? 'badge-vip' : 'badge-free')">
+                  <span *ngIf="p.plan === 'VIP'">⭐</span> {{ p.plan }}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [class.badge-success]="p.status === 'SUCCESS'"
+                                    [class.badge-danger]="p.status !== 'SUCCESS'">
+                  {{ p.status === 'SUCCESS' ? '✓' : '✕' }} {{ p.status }}
+                </span>
+              </td>
+              <td><strong class="s-amount">{{ p.amount }}</strong></td>
+              <td><span class="s-date">{{ p.createdAt }}</span></td>
+              <td class="col-right">
+                <span class="s-mono s-card" *ngIf="p.cardLast4">**** {{ p.cardLast4 }}</span>
+                <span class="s-no-date" *ngIf="!p.cardLast4">—</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="s-modal-footer">
+      <button class="s-btn s-btn-ghost" (click)="closePayments()">Close</button>
+    </div>
+  </div>
+</div>

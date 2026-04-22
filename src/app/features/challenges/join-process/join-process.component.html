@@ -1,0 +1,67 @@
+<div *ngIf="state.currentView === 'steps'" class="main">
+  <div class="container">
+    <div class="sidebar">
+      <h3 class="sidebar__title">Progress</h3>
+      <app-step-indicator 
+        [steps]="steps" 
+        [currentStep]="state.activeStep"
+      ></app-step-indicator>
+    </div>
+
+    <div class="content">
+      <app-step-1 
+        *ngIf="state.activeStep === 1"
+        [username]="state.githubUsername"
+        [isLoading]="state.isLoading"
+        [errorMessage]="state.errorMessage"
+        (usernameChange)="handleUsernameChange($event)"
+        (continue)="handleJoinSubmit()"
+      ></app-step-1>
+
+      <app-step-2 
+        *ngIf="state.activeStep === 2"
+        [repoUrl]="state.repoUrl"
+        [repoName]="state.repoName"
+        [username]="state.githubUsername"
+        (continue)="handleNext()"
+        (back)="handleBack()"
+      ></app-step-2>
+
+      <app-step-3 
+        *ngIf="state.activeStep === 3"
+        [isLoading]="state.isLoading"
+        [invitationAccepted]="state.invitationAccepted"
+        (checkStatus)="handleCheckInvitation()"
+        (continue)="handleNext()"
+        (back)="handleBack()"
+      ></app-step-3>
+
+      <app-step-4 
+        *ngIf="state.activeStep === 4"
+        [repoUrl]="state.repoUrl"
+        [copied]="state.copiedRepo"
+        (continue)="handleNext()"
+        (back)="handleBack()"
+        (copyRepo)="handleCopyRepo()"
+      ></app-step-4>
+
+      <app-step-5 
+        *ngIf="state.activeStep === 5"
+        [copied]="state.copiedCommands"
+        (complete)="handleNext()"
+        (back)="handleBack()"
+        (copyCommands)="handleCopyCommands()"
+      ></app-step-5>
+    </div>
+  </div>
+</div>
+
+<app-success-state
+  *ngIf="state.currentView === 'success'"
+  [repoUrl]="state.repoUrl"
+  [repoName]="state.repoName"
+  [copied]="state.copiedRepo"
+  (copyRepo)="handleCopyRepo()"
+  (openRepo)="handleOpenRepo()"
+  (finish)="handleFinish()"
+></app-success-state>

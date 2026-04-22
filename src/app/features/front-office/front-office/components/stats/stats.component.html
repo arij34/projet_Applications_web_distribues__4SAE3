@@ -1,0 +1,372 @@
+<div class="stats-wrapper">
+
+  <!-- HEADER -->
+  <div class="stats-header">
+    <div>
+      <h1 class="stats-title">Analytics Dashboard</h1>
+      <p class="stats-subtitle">Real-time insights across all projects & freelancers</p>
+    </div>
+    <div class="header-badge">
+      <span class="live-dot"></span>
+      Live Data
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="loader"></div>
+    <p>Loading analytics...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+
+    <!-- ① KPI CARDS -->
+    <div class="kpi-grid">
+
+      <div class="kpi-card kpi-blue">
+        <div class="kpi-top">
+          <div class="kpi-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+          </div>
+          <span class="kpi-trend trend-up">▲ Active</span>
+        </div>
+        <p class="kpi-value">{{ formatNumber(kpis.totalProjects) }}</p>
+        <p class="kpi-label">Total Projects</p>
+      </div>
+
+      <div class="kpi-card kpi-purple">
+        <div class="kpi-top">
+          <div class="kpi-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <span class="kpi-trend trend-up">▲ Revenue</span>
+        </div>
+        <p class="kpi-value">{{ formatBudget(kpis.totalBudget) }}</p>
+        <p class="kpi-label">Total Budget</p>
+      </div>
+
+      <div class="kpi-card kpi-teal">
+        <div class="kpi-top">
+          <div class="kpi-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <span class="kpi-trend trend-up">▲ Growing</span>
+        </div>
+        <p class="kpi-value">{{ formatNumber(freelancersTotal) }}</p>
+        <p class="kpi-label">Compatible Freelancers</p>
+      </div>
+
+      <div class="kpi-card kpi-green">
+        <div class="kpi-top">
+          <div class="kpi-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+              <polyline points="17 6 23 6 23 12"/>
+            </svg>
+          </div>
+          <span class="kpi-trend trend-up">▲ 10%</span>
+        </div>
+        <p class="kpi-value">{{ formatBudget(kpis.platformRevenue) }}</p>
+        <p class="kpi-label">Platform Revenue</p>
+      </div>
+
+    </div>
+
+    <!-- ② ROW 1 : Statuts + Projets par semaine -->
+    <div class="row-2">
+
+      <!-- Statuts donut -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Project Status</h3>
+          <span class="chart-badge">Overview</span>
+        </div>
+
+        <div class="donut-wrapper">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#e2e8f0" stroke-width="20"/>
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#2563eb" stroke-width="20"
+                    stroke-dasharray="377"
+                    [attr.stroke-dashoffset]="377 - (377 * getStatusPercent(kpis.openProjects) / 100)"
+                    transform="rotate(-90 80 80)" stroke-linecap="round"/>
+          </svg>
+          <div class="donut-center">
+            <span class="donut-value">{{ kpis.totalProjects }}</span>
+            <span class="donut-label">Total</span>
+          </div>
+        </div>
+
+        <div class="status-legend">
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#2563eb"></span>
+            <span class="legend-text">Open</span>
+            <span class="legend-val">{{ kpis.openProjects }}</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#d97706"></span>
+            <span class="legend-text">In Progress</span>
+            <span class="legend-val">{{ kpis.inProgressProjects }}</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#16a34a"></span>
+            <span class="legend-text">Completed</span>
+            <span class="legend-val">{{ kpis.completedProjects }}</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#94a3b8"></span>
+            <span class="legend-text">Draft</span>
+            <span class="legend-val">
+              {{ kpis.totalProjects - kpis.openProjects - kpis.inProgressProjects - kpis.completedProjects }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projets par semaine — bar chart amélioré -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">📈 Projects Created per Week</h3>
+          <span class="chart-badge">Timeline</span>
+        </div>
+
+        <div *ngIf="perWeek.length > 0">
+
+          <!-- Max indicator -->
+          <div style="display:flex; justify-content:flex-end; margin-bottom:0.5rem;">
+            <span style="font-size:0.72rem; color:#94a3b8; font-weight:600;">
+              Peak: {{ getWeekMax() }} projects
+            </span>
+          </div>
+
+          <!-- Bars -->
+          <div style="display:flex; align-items:flex-end; gap:0.625rem;
+                      height:150px; padding:0 0.25rem;">
+            <div *ngFor="let w of perWeek"
+                 style="display:flex; flex-direction:column; align-items:center;
+                        justify-content:flex-end; flex:1; height:100%; gap:0.3rem;
+                        cursor:pointer;">
+
+              <!-- count label -->
+              <span style="font-size:0.72rem; font-weight:800; color:#4f46e5; line-height:1;">
+                {{ w.count }}
+              </span>
+
+              <!-- bar -->
+              <div style="width:100%; border-radius:6px 6px 0 0; min-height:4px;
+                          background: linear-gradient(180deg, #6366f1 0%, #a5b4fc 100%);"
+                   [style.height.%]="getWeekMax() > 0 ? (w.count / getWeekMax()) * 100 : 4">
+              </div>
+
+              <!-- week label -->
+              <span style="font-size:0.65rem; font-weight:700; color:#64748b; white-space:nowrap;">
+                S{{ w.week }}
+              </span>
+
+              <!-- month label -->
+              <span style="font-size:0.6rem; color:#94a3b8; margin-top:-0.2rem; white-space:nowrap;">
+                {{ getMonthLabel(w.month) }}
+              </span>
+
+            </div>
+          </div>
+
+          <!-- baseline -->
+          <div style="height:2px; background:linear-gradient(90deg,#e0e7ff,#c7d2fe,#e0e7ff);
+                      border-radius:99px; margin-top:0.25rem;"></div>
+
+          <!-- summary -->
+          <div style="display:flex; justify-content:space-between; align-items:center;
+                      margin-top:1rem; padding:0.625rem 0.875rem;
+                      background:#f5f3ff; border-radius:10px;">
+            <div style="display:flex; align-items:center; gap:0.4rem;">
+              <div style="width:8px; height:8px; border-radius:2px;
+                          background:linear-gradient(135deg,#6366f1,#a5b4fc);"></div>
+              <span style="font-size:0.75rem; color:#4f46e5; font-weight:600;">
+                {{ perWeek.length }} weeks
+              </span>
+            </div>
+            <span style="font-size:0.75rem; font-weight:800; color:#4f46e5;">
+              Total: {{ getTotalWeekProjects() }} projects
+            </span>
+          </div>
+
+        </div>
+
+        <div class="no-data" *ngIf="perWeek.length === 0">No data available</div>
+      </div>
+
+    </div>
+
+    <!-- ③ ROW 2 : Top Skills + Budget par complexité -->
+    <div class="row-2">
+
+      <!-- Top Skills -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Top Skills in Demand</h3>
+          <span class="chart-badge">Market</span>
+        </div>
+        <div class="skills-list" *ngIf="topSkills.length > 0">
+          <div class="skill-row" *ngFor="let skill of topSkills; let i = index">
+            <div class="skill-rank">#{{ i + 1 }}</div>
+            <div class="skill-info">
+              <div class="skill-name-row">
+                <span class="skill-name">{{ skill.skillName }}</span>
+                <span class="demand-pill"
+                      [style.background]="getDemandColor(skill.demand) + '20'"
+                      [style.color]="getDemandColor(skill.demand)">
+                  {{ skill.demand }}
+                </span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill"
+                     [style.width.%]="(skill.count / getSkillMax()) * 100"
+                     [style.background]="getDemandColor(skill.demand)">
+                </div>
+              </div>
+            </div>
+            <span class="skill-count">{{ skill.count }}</span>
+          </div>
+        </div>
+        <div class="no-data" *ngIf="topSkills.length === 0">No skills data</div>
+      </div>
+
+      <!-- Budget par complexité -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Avg Budget by Complexity</h3>
+          <span class="chart-badge">Financial</span>
+        </div>
+        <div class="complexity-list" *ngIf="budgetComplexity.length > 0">
+          <div class="complexity-row" *ngFor="let c of budgetComplexity">
+            <div class="complexity-left">
+              <span class="complexity-badge"
+                    [style.background]="getComplexityColor(c.complexity) + '20'"
+                    [style.color]="getComplexityColor(c.complexity)">
+                {{ c.complexity }}
+              </span>
+              <span class="complexity-count">{{ c.count }} projects</span>
+            </div>
+            <div class="complexity-bar-wrap">
+              <div class="complexity-bar-track">
+                <div class="complexity-bar-fill"
+                     [style.width.%]="(c.avgBudget / getBudgetMax()) * 100"
+                     [style.background]="getComplexityColor(c.complexity)">
+                </div>
+              </div>
+              <span class="complexity-value">{{ formatBudget(c.avgBudget) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="no-data" *ngIf="budgetComplexity.length === 0">No budget data</div>
+      </div>
+
+    </div>
+
+    <!-- ④ ROW 3 : Most Saved + Budget OPEN vs COMPLETED -->
+    <div class="row-2">
+
+      <!-- Most Saved -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Most Saved Projects</h3>
+          <span class="chart-badge">🔖 Interest</span>
+        </div>
+        <div class="saved-list" *ngIf="mostSaved.length > 0">
+          <div class="saved-row" *ngFor="let s of mostSaved; let i = index">
+            <div class="saved-rank"
+                 [style.background]="i === 0 ? '#fef3c7' : i === 1 ? '#f1f5f9' : '#fff7ed'"
+                 [style.color]="i === 0 ? '#d97706' : i === 1 ? '#64748b' : '#b45309'">
+              {{ i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i+1) }}
+            </div>
+            <div class="saved-info">
+              <span class="saved-title">{{ s.projectTitle }}</span>
+              <div class="saved-bar-track">
+                <div class="saved-bar-fill"
+                     [style.width.%]="(s.saveCount / getSaveMax()) * 100">
+                </div>
+              </div>
+            </div>
+            <div class="saved-count">
+              <span class="saved-num">{{ s.saveCount }}</span>
+              <span class="saved-label">saves</span>
+            </div>
+          </div>
+        </div>
+        <div class="no-data" *ngIf="mostSaved.length === 0">No saved projects yet</div>
+      </div>
+
+      <!-- Budget OPEN vs COMPLETED -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Budget: Open vs Completed</h3>
+          <span class="chart-badge">Financial</span>
+        </div>
+        <div class="budget-compare">
+          <div class="budget-item">
+            <div class="budget-circle" style="background: linear-gradient(135deg,#dbeafe,#eff6ff);">
+              <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#e2e8f0" stroke-width="8"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#2563eb"
+                        stroke-width="8" stroke-linecap="round"
+                        stroke-dasharray="239" stroke-dashoffset="60"
+                        transform="rotate(-90 50 50)"/>
+              </svg>
+              <div class="budget-circle-text">
+                <span style="font-size:.75rem;font-weight:800;color:#2563eb;">OPEN</span>
+              </div>
+            </div>
+            <p class="budget-stat-val">{{ formatBudget(kpis.openProjects * 15000) }}</p>
+            <p class="budget-stat-label">{{ kpis.openProjects }} projects</p>
+          </div>
+          <div class="budget-vs">VS</div>
+          <div class="budget-item">
+            <div class="budget-circle" style="background: linear-gradient(135deg,#dcfce7,#f0fdf4);">
+              <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#e2e8f0" stroke-width="8"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#16a34a"
+                        stroke-width="8" stroke-linecap="round"
+                        stroke-dasharray="239" stroke-dashoffset="20"
+                        transform="rotate(-90 50 50)"/>
+              </svg>
+              <div class="budget-circle-text">
+                <span style="font-size:.75rem;font-weight:800;color:#16a34a;">DONE</span>
+              </div>
+            </div>
+            <p class="budget-stat-val">{{ formatBudget(kpis.completedProjects * 15000) }}</p>
+            <p class="budget-stat-label">{{ kpis.completedProjects }} projects</p>
+          </div>
+        </div>
+
+        <div class="revenue-highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+            <polyline points="17 6 23 6 23 12"/>
+          </svg>
+          <div>
+            <p class="revenue-label">Estimated Platform Revenue (10%)</p>
+            <p class="revenue-value">{{ formatBudget(kpis.platformRevenue) }}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </ng-container>
+</div>

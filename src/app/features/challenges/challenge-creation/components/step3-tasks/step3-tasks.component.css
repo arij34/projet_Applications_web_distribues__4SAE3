@@ -1,0 +1,270 @@
+/* src/app/modules/challenge-creation/components/step3-tasks/step3-tasks.component.css */
+
+.step-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .step-header {
+    margin-bottom: 0.5rem;
+  }
+  
+  .step-title {
+    color: #4F46E5;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  
+  .step-description {
+    color: #4b5563;
+    font-size: 0.875rem;
+  }
+  
+  .tip-card {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .tip-text {
+    font-size: 0.875rem;
+    color: #1e40af;
+  }
+  
+  .empty-state {
+    border: 2px dashed #d1d5db;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+  }
+  
+  .empty-icon-wrapper {
+    width: 4rem;
+    height: 4rem;
+    background-color: #f3f4f6;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-icon {
+    width: 2rem;
+    height: 2rem;
+    color: #9ca3af;
+  }
+  
+  .empty-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+  }
+  
+  .empty-description {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-bottom: 1rem;
+  }
+  
+  .tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .task-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .task-card.cdk-drag-preview {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    opacity: 0.8;
+  }
+  
+  .task-card.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .tasks-list.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .task-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .drag-handle {
+    cursor: move;
+    color: #9ca3af;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+  }
+  
+  .drag-handle:hover {
+    color: #4b5563;
+  }
+  
+  .drag-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .task-title-wrapper {
+    flex: 1;
+  }
+  
+  .task-card-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1f2937;
+  }
+  
+  .icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .icon-btn:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .delete-btn {
+    color: #dc2626;
+  }
+  
+  .delete-btn:hover {
+    background-color: #fef2f2;
+  }
+  
+  .icon {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .task-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-label {
+    font-weight: 500;
+    margin-bottom: 0.375rem;
+    color: #1f2937;
+  }
+  
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+  
+  .form-input.with-icon {
+    padding-left: 2.5rem;
+  }
+  
+  .form-input:focus,
+  .form-textarea:focus {
+    outline: none;
+    border-color: #4F46E5;
+    box-shadow: 0 0 0 3px rgba(2, 6, 111, 0.1);
+  }
+  
+  .form-textarea {
+    resize: vertical;
+  }
+  
+  .input-with-icon {
+    position: relative;
+  }
+  
+  .input-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1rem;
+    height: 1rem;
+    color: #9ca3af;
+    pointer-events: none;
+  }
+  
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  
+  .btn-primary {
+    background-color: #4F46E5;
+    color: #ffffff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #010554;
+  }
+  
+  .btn-outline-dashed {
+    background-color: #ffffff;
+    border: 2px dashed #d1d5db;
+    color: #374151;
+  }
+  
+  .btn-outline-dashed:hover {
+    border-color: #4F46E5;
+    color: #4F46E5;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .btn-icon {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+  }
+  

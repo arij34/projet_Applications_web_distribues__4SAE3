@@ -1,0 +1,33 @@
+<div class="relative">
+  <div class="relative">
+    <!-- Search Icon -->
+    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+    </div>
+
+    <!-- Search Input -->
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="onSearchInput(searchTerm)"
+      placeholder="Search challenges by title, description, or category..."
+      class="w-full pl-12 pr-12 py-4 rounded-2xl border-2 border-gray-300 focus:border-primary focus:outline-none text-gray-900 placeholder-gray-600 transition-all bg-white shadow-sm hover:shadow-md"
+    />
+
+    <!-- Clear Button -->
+    <button
+      *ngIf="searchTerm"
+      type="button"
+      (click)="clearSearch()"
+      class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900 transition-colors"
+      aria-label="Clear search">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<div class="challenge-card">
+  <!-- Image header (top section) -->
+  <div class="card-image-header" [style.backgroundImage]="getBackgroundImageStyle()">
+    <div class="card-image-overlay"></div>
+    <div class="card-image-badges">
+      <span class="image-badge category-pill">{{ challenge.category }}</span>
+      <div class="image-badge points-pill">
+        <svg class="points-icon" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span class="points-value">{{ challenge.points }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content area (bottom section) -->
+  <div class="card-body">
+    <span class="diff-text" [ngClass]="'diff-' + (challenge.difficulty || '').toLowerCase()">{{ challenge.difficulty }} Difficulty</span>
+    <h3 class="card-title">{{ challenge.title }}</h3>
+    <p class="card-description">{{ challenge.description }}</p>
+
+    <!-- Progress Bar (Optional) -->
+    <div *ngIf="challenge.progress !== undefined" class="progress-section">
+      <div class="progress-header">
+        <span class="progress-label">Progress</span>
+        <span class="progress-percentage">{{ challenge.progress }}%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="challenge.progress"></div>
+      </div>
+    </div>
+
+    <!-- Start & End Dates -->
+    <div class="dates-bar" *ngIf="challenge.startDate || challenge.endDate">
+      <div class="date-chip" *ngIf="challenge.startDate">
+        <span class="date-chip-label">Start in</span>
+        <span class="date-chip-value">{{ challenge.startDate | date:'mediumDate' }}</span>
+      </div>
+      <div class="date-chip" *ngIf="challenge.endDate">
+        <span class="date-chip-label">End in</span>
+        <span class="date-chip-value">{{ challenge.endDate | date:'mediumDate' }}</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <!-- Participants -->
+      <div class="participants-info">
+      <svg class="participants-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+        <span class="participants-text">{{ challenge.participants }} participants</span>
+      </div>
+    
+      <!-- CTA Button -->
+      <button type="button" 
+              (click)="onJoinChallenge()"
+              class="join-button">
+      Join Challenge
+    </button>
+    </div>
+  </div>
+</div>

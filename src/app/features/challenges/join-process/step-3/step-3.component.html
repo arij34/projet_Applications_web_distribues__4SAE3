@@ -1,0 +1,78 @@
+<div class="card">
+  <div class="card__header">
+    <div class="card__icon card__icon--secondary">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+      </svg>
+    </div>
+    <div class="card__body">
+      <h2 class="card__title">Step 3 — Accept Your GitHub Invitation</h2>
+      <p class="card__text">After joining:</p>
+      
+      <ol class="ordered-list">
+        <li>Check your email or GitHub notifications</li>
+        <li>Open the GitHub invitation</li>
+        <li>Click "Accept Invitation"</li>
+      </ol>
+      
+      <p class="helper-text">
+        Or visit your 
+        <a href="https://github.com/notifications" target="_blank" rel="noopener noreferrer" class="link">
+          GitHub notifications
+        </a> 
+        directly.
+      </p>
+
+      <div *ngIf="invitationAccepted" class="status-box status-box--success">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>
+        </svg>
+        <span>Invitation accepted! You can proceed to clone your repository.</span>
+      </div>
+
+      <div *ngIf="!invitationAccepted && !showNotAcceptedWarning" class="status-box status-box--pending">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>Invitation is still pending. Accept it on GitHub, then check status.</span>
+      </div>
+
+      <div *ngIf="!invitationAccepted && showNotAcceptedWarning && !isLoading" class="status-box status-box--error">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/>
+        </svg>
+        <span>You haven't accepted the invitation yet. Please accept it on GitHub before continuing.</span>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--outline" (click)="onBack()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+          </svg>
+          Back
+        </button>
+        <div class="actions__right">
+          <button 
+            class="btn btn--secondary" 
+            (click)="onCheckStatus()"
+            [disabled]="isLoading || invitationAccepted"
+          >
+            <span *ngIf="isLoading" class="spinner"></span>
+            <span *ngIf="!isLoading">Check Status</span>
+            <span *ngIf="isLoading">Checking...</span>
+          </button>
+          <button 
+            class="btn btn--primary" 
+            (click)="onContinue()"
+            [disabled]="isLoading"
+          >
+            {{ invitationAccepted ? 'Continue' : "I've Accepted" }}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

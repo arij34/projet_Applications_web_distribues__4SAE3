@@ -1,0 +1,32 @@
+<div
+  #containerRef
+  class="webcam-container"
+  [class.webcam-container-dragging]="isDragging()"
+  [style.top]="panelTop()"
+  [style.left]="panelLeft()"
+  [style.transform]="panelTransform()">
+  <div class="webcam-header" (pointerdown)="startDragging($event)">
+    <span class="webcam-title">Camera Monitor</span>
+    <span class="webcam-status" [class.ready]="webcamReady()" [class.error]="!!errorMessage()">
+      {{ errorMessage() ? 'Error' : webcamReady() ? 'Live' : 'Starting' }}
+    </span>
+  </div>
+
+  <div class="webcam-frame" [class.webcam-frame-error]="!!errorMessage()">
+    <video #videoRef autoplay muted playsinline [class.webcam-hidden]="!webcamReady() || !!errorMessage()"></video>
+
+    <div class="webcam-overlay" *ngIf="!webcamReady() && !errorMessage()">
+      <div class="webcam-spinner"></div>
+      <p>Starting camera…</p>
+      <span>Please allow browser camera access if prompted.</span>
+    </div>
+
+    <div class="webcam-overlay webcam-overlay-error" *ngIf="errorMessage() as error">
+      <p class="webcam-error-title">Camera unavailable</p>
+      <span>{{ error }}</span>
+      <button type="button" class="retry-button" (click)="retryMonitoring()">Retry</button>
+    </div>
+  </div>
+
+  <p class="webcam-warning" *ngIf="activeWarning() as warning">{{ warning }}</p>
+</div>

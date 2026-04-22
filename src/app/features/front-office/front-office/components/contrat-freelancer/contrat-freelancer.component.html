@@ -1,0 +1,450 @@
+<!-- ─────────────────────────────────────────────────────────────
+     CONTRACT-FREELANCER  –  List View  (CORRIGÉ)
+
+     FLUX BOUTONS PAR STATUT :
+     ┌─────────────────────────────────────────────────────────┐
+     │ DRAFT            → [Accept proposal]                    │
+     │ PENDING_SIGNATURE                                        │
+     │   !freelancerSignedAt → [Sign electronically]           │
+     │   freelancerSignedAt && !clientSignedAt                  │
+     │                  → Badge "You signed — client notified"  │
+     │                  + Lien "View signed contract"           │
+     │ ACTIVE + pdfUrl  → [Download signed PDF]                │
+     └─────────────────────────────────────────────────────────┘
+     ───────────────────────────────────────────────────────────── -->
+
+<div class="cf-page">
+
+  <!-- ══ NOTIFICATION DRAWER ══════════════════════════════════════ -->
+  <div class="notif-overlay" [class.open]="showNotifPanel" (click)="showNotifPanel=false"></div>
+  <div class="notif-drawer" [class.open]="showNotifPanel">
+    <div class="nd-head">
+      <div class="nd-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/>
+        </svg>
+        Notifications
+        <span class="nd-count" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+      </div>
+      <button class="nd-mark-read" (click)="markAllRead()" *ngIf="unreadCount > 0">Mark all read</button>
+    </div>
+    <div class="nd-list">
+      <div class="nd-card" [class.nd-unread]="!n.read"
+           [class.nd-blue]="n.color==='blue'" [class.nd-green]="n.color==='green'"
+           [class.nd-amber]="n.color==='amber'" [class.nd-purple]="n.color==='purple'"
+           *ngFor="let n of notifications">
+        <div class="nd-icon" [ngClass]="'nd-ico-'+n.color">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path [attr.d]="getNotifIcon(n.color)"/>
+          </svg>
+        </div>
+        <div class="nd-body">
+          <div class="nd-notif-title">{{ n.title }}</div>
+          <div class="nd-notif-msg">{{ n.message }}</div>
+          <div class="nd-notif-time">{{ getTimeAgo(n.timestamp) }}</div>
+        </div>
+      </div>
+      <div class="nd-empty" *ngIf="notifications.length === 0">No notifications</div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN CONTENT ═════════════════════════════════════════════ -->
+  <div class="cf-main">
+
+    <!-- HERO -->
+    <div class="cf-hero">
+      <div class="cf-hero-left">
+        <h1 class="cf-hero-title">My Contracts</h1>
+        <p class="cf-hero-sub">Manage, negotiate, and sign your contracts with full transparency.</p>
+        <div class="cf-kpi-row">
+          <div class="cf-kpi">
+            <i class="bi bi-collection-fill cf-kpi-icon"></i>
+            <span class="cf-kpi-num">{{ countByStatus('ALL') }}</span>
+            <span class="cf-kpi-lbl">Total</span>
+          </div>
+          <div class="cf-kpi cf-kpi-amber">
+            <i class="bi bi-clock-history cf-kpi-icon"></i>
+            <span class="cf-kpi-num">{{ countByStatus('DRAFT') + countByStatus('PENDING_SIGNATURE') }}</span>
+            <span class="cf-kpi-lbl">Pending</span>
+          </div>
+          <div class="cf-kpi cf-kpi-green">
+            <i class="bi bi-check-circle-fill cf-kpi-icon"></i>
+            <span class="cf-kpi-num">{{ countByStatus('ACTIVE') }}</span>
+            <span class="cf-kpi-lbl">Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALERT BANNER -->
+    <div class="cf-alert-banner" *ngIf="countByStatus('DRAFT') + countByStatus('PENDING_SIGNATURE') > 0">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span>
+        <strong>{{ countByStatus('DRAFT') + countByStatus('PENDING_SIGNATURE') }} contract(s)</strong>
+        require your attention.
+      </span>
+      <button class="cf-alert-cta" (click)="setFilter('PENDING_SIGNATURE')">View now</button>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="cf-filter-bar">
+      <a class="cf-filter-link" [class.active]="activeFilter==='ALL'" (click)="setFilter('ALL')">
+        All <span class="cf-filter-count">{{ countByStatus('ALL') }}</span>
+      </a>
+      <a class="cf-filter-link" [class.active]="activeFilter==='DRAFT'" (click)="setFilter('DRAFT')">
+        Drafts <span class="cf-filter-count">{{ countByStatus('DRAFT') }}</span>
+      </a>
+      <a class="cf-filter-link" [class.active]="activeFilter==='PENDING_SIGNATURE'" (click)="setFilter('PENDING_SIGNATURE')">
+        To sign <span class="cf-filter-count">{{ countByStatus('PENDING_SIGNATURE') }}</span>
+      </a>
+      <a class="cf-filter-link" [class.active]="activeFilter==='ACTIVE'" (click)="setFilter('ACTIVE')">
+        Active <span class="cf-filter-count">{{ countByStatus('ACTIVE') }}</span>
+      </a>
+      <a class="cf-filter-link" [class.active]="activeFilter==='COMPLETED'" (click)="setFilter('COMPLETED')">
+        Completed <span class="cf-filter-count">{{ countByStatus('COMPLETED') }}</span>
+      </a>
+    </div>
+
+    <!-- LOADING -->
+    <div class="cf-loading" *ngIf="isLoading">
+      <div class="cf-spinner"></div>
+      <p>Loading contracts…</p>
+    </div>
+
+    <div class="cf-error" *ngIf="errorMessage && !isLoading">{{ errorMessage }}</div>
+
+    <!-- CONTRACT GRID -->
+    <div class="cf-grid" *ngIf="!isLoading">
+
+      <div class="cf-empty" *ngIf="filteredContracts.length === 0">
+        <div class="cf-empty-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <h3>No contracts found</h3>
+        <p>Adjust your filters or start a new search.</p>
+      </div>
+
+      <!-- CONTRACT CARD -->
+      <div class="cf-card" *ngFor="let c of filteredContracts"
+           [class.cf-card-draft]="c.status==='DRAFT'"
+           [class.cf-card-pending]="c.status==='PENDING_SIGNATURE'"
+           [class.cf-card-active]="c.status==='ACTIVE'"
+           [class.cf-card-done]="c.status==='COMPLETED'">
+
+        <!-- Badge urgent -->
+        <div class="cf-card-urgent" *ngIf="isUrgent(c)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <!-- Message contextuel selon l'état -->
+          <ng-container *ngIf="c.status === 'DRAFT'">Pending your acceptance</ng-container>
+          <ng-container *ngIf="c.status === 'PENDING_SIGNATURE' && !c.freelancerSignedAt">Your signature required</ng-container>
+          <ng-container *ngIf="c.status === 'PENDING_SIGNATURE' && c.freelancerSignedAt && !c.clientSignedAt">Waiting for client signature</ng-container>
+        </div>
+
+        <div class="cf-card-head">
+          <div class="cf-card-head-left">
+            <span class="cf-card-ref" *ngIf="c.reference">{{ c.reference }}</span>
+            <h3 class="cf-card-title">{{ c.title }}</h3>
+          </div>
+          <div class="cf-card-head-right">
+            <span class="cf-status-badge" [ngClass]="getStatusClass(c.status)">
+              {{ getCardStatusLabel(c) }}
+            </span>
+            <span class="cf-amount-badge">{{ formatAmount(c.totalAmount, c.currency) }}</span>
+          </div>
+        </div>
+
+        <p class="cf-card-desc" *ngIf="c.description">{{ c.description }}</p>
+
+        <!-- ── Indicateur de progression des signatures ── -->
+        <div class="cf-sign-progress" *ngIf="c.status === 'PENDING_SIGNATURE'">
+          <div class="cf-sign-party" [class.signed]="c.freelancerSignedAt">
+            <div class="cf-sign-avatar">
+              <span *ngIf="!c.freelancerSignedAt">1</span>
+              <svg *ngIf="c.freelancerSignedAt" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <div class="cf-sign-party-info">
+              <span class="cf-sign-party-role">Freelancer (you)</span>
+              <span class="cf-sign-party-status">{{ c.freelancerSignedAt ? 'Signed ✓' : 'Pending…' }}</span>
+            </div>
+          </div>
+          <div class="cf-sign-connector" [class.active]="c.freelancerSignedAt"></div>
+          <div class="cf-sign-party" [class.signed]="c.clientSignedAt">
+            <div class="cf-sign-avatar">
+              <span *ngIf="!c.clientSignedAt">2</span>
+              <svg *ngIf="c.clientSignedAt" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <div class="cf-sign-party-info">
+              <span class="cf-sign-party-role">Client</span>
+              <span class="cf-sign-party-status">
+                {{ c.clientSignedAt ? 'Signed ✓' : (c.freelancerSignedAt ? 'Notified by email' : 'Waiting…') }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cf-card-info">
+          <div class="cf-info-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            {{ formatDate(c.startDate) }}
+          </div>
+          <div class="cf-info-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            End: {{ formatDate(c.endDate) }}
+          </div>
+        </div>
+
+        <!-- ════ ZONE ACTIONS — logique stricte par statut ════ -->
+        <div class="cf-card-actions">
+
+          <!-- ── BOUTON SIGNER TOUJOURS VISIBLE (sauf contrat actif / complété / déjà signé) ── -->
+          <button
+            class="cf-btn-sign"
+            *ngIf="canAttemptSign(c)"
+            (click)="openSignModal(c, $event)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+            Sign electronically
+          </button>
+
+          <!-- ── SIGNÉ PAR FREELANCER, CLIENT EN ATTENTE ──
+               Badge + lien vers la vue détail pour que le client
+               puisse y accéder depuis le lien email -->
+          <div class="cf-signed-zone" *ngIf="freelancerSignedClientPending(c)">
+            <span class="cf-signed-badge">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              You signed — awaiting client
+            </span>
+            <a class="cf-btn-view-signed" (click)="viewContract(c.id)" title="View contract details">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              View contract
+            </a>
+          </div>
+
+          <!-- ── CONTRAT ACTIF : télécharger le PDF signé ── -->
+          <a class="cf-btn-download-pdf"
+             *ngIf="isActiveWithPdf(c)"
+             [href]="getPdfUrl(c)"
+             target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download signed PDF
+          </a>
+
+          <!-- Bouton View toujours disponible -->
+          <button class="cf-btn-view"
+                  (click)="viewContract(c.id)"
+                  [class.cf-btn-view-full]="c.status !== 'DRAFT' && !hasPendingSignature(c) && !freelancerSignedClientPending(c)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            View details
+          </button>
+
+        </div>
+
+      </div><!-- /cf-card -->
+    </div><!-- /cf-grid -->
+  </div><!-- /cf-main -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MODAL DE SIGNATURE ÉLECTRONIQUE FREELANCER
+       3 étapes : draw → confirm → done
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="esign-overlay" *ngIf="showSignModal" (click)="closeSignModal()">
+    <div class="esign-modal" (click)="$event.stopPropagation()">
+
+      <!-- HEADER -->
+      <div class="esign-header">
+        <div class="esign-header-left">
+          <div class="esign-header-icon">✍️</div>
+          <div>
+            <h2 class="esign-title">Electronic Signature</h2>
+            <p class="esign-subtitle">{{ selectedContract?.title }}</p>
+          </div>
+        </div>
+        <button class="esign-close" (click)="closeSignModal()" [disabled]="isSigningLoading">✕</button>
+      </div>
+
+      <!-- STEP INDICATOR -->
+      <div class="esign-steps" *ngIf="signStep !== 'done'">
+        <div class="esign-step" [class.active]="signStep === 'draw'" [class.completed]="signStep === 'confirm'">
+          <div class="esign-step-dot">
+            <span *ngIf="signStep === 'draw'">1</span>
+            <svg *ngIf="signStep !== 'draw'" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <span>Draw signature</span>
+        </div>
+        <div class="esign-step-line" [class.active]="signStep === 'confirm'"></div>
+        <div class="esign-step" [class.active]="signStep === 'confirm'">
+          <div class="esign-step-dot">2</div>
+          <span>Confirm & send</span>
+        </div>
+      </div>
+
+      <!-- ── STEP 1 : DESSINER ── -->
+      <div class="esign-body" *ngIf="signStep === 'draw'">
+        <p class="esign-instruction">
+          Draw your signature in the box below using your mouse or finger.
+        </p>
+        <div class="esign-canvas-wrapper">
+          <canvas
+            id="signatureCanvas"
+            class="esign-canvas"
+            (mousedown)="onMouseDown($event)"
+            (mousemove)="onMouseMove($event)"
+            (mouseup)="onMouseUp()"
+            (mouseleave)="onMouseLeave()"
+            (touchstart)="onTouchStart($event)"
+            (touchmove)="onTouchMove($event)"
+            (touchend)="onTouchEnd()">
+          </canvas>
+          <div class="esign-canvas-hint" *ngIf="!hasDrawn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+            Sign here
+          </div>
+        </div>
+        <div class="esign-canvas-actions">
+          <button class="esign-btn-clear" (click)="clearSignature()" [disabled]="!hasDrawn">
+            🗑️ Clear
+          </button>
+        </div>
+        <div class="esign-info-box">
+          <span>ℹ️</span>
+          <span>
+            After signing, the client will receive an email notification and will need to sign
+            to activate the contract.
+          </span>
+        </div>
+      </div>
+
+      <!-- ── STEP 2 : CONFIRMER ── -->
+      <div class="esign-body" *ngIf="signStep === 'confirm'">
+        <div class="esign-alert-error" *ngIf="signError">
+          <span>❌</span><span>{{ signError }}</span>
+        </div>
+        <div class="esign-recap">
+          <div class="esign-recap-row">
+            <span class="esign-recap-label">Contract</span>
+            <span class="esign-recap-value">{{ selectedContract?.title }}</span>
+          </div>
+          <div class="esign-recap-row">
+            <span class="esign-recap-label">Amount</span>
+            <span class="esign-recap-value esign-recap-amount">
+              {{ formatAmount(selectedContract?.totalAmount!, selectedContract?.currency!) }}
+            </span>
+          </div>
+          <div class="esign-recap-row">
+            <span class="esign-recap-label">Period</span>
+            <span class="esign-recap-value">
+              {{ formatDate(selectedContract?.startDate) }} → {{ formatDate(selectedContract?.endDate) }}
+            </span>
+          </div>
+        </div>
+        <div class="esign-preview-label">Your signature preview</div>
+        <div class="esign-preview-box">
+          <canvas id="signaturePreview" class="esign-preview-canvas" width="380" height="100"></canvas>
+        </div>
+        <div class="esign-legal">
+          <span>⚖️</span>
+          <span>
+            By clicking <strong>"Confirm & Sign"</strong>, you legally bind yourself to this contract.
+            The client will be notified by email and must also sign to activate the contract.
+          </span>
+        </div>
+        <div class="esign-loading" *ngIf="isSigningLoading">
+          <div class="esign-spinner"></div>
+          <p>Registering your signature and notifying the client…</p>
+        </div>
+      </div>
+
+      <!-- ── STEP 3 : SUCCÈS ── -->
+      <div class="esign-body esign-body-success" *ngIf="signStep === 'done'">
+        <div class="esign-success-icon">✅</div>
+        <h3 class="esign-success-title">Signature registered!</h3>
+        <p class="esign-success-msg">{{ signSuccess }}</p>
+        <div class="esign-success-next">
+          <div class="esign-next-step">
+            <span class="esign-next-icon">📧</span>
+            <div>
+              <strong>Client notified</strong><br>
+              <span>An email has been sent to the client asking them to sign the contract.</span>
+            </div>
+          </div>
+          <div class="esign-next-step">
+            <span class="esign-next-icon">⏳</span>
+            <div>
+              <strong>Waiting for client signature</strong><br>
+              <span>The contract will be activated once both parties have signed.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="esign-footer">
+        <ng-container *ngIf="signStep === 'draw'">
+          <button class="esign-btn-secondary" (click)="closeSignModal()">Cancel</button>
+          <button class="esign-btn-primary" (click)="goToConfirm()" [disabled]="!hasDrawn">
+            Next → Review
+          </button>
+        </ng-container>
+        <ng-container *ngIf="signStep === 'confirm'">
+          <button class="esign-btn-secondary" (click)="goBackToDraw()" [disabled]="isSigningLoading">
+            ← Back
+          </button>
+          <button class="esign-btn-primary" (click)="confirmAndSign()" [disabled]="isSigningLoading">
+            <span *ngIf="!isSigningLoading">✅ Confirm & Sign</span>
+            <span *ngIf="isSigningLoading" class="esign-btn-loading">
+              <span class="esign-small-spinner"></span> Signing…
+            </span>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="signStep === 'done'">
+          <button class="esign-btn-primary esign-btn-full" (click)="closeSignModal()">
+            Close
+          </button>
+        </ng-container>
+      </div>
+
+    </div><!-- /esign-modal -->
+  </div><!-- /esign-overlay -->
+
+</div><!-- /cf-page -->

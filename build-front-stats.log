@@ -1,0 +1,38 @@
+[33m❯[39m Building...
+[32m✔[39m Building...
+Application bundle generation failed. [3.672 seconds]
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-996001: The class 'StatsViewComponent' is listed in the declarations of the NgModule 'BackOfficeModule', but is not a directive, a component, or a pipe. Either remove it from the NgModule's declarations, or add an appropriate Angular decorator.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office.module.ts:25:4:
+[37m      25 │     [32mStatsViewComponent[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+  'StatsViewComponent' is declared here.
+
+    src/app/features/back-office/back-office/components/views/stats-view/stats-view.component.ts:53:13:
+[37m      53 │ export class [32mStatsViewComponent[37m implements OnInit {
+         ╵              [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../../../../core/services/admin-stats.service' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/stats-view/stats-view.component.ts:2:49:
+[37m      2 │ ...StatsDto } from [32m'../../../../../core/services/admin-stats.service'[37m;
+        ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-992003: No suitable injection token for parameter 'stats' of class 'StatsViewComponent'.
+  Consider using the @Inject decorator to specify an injection token.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/stats-view/stats-view.component.ts:58:31:
+[37m      58 │   constructor(private readonly [32mstats[37m: AdminStatsService) {}
+         ╵                                [32m~~~~~[0m
+
+  This type does not have a value, so it cannot be used as injection token.
+
+    src/app/features/back-office/back-office/components/views/stats-view/stats-view.component.ts:58:38:
+[37m      58 │   constructor(private readonly stats: [32mAdminStatsService[37m) {}
+         ╵                                       [32m~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m

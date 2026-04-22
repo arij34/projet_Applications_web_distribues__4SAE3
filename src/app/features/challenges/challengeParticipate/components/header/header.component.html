@@ -1,0 +1,88 @@
+<header class="modern-header" [class.scrolled]="isScrolled">
+  <div class="header-container">
+    <nav class="nav-wrapper">
+      <!-- Logo -->
+      <a class="logo-wrapper" routerLink="/">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="logo-text">ChallengePro</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="nav-menu-desktop">
+        <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <span>Home</span>
+        </a>
+        <a class="nav-link" routerLink="/challenges" routerLinkActive="active">
+          <span>Challenges</span>
+        </a>
+        <a class="nav-link" href="#about">
+          <span>About</span>
+        </a>
+        <a class="nav-link" href="#pricing">
+          <span>Pricing</span>
+        </a>
+        <a class="nav-link" href="#contact">
+          <span>Contact</span>
+        </a>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="header-actions">
+        <button class="action-btn notification-btn" type="button" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="notification-badge">3</span>
+        </button>
+        <button class="action-btn profile-btn" type="button" aria-label="Profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </button>
+        <button class="cta-button" type="button">
+          Get Started
+        </button>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button 
+        class="mobile-toggle" 
+        type="button" 
+        [class.active]="isMobileMenuOpen"
+        (click)="toggleMobileMenu()"
+        aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="nav-menu-mobile" [class.active]="isMobileMenuOpen">
+      <a class="mobile-nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+        Home
+      </a>
+      <a class="mobile-nav-link" routerLink="/challenges" routerLinkActive="active" (click)="closeMobileMenu()">
+        Challenges
+      </a>
+      <a class="mobile-nav-link" href="#about" (click)="closeMobileMenu()">
+        About
+      </a>
+      <a class="mobile-nav-link" href="#pricing" (click)="closeMobileMenu()">
+        Pricing
+      </a>
+      <a class="mobile-nav-link" href="#contact" (click)="closeMobileMenu()">
+        Contact
+      </a>
+      <button class="mobile-cta-button" type="button" (click)="closeMobileMenu()">
+        Get Started
+      </button>
+    </div>
+  </div>
+</header>

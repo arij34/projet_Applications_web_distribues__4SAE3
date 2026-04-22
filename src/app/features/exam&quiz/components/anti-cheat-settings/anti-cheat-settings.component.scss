@@ -1,0 +1,84 @@
+@use '../variables' as v;
+
+.card { @extend %card; }
+.card-head { @extend %card-head; }
+.card-label { @extend %card-label; }
+.card-body { padding: 0 20px; }
+.btn-primary { @extend %btn-primary; }
+.toggle { @extend %toggle; }
+.card-footer {
+  margin-top: 12px;
+  padding: 6px 0 12px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ac-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid v.$border;
+  &.last { border-bottom: none; }
+}
+
+.ac-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: v.$radius-sm;
+  border: 1px solid v.$border;
+  background: v.$surface-2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: v.$text-2;
+}
+
+.ac-info { flex: 1; }
+.ac-label { font-size: 13.5px; font-weight: 500; color: v.$text-1; }
+.ac-desc { font-size: 11.5px; color: v.$text-3; margin-top: 2px; }
+
+.advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.advanced-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cooldown-field {
+  margin-top: 12px;
+}
+
+.advanced-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: v.$text-2;
+}
+
+.advanced-input,
+.advanced-select {
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid v.$border;
+  border-radius: v.$radius-sm;
+  background: #fff;
+  color: v.$text-1;
+  font-size: 13px;
+}
+
+.advanced-input:focus,
+.advanced-select:focus {
+  outline: none;
+  border-color: v.$accent;
+  box-shadow: 0 0 0 2px rgba(v.$accent, 0.12);
+}

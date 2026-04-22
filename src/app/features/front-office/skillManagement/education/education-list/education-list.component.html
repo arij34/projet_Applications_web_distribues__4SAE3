@@ -1,0 +1,49 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Formations</h2>
+    <a [routerLink]="['/front/education/add']" class="btn-primary-modern">+ Ajouter</a>
+  </div>
+
+  <!-- ✅ BARRE DE RECHERCHE -->
+  <app-search-bar
+    placeholder="Search by degree, institution..."
+    [filters]="search.config.filters"
+    [totalCount]="allItems.length"
+    [resultCount]="filteredItems.length"
+    [currentQuery]="currentQuery"
+    (queryChange)="onSearch($event)"
+    (filterChange)="onFilter($event)"
+    (reset)="onReset()">
+  </app-search-bar>
+
+  <div class="table-card">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Diplôme</th>
+          <th>Établissement</th>
+          <th>Année</th>
+          <th class="actions-cell">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredItems">
+          <td>{{ item.degree }}</td>
+          <td>{{ item.institution }}</td>
+          <td>{{ item.year }}</td>
+          <td class="actions-cell">
+            <a [routerLink]="['/front/education/edit', item.id]" class="action-icon edit-icon">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <button (click)="deleteItem(item.id!)" class="action-icon delete-icon">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredItems.length === 0">
+          <td colspan="4" class="empty-state">Aucune formation trouvée</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

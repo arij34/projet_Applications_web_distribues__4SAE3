@@ -1,0 +1,457 @@
+<!-- ✅ TOAST NOTIFICATIONS CONTAINER -->
+ <div class="dashboard-wrapper">
+<div class="toast-container">
+  <div *ngFor="let toast of toasts"
+       class="toast-item"
+       [class.toast-success]="toast.type === 'success'"
+       [class.toast-error]="toast.type === 'error'"
+       [class.toast-info]="toast.type === 'info'"
+       [class.toast-visible]="toast.visible"
+       [class.toast-hidden]="!toast.visible">
+    <div class="toast-icon-wrap">
+      <i class="bi" [ngClass]="{
+        'bi-check-circle-fill text-success': toast.type === 'success',
+        'bi-x-circle-fill text-danger': toast.type === 'error',
+        'bi-info-circle-fill text-primary': toast.type === 'info'
+      }"></i>
+    </div>
+    <div class="toast-body">
+      <div class="toast-title">{{ getToastTitle(toast.type) }}</div>
+      <div class="toast-message">{{ toast.message }}</div>
+      <div class="toast-skill" *ngIf="toast.skillName">#{{ toast.skillName }}</div>
+    </div>
+    <button class="toast-close" (click)="dismissToast(toast.id)">
+      <i class="bi bi-x-lg"></i>
+    </button>
+    <div class="toast-progress"
+         [class.toast-progress-success]="toast.type === 'success'"
+         [class.toast-progress-error]="toast.type === 'error'"
+         [class.toast-progress-info]="toast.type === 'info'">
+    </div>
+  </div>
+</div>
+
+<!-- ====== MAIN LAYOUT ====== -->
+<div class="dashboard-layout">
+
+  <!-- ================= LEFT / MAIN ================= -->
+  <div class="dashboard-main">
+
+    <!-- HEADER -->
+    <div class="dashboard-header fade-in">
+      <div>
+        <h1 class="dashboard-title">
+          <i class="bi bi-person-workspace me-2"></i>
+          Professional Expertise
+        </h1>
+        <p class="dashboard-subtitle">Manage your skills, education and availability</p>
+      </div>
+      <div class="header-actions">
+        <a routerLink="/front/freelancer-skills/add" class="btn-add-skill">
+          <i class="bi bi-plus-lg"></i>
+          Add Skill
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== STATS GRID ===== -->
+    <div class="stats-grid fade-in delay-1">
+
+      <div class="stat-card">
+        <div class="stat-icon icon-skills">
+          <i class="bi bi-bullseye"></i>
+        </div>
+        <div class="stat-label">TOTAL SKILLS</div>
+        <div class="stat-value">{{ freelancerSkills.length }}</div>
+        <div class="stat-sub text-success" *ngIf="newThisMonth > 0">
+          <i class="bi bi-arrow-up-short"></i> +{{ newThisMonth }} this month
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-exp">
+          <i class="bi bi-briefcase-fill"></i>
+        </div>
+        <div class="stat-label">EXPERIENCE</div>
+        <div class="stat-value">{{ totalYears || 0 }}<span class="stat-unit">yrs</span></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-edu">
+          <i class="bi bi-mortarboard-fill"></i>
+        </div>
+        <div class="stat-label">EDUCATION</div>
+        <div class="stat-value stat-small">{{ highestDegree || 'N/A' }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-avail">
+          <i class="bi bi-clock-fill"></i>
+        </div>
+        <span class="avail-badge-top" [ngClass]="getAvailClass()">
+          <i class="bi bi-circle-fill me-1" style="font-size:7px"></i>
+          {{ getAvailStatus() }}
+        </span>
+        <div class="stat-label">AVAILABILITY</div>
+        <div class="stat-value stat-small">{{ getAvailLabel() }}</div>
+      </div>
+
+    </div>
+
+    <!-- ===== SKILLS TABLE ===== -->
+    <div class="section-card fade-in delay-2">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="bi bi-list-check me-2"></i>Skills Management
+        </h2>
+        <a routerLink="/front/freelancer-skills" class="view-all-link">
+          View all <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+
+      <div *ngIf="loadingSkills" class="loading-state">
+        <div class="spinner-border text-primary"></div>
+        <span>Loading skills...</span>
+      </div>
+
+      <table class="skills-table" *ngIf="!loadingSkills">
+        <thead>
+          <tr>
+            <th><i class="bi bi-tag me-1"></i>SKILL</th>
+            <th><i class="bi bi-grid me-1"></i>CATEGORY</th>
+            <th><i class="bi bi-bar-chart me-1"></i>LEVEL</th>
+            <th><i class="bi bi-calendar3 me-1"></i>YEARS</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fs of freelancerSkills.slice(0,5)" class="skill-row">
+            <td>
+              <span class="skill-name">
+                <i class="bi bi-code-slash me-1 text-muted"></i>
+                {{ fs.customSkillName || fs?.skill?.name }}
+              </span>
+            </td>
+            <td>
+              <span class="category-tag">{{ fs?.skill?.category || '—' }}</span>
+            </td>
+            <td>
+              <span class="level-badge" [ngClass]="getLevelClass(fs?.level)">
+                {{ fs?.level }}
+              </span>
+            </td>
+            <td class="years-cell">
+              <i class="bi bi-clock me-1 text-muted"></i>
+              {{ fs?.yearsExperience || 0 }} yr{{ fs?.yearsExperience !== 1 ? 's' : '' }}
+            </td>
+            <td>
+              <div class="action-btns">
+                <a [routerLink]="['/front/freelancer-skills/edit', fs?.id]"
+                   class="action-edit" title="Edit">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                <button type="button" (click)="deleteSkill(fs?.id!)"
+                        class="action-delete" title="Delete">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="freelancerSkills.length === 0">
+            <td colspan="5" class="empty-row">
+              <i class="bi bi-inbox me-2"></i>No skills found —
+              <a routerLink="/front/freelancer-skills/add">Add your first skill</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ===== SUMMARY GRID ===== -->
+    <div class="summary-grid">
+
+      <!-- EXPERIENCE -->
+      <div class="summary-card exp-card fade-in delay-2">
+        <div class="summary-card-header">
+          <div class="summary-icon-wrap exp-wrap">
+            <i class="bi bi-briefcase-fill"></i>
+          </div>
+          <div>
+            <div class="summary-card-title">Experience</div>
+            <div class="summary-card-sub">{{ experiences.length }} role(s)</div>
+          </div>
+          <a routerLink="/front/experience" class="manage-link">
+            Manage <i class="bi bi-arrow-up-right"></i>
+          </a>
+        </div>
+
+        <div *ngIf="latestExperience; else noExperience" class="exp-highlight">
+          <div class="exp-company-badge">
+            {{ latestExperience?.company | uppercase }}
+          </div>
+          <div class="exp-main-info">
+            <div class="exp-role">{{ latestExperience?.title }}</div>
+            <div class="exp-dates">
+              <i class="bi bi-calendar3 me-1"></i>
+              {{ latestExperience?.startDate | date:'MMM yyyy' }} –
+              {{ latestExperience?.endDate ? (latestExperience?.endDate | date:'MMM yyyy') : 'Present' }}
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="latestExperience" class="exp-stat-box">
+          <div class="exp-stat-label">
+            <i class="bi bi-hourglass-split me-1"></i>TOTAL EXPERIENCE
+          </div>
+          <div class="exp-stat-value">{{ totalYears | number:'1.0-1' }} Years</div>
+        </div>
+
+        <ng-template #noExperience>
+          <div class="empty-text">
+            <i class="bi bi-inbox me-1"></i> No experience added yet.
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="summary-card fade-in delay-3">
+        <div class="summary-card-header">
+          <div class="summary-icon-wrap edu-wrap">
+            <i class="bi bi-mortarboard-fill"></i>
+          </div>
+          <div>
+            <div class="summary-card-title">Education</div>
+            <div class="summary-card-sub">Highest: {{ highestDegree || 'N/A' }}</div>
+          </div>
+          <a routerLink="/front/education" class="manage-link">
+            Manage <i class="bi bi-arrow-up-right"></i>
+          </a>
+        </div>
+
+        <ng-container *ngIf="latestEducation; else emptyEdu">
+          <div class="edu-main-card">
+            <div class="edu-logo">
+              <i class="bi bi-bank"></i>
+            </div>
+            <div>
+              <div class="edu-degree">{{ latestEducation.degree }}</div>
+              <div class="edu-university">
+                <i class="bi bi-geo-alt me-1"></i>
+                {{ latestEducation.institution }} · {{ latestEducation.year }}
+              </div>
+            </div>
+          </div>
+          <div class="edu-info-row">
+            <div class="edu-info-box">
+              <div class="edu-label"><i class="bi bi-building me-1"></i>INSTITUTION</div>
+              <div class="edu-value">{{ latestEducation.institution }}</div>
+            </div>
+            <div class="edu-info-box">
+              <div class="edu-label"><i class="bi bi-calendar-check me-1"></i>GRADUATION</div>
+              <div class="edu-value">Class of {{ latestEducation.year }}</div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #emptyEdu>
+          <div class="empty-text">
+            <i class="bi bi-inbox me-1"></i> No education added yet.
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- AVAILABILITY -->
+      <div class="summary-card fade-in delay-4">
+        <div class="summary-card-header">
+          <div class="summary-icon-wrap avail-wrap">
+            <i class="bi bi-clock-fill"></i>
+          </div>
+          <div>
+            <div class="summary-card-title">Availability</div>
+            <div class="summary-card-sub">{{ getAvailLabel() }}</div>
+          </div>
+          <a routerLink="/front/availability" class="manage-link">
+            Manage <i class="bi bi-arrow-up-right"></i>
+          </a>
+        </div>
+
+        <div class="avail-info" *ngIf="availability; else noAvail">
+          <div class="avail-hours">
+            <i class="bi bi-clock me-1"></i>
+            {{ availability?.hoursPerWeek }}
+            <span>hrs / week</span>
+          </div>
+          <div class="avail-status">
+            <i class="bi bi-circle-fill me-1" style="font-size:8px"></i>
+            Available
+          </div>
+        </div>
+
+        <ng-template #noAvail>
+          <div class="empty-text">
+            <i class="bi bi-inbox me-1"></i> No availability set.
+          </div>
+        </ng-template>
+      </div>
+
+    </div>
+
+    <!-- ===== CV UPLOAD ===== -->
+    <div class="section-card fade-in delay-1 cv-upload-card">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="bi bi-file-earmark-person me-2"></i>CV Upload & Analysis
+        </h2>
+      </div>
+
+      <div class="cv-upload-body">
+        <label class="btn-upload">
+          <i class="bi bi-cloud-upload-fill"></i>
+          Upload CV
+          <input type="file" hidden accept=".pdf,.doc,.docx" (change)="onFileSelected($event)">
+        </label>
+
+        <div *ngIf="selectedFileName" class="file-name">
+          <i class="bi bi-file-earmark-check me-1 text-success"></i>
+          {{ selectedFileName }}
+        </div>
+
+        <div *ngIf="uploading" class="loading-state mt-3">
+          <div class="spinner-border spinner-border-sm text-primary"></div>
+          <span>Extracting data...</span>
+        </div>
+
+        <div *ngIf="extractedData" class="cv-results mt-4">
+
+          <!-- SCORE -->
+          <div class="cv-score-box mb-4">
+            <h5><i class="bi bi-speedometer2 me-2"></i>Analysis Score</h5>
+            <div class="progress">
+              <div class="progress-bar"
+                   role="progressbar"
+                   [style.width.%]="extractedData.confidence_score"
+                   [ngClass]="{
+                     'bg-success': extractedData.confidence_score >= 80,
+                     'bg-warning': extractedData.confidence_score >= 50 && extractedData.confidence_score < 80,
+                     'bg-danger': extractedData.confidence_score < 50
+                   }">
+                {{ extractedData.confidence_score }}%
+              </div>
+            </div>
+          </div>
+
+          <!-- SKILLS -->
+          <div class="mb-4">
+            <h5><i class="bi bi-tags-fill me-2"></i>Extracted Skills</h5>
+            <span class="badge bg-primary me-2 mb-2" *ngFor="let skill of extractedData.skills">
+              {{ skill }}
+            </span>
+            <div *ngIf="extractedData.skills?.length === 0" class="empty-text">
+              <i class="bi bi-search me-1"></i> No skills detected.
+            </div>
+          </div>
+
+          <!-- EDUCATION -->
+          <div class="mb-4">
+            <h5><i class="bi bi-mortarboard me-2"></i>Education</h5>
+            <div *ngFor="let edu of extractedData.education" class="cv-card-mini">
+              <strong>{{ edu.degree }}</strong>
+              <div class="text-muted small">
+                <i class="bi bi-building me-1"></i>{{ edu.institution }}
+              </div>
+              <div class="text-muted small">
+                <i class="bi bi-calendar3 me-1"></i>{{ edu.startYear }} - {{ edu.endYear }}
+              </div>
+            </div>
+            <div *ngIf="extractedData.education?.length === 0" class="empty-text">
+              <i class="bi bi-inbox me-1"></i> No education detected.
+            </div>
+          </div>
+
+          <!-- EXPERIENCE -->
+          <div class="mb-4">
+            <h5><i class="bi bi-briefcase me-2"></i>Experience</h5>
+            <div *ngFor="let exp of extractedData.experience" class="cv-card-mini">
+              <strong>{{ exp.jobTitle }}</strong>
+              <div class="text-muted small">
+                <i class="bi bi-building me-1"></i>{{ exp.company || 'Company not detected' }}
+              </div>
+              <div class="text-muted small">
+                <i class="bi bi-calendar3 me-1"></i>{{ exp.startDate || '-' }} - {{ exp.endDate || '-' }}
+              </div>
+            </div>
+            <div *ngIf="extractedData.experience?.length === 0" class="empty-text">
+              <i class="bi bi-inbox me-1"></i> No experience detected.
+            </div>
+          </div>
+
+          <!-- AUTO ADD -->
+          <button class="btn btn-success mt-2"
+                  [disabled]="!extractedData?.skills?.length || uploading"
+                  (click)="preCheckSkills()">
+            <i class="bi bi-magic me-2"></i>Analyze & Add Skills
+          </button>
+          <span *ngIf="extractedData?.skills?.length" class="badge bg-secondary ms-2">
+            <i class="bi bi-list-check me-1"></i>{{ extractedData.skills.length }} skill(s)
+          </span>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- ===== END MAIN ===== -->
+
+  <!-- ================= RIGHT SIDEBAR ================= -->
+  <div class="dashboard-sidebar">
+
+    <div class="duplicate-ai-card fade-in" *ngIf="duplicatePairs.length > 0">
+      <div class="ai-header">
+        <div class="ai-icon-wrap">
+          <i class="bi bi-robot"></i>
+        </div>
+        <div>
+          <div class="ai-title">Duplicate Detection</div>
+          <div class="ai-sub">AI similarity analysis</div>
+        </div>
+      </div>
+
+      <div *ngIf="loadingDuplicates" class="loading-state">
+        <div class="spinner-border spinner-border-sm text-warning"></div>
+      </div>
+
+      <div *ngIf="!loadingDuplicates">
+        <div *ngFor="let pair of duplicatePairs" class="ai-duplicate-item">
+          <div class="ai-skill-pair">
+            <span class="skill-a">
+              <i class="bi bi-tag me-1"></i>{{ pair.skillA }}
+            </span>
+            <span class="approx"><i class="bi bi-arrows-collapse"></i></span>
+            <span class="skill-b">
+              <i class="bi bi-tag me-1"></i>{{ pair.skillB }}
+            </span>
+          </div>
+          <div class="ai-confidence">
+            <div class="confidence-bar">
+              <div class="confidence-fill" [style.width.%]="pair.confidence * 100"></div>
+            </div>
+            <div class="confidence-text">
+              <i class="bi bi-graph-up me-1"></i>{{ pair.confidence * 100 | number:'1.0-0' }}% match
+            </div>
+          </div>
+          <div class="ai-hint">
+            <i class="bi bi-lightbulb me-1"></i>Consider merging these skills
+          </div>
+          <button class="btn-merge">
+            <i class="bi bi-intersect me-1"></i>Merge
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</div>

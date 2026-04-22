@@ -1,0 +1,162 @@
+.webcam-container {
+  position: fixed;
+  width: min(220px, calc(100vw - 32px));
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.webcam-container-dragging {
+  cursor: grabbing;
+}
+
+.webcam-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border: 1px solid #cfd8e3;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.1);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.webcam-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #122033;
+}
+
+.webcam-status {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eef2f7;
+  color: #526173;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.webcam-status.ready {
+  background: #e7f6ee;
+  color: #17633d;
+}
+
+.webcam-status.error {
+  background: #fdecec;
+  color: #a12828;
+}
+
+.webcam-frame {
+  position: relative;
+  min-height: 150px;
+  overflow: hidden;
+  border: 1px solid #cfd8e3;
+  border-radius: 14px;
+  background: #0f172a;
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.14);
+}
+
+.webcam-frame-error {
+  border-color: #f2b7b7;
+  background: #fff7f7;
+}
+
+video {
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.webcam-hidden {
+  opacity: 0;
+}
+
+.webcam-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.82);
+  color: #f8fafc;
+}
+
+.webcam-overlay p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.webcam-overlay span {
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(248, 250, 252, 0.88);
+}
+
+.webcam-overlay-error {
+  background: rgba(255, 247, 247, 0.96);
+  color: #7f1d1d;
+}
+
+.webcam-overlay-error span {
+  color: #8a3b3b;
+}
+
+.webcam-error-title {
+  color: #991b1b;
+}
+
+.retry-button {
+  margin-top: 6px;
+  padding: 8px 12px;
+  border: 1px solid #d77a7a;
+  border-radius: 10px;
+  background: #fff;
+  color: #8f2222;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.retry-button:hover {
+  background: #fff1f1;
+}
+
+.webcam-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+  border-radius: 999px;
+  animation: webcam-spin 0.8s linear infinite;
+}
+
+.webcam-warning {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid #f1cf8d;
+  border-radius: 12px;
+  background: #fff8e8;
+  color: #8a5a1e;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+@keyframes webcam-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

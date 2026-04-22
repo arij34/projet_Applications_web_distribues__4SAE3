@@ -1,0 +1,38 @@
+<div class="card">
+  <div class="card-accent"></div>
+  <div class="card-head">
+    <span class="card-label">Exam statistics</span>
+  </div>
+  <div class="card-body">
+    <div class="stat-row">
+      <span class="stat-key">Total questions</span>
+      <span class="stat-num">{{ totalQuestions }}</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-key">Total points</span>
+      <span class="stat-num">{{ totalPoints }}</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-key">Passing score</span>
+      <span class="stat-num sm">{{ passingScore }}%</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-key">Est. duration</span>
+      <span class="stat-num sm">{{ estDuration }} min</span>
+    </div>
+
+    <div class="diff-section">
+      <div class="diff-label">By difficulty</div>
+      <div class="diff-track">
+        <div class="seg seg-easy" [style.width.%]="easyPct"></div>
+        <div class="seg seg-medium" [style.width.%]="mediumPct"></div>
+        <div class="seg seg-hard" [style.width.%]="hardPct"></div>
+      </div>
+      <div class="diff-legend">
+        <div class="legend-item"><div class="legend-dot dot-easy"></div>Easy · {{ easyCount }}</div>
+        <div class="legend-item"><div class="legend-dot dot-medium"></div>Med · {{ mediumCount }}</div>
+        <div class="legend-item"><div class="legend-dot dot-hard"></div>Hard · {{ hardCount }}</div>
+      </div>
+    </div>
+  </div>
+</div>
