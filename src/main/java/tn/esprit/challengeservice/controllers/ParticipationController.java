@@ -2,8 +2,10 @@ package tn.esprit.challengeservice.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.challengeservice.dtos.SaveSonarPointsRequest;
 import tn.esprit.challengeservice.entities.ChallengeParticipation;
 import tn.esprit.challengeservice.entities.SonarCloudResult;
+import tn.esprit.challengeservice.exceptions.SonarResultsNotFoundException;
 import tn.esprit.challengeservice.services.GitHubService;
 import tn.esprit.challengeservice.services.iparticipationService;
 
@@ -124,7 +126,16 @@ public class ParticipationController {
 
     @GetMapping("/{participationId}/sonar-results")
     public SonarCloudResult getSonarResults(@PathVariable String participationId) {
-        return participationService.getSonarResults(participationId);
+        try {
+            return participationService.getSonarResults(participationId);
+        } catch (SonarResultsNotFoundException e) {
+            // Try to fetch from SonarCloud (analysis may have just finished)
+            try {
+                return participationService.fetchSonarResults(participationId);
+            } catch (Exception ex) {
+                throw e;
+            }
+        }
     }
 
     @GetMapping("/{participationId}/sonar-results/status")
@@ -146,6 +157,17 @@ public class ParticipationController {
     public SonarCloudResult updateSonarResults(@PathVariable String participationId,
                                                @RequestBody SonarCloudResult updatedResult) {
         return participationService.updateSonarResults(participationId, updatedResult);
+    }
+
+    @PatchMapping("/{participationId}/sonar-results/{sonarResultId}/points")
+    public void saveSonarPoints(@PathVariable String participationId,
+                                @PathVariable String sonarResultId,
+                                @RequestBody SaveSonarPointsRequest body) {
+        Integer points = body != null ? body.getPointsAwarded() : null;
+        if (points == null) {
+            throw new IllegalArgumentException("pointsAwarded is required");
+        }
+        participationService.saveSonarPoints(participationId, sonarResultId, points);
     }
 
     @GetMapping("/github/user-exists/{usernameGithub}")

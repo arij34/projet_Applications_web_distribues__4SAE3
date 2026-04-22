@@ -75,7 +75,23 @@
             <artifactId>jna</artifactId>
             <version>5.14.0</version>
         </dependency>
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 
+        <!-- OAuth2 Resource Server (Keycloak JWT validation) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+
+        <!-- JWT decoding (required for Keycloak) -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -90,6 +106,8 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+
 
     <!-- Spring Cloud Dependency Management -->
     <dependencyManagement>

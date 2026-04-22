@@ -28,6 +28,7 @@ public class SonarCloudResult {
     private int linesOfCode;
     private String pullRequestKey;
     private Date analyzedAt;
+    private Integer pointsAwarded;
 
     @JsonIgnore
     @OneToOne
