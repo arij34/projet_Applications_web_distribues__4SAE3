@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.smartfreelance.subscription.service.SubscriptionServiceTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.029 s -- in com.smartfreelance.subscription.service.SubscriptionServiceTest
