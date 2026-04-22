@@ -1,6 +1,5 @@
 package tn.freelancy.skillmanagement.Controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.freelancy.skillmanagement.dto.SkillMatchResult;
@@ -15,11 +14,14 @@ import java.util.Map;
 @RequestMapping("/skills")
 public class SkillController {
 
-    @Autowired
-    private SkillService skillService;
+    private final SkillService skillService;
+    private final SkillMatcherService skillMatcherService;
 
-    @Autowired
-    private SkillMatcherService skillMatcherService;
+    public SkillController(SkillService skillService,
+                           SkillMatcherService skillMatcherService) {
+        this.skillService = skillService;
+        this.skillMatcherService = skillMatcherService;
+    }
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Skill skill) {
@@ -38,10 +40,7 @@ public class SkillController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         Skill skill = skillService.getSkillById(id);
-        if (skill == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(skill);
+        return skill != null ? ResponseEntity.ok(skill) : ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
@@ -49,9 +48,7 @@ public class SkillController {
 
         Skill existing = skillService.getSkillById(id);
 
-        if (existing == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (existing == null) return ResponseEntity.notFound().build();
 
         existing.setName(skill.getName());
         existing.setNormalizedName(skill.getNormalizedName());
@@ -70,7 +67,7 @@ public class SkillController {
         }
     }
 
-    // ✅ MATCH / DID YOU MEAN
+    // ✅ MATCH
     @GetMapping("/match")
     public ResponseEntity<?> matchSkill(@RequestParam String input) {
 

@@ -1,13 +1,10 @@
 package tn.freelancy.skillmanagement.Controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.freelancy.skillmanagement.clients.UserDto;
 import tn.freelancy.skillmanagement.clients.UserServiceClient;
-import tn.freelancy.skillmanagement.dto.DuplicateSkillDTO;
-import tn.freelancy.skillmanagement.dto.SkillCheckResponse;
-import tn.freelancy.skillmanagement.dto.SkillMatchResult;
+import tn.freelancy.skillmanagement.dto.*;
 import tn.freelancy.skillmanagement.entity.FreelancerSkill;
 import tn.freelancy.skillmanagement.entity.Level;
 import tn.freelancy.skillmanagement.service.FreelancerSkillService;
@@ -21,16 +18,19 @@ import java.util.Map;
 @RequestMapping("/freelancer-skill")
 public class FreelancerSkillController {
 
-    @Autowired
-    private FreelancerSkillService freelancerSkillService;
+    private final FreelancerSkillService freelancerSkillService;
+    private final SkillMatcherService skillMatcherService;
+    private final UserServiceClient userServiceClient;
 
-    @Autowired
-    private SkillMatcherService skillMatcherService;
+    public FreelancerSkillController(FreelancerSkillService freelancerSkillService,
+                                     SkillMatcherService skillMatcherService,
+                                     UserServiceClient userServiceClient) {
+        this.freelancerSkillService = freelancerSkillService;
+        this.skillMatcherService = skillMatcherService;
+        this.userServiceClient = userServiceClient;
+    }
 
-    @Autowired
-    private UserServiceClient userServiceClient;
-
-    // ✅ CREATE (avec gestion suggestion)
+    // ✅ CREATE
     @PostMapping("/user/me")
     public ResponseEntity<?> createFreelancerSkillForCurrentUser(
             @RequestHeader("Authorization") String authorization,
@@ -44,7 +44,6 @@ public class FreelancerSkillController {
 
             SkillMatchResult match = skillMatcherService.findMatchOrSuggest(skillInput.trim());
 
-            // 🔴 "Did you mean" → suggestion SANS création SAUF si forceCreate=true
             if (match != null && match.isSuggestion() && !forceCreate) {
                 return ResponseEntity.ok(Map.of(
                         "type", "suggestion",
@@ -54,9 +53,8 @@ public class FreelancerSkillController {
                 ));
             }
 
-            // Ici on crée le skill même s'il y a suggestion SI forceCreate=true
-            FreelancerSkill saved = freelancerSkillService
-                    .createFreelancerSkill(userId, freelancerSkill, skillInput);
+            FreelancerSkill saved =
+                    freelancerSkillService.createFreelancerSkill(userId, freelancerSkill, skillInput);
 
             return ResponseEntity.ok(Map.of(
                     "type", "success",
@@ -68,47 +66,17 @@ public class FreelancerSkillController {
         }
     }
 
-    // ✅ CREATE CV
-    @PostMapping("/CV/me")
-    public ResponseEntity<?> createFreelancerSkillCVForCurrentUser(
-            @RequestHeader("Authorization") String authorization,
-            @RequestParam String skillInput,
-            @RequestBody FreelancerSkill freelancerSkill) {
-
-        try {
-            UserDto currentUser = userServiceClient.getCurrentUser(authorization);
-            Long userId = currentUser.getId();
-
-            FreelancerSkill saved = freelancerSkillService
-                    .createFreelancerSkillCv(userId, freelancerSkill, skillInput);
-
-            return ResponseEntity.ok(Map.of(
-                    "type", "success",
-                    "data", buildSkillResponse(saved)
-            ));
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
-
-    // ✅ GET skills user connecté
+    // ✅ GET USER SKILLS
     @GetMapping("/user/me")
     public ResponseEntity<?> getAllForCurrentUser(
             @RequestHeader("Authorization") String authorization) {
 
-        try {
-            UserDto currentUser = userServiceClient.getCurrentUser(authorization);
-            Long userId = currentUser.getId();
+        UserDto currentUser = userServiceClient.getCurrentUser(authorization);
+        Long userId = currentUser.getId();
 
-            List<FreelancerSkill> skills =
-                    freelancerSkillService.getFreelancerSkillsByUserId(userId);
-
-            return ResponseEntity.ok(skills);
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(
+                freelancerSkillService.getFreelancerSkillsByUserId(userId)
+        );
     }
 
     // ✅ DELETE
@@ -120,37 +88,36 @@ public class FreelancerSkillController {
 
     // ✅ LEVEL
     @GetMapping("/level/{years}")
-    public ResponseEntity<Map<String, Object>> getLevelByYears(@PathVariable int years) {
+    public ResponseEntity<Map<String, Object>> getLevel(@PathVariable int years) {
 
-        Level calculatedLevel = freelancerSkillService.calculateLevel(years);
+        Level level = freelancerSkillService.calculateLevel(years);
 
         Map<String, Object> response = new HashMap<>();
         response.put("years", years);
-        response.put("level", calculatedLevel.ordinal() + 1);
-        response.put("label", calculatedLevel.name());
+        response.put("level", level);
+        response.put("label", level.name());
 
         return ResponseEntity.ok(response);
     }
 
-    // ✅ DUPLICATES (corrigé)
+    // ✅ DUPLICATES
     @GetMapping("/user/{userId}/duplicates")
     public ResponseEntity<List<DuplicateSkillDTO>> getDuplicateSkills(@PathVariable Long userId) {
         return ResponseEntity.ok(freelancerSkillService.detectDuplicates(userId));
     }
 
-    // ✅ CHECK SKILLS (unique API)
+    // ✅ CHECK SKILLS
     @PostMapping("/check-skills/me")
-    public ResponseEntity<SkillCheckResponse> checkSkillsForCurrentUser(
+    public ResponseEntity<SkillCheckResponse> checkSkills(
             @RequestHeader("Authorization") String authorization,
             @RequestBody List<String> skills) {
 
         UserDto currentUser = userServiceClient.getCurrentUser(authorization);
         Long userId = currentUser.getId();
 
-        SkillCheckResponse response =
-                freelancerSkillService.checkExistingSkills(userId, skills);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(
+                freelancerSkillService.checkExistingSkills(userId, skills)
+        );
     }
 
     // ===== HELPER =====
@@ -171,51 +138,5 @@ public class FreelancerSkillController {
         response.put("isCustom", saved.getSkill() == null);
 
         return response;
-    }
-
-    @PutMapping("/user/me/{id}")
-    public ResponseEntity<?> updateFreelancerSkillForCurrentUser(
-            @RequestHeader("Authorization") String authorization,
-            @PathVariable Long id,
-            @RequestBody FreelancerSkill freelancerSkill) {
-
-        try {
-            UserDto currentUser = userServiceClient.getCurrentUser(authorization);
-            Long userId = currentUser.getId();
-
-            // Sécurité : on vérifie que le skill appartient bien à cet utilisateur
-            FreelancerSkill existing = freelancerSkillService.getFreelancerSkillById(id);
-            if (existing == null || !existing.getUserId().equals(userId)) {
-                return ResponseEntity.status(403).body(Map.of("error", "Unauthorized or not found"));
-            }
-
-            // On force : seul l'utilisateur connecté peut modifier le skill
-            freelancerSkill.setId(id);
-            freelancerSkill.setUserId(userId);
-
-            FreelancerSkill updated = freelancerSkillService.updateFreelancerSkill(freelancerSkill);
-
-            return ResponseEntity.ok(updated);
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getFreelancerSkillById(
-            @PathVariable Long id,
-            @RequestHeader("Authorization") String authorization) {
-        try {
-            UserDto currentUser = userServiceClient.getCurrentUser(authorization);
-            FreelancerSkill skill = freelancerSkillService.getFreelancerSkillById(id);
-            // Optionnel : Sécuriser (vérifie que skill appartient bien au user connecté)
-            if (skill == null || !skill.getUserId().equals(currentUser.getId())) {
-                return ResponseEntity.status(404).body(Map.of("error", "Not found"));
-            }
-            return ResponseEntity.ok(skill);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
     }
 }
