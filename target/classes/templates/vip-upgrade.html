@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reçu VIP — Freelancy</title>
+</head>
+<body style="margin:0;padding:0;background-color:#eaf3fd;font-family:'Segoe UI',Arial,Helvetica,sans-serif;color:#1a2b6b;">
+
+<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#eaf3fd">
+  <tr>
+    <td align="center" style="padding:40px 16px 56px;">
+
+      <!-- ══════════════ CARD ══════════════ -->
+      <table width="600" cellpadding="0" cellspacing="0"
+             style="max-width:600px;width:100%;border-radius:22px;overflow:hidden;
+                    box-shadow:0 8px 40px rgba(45,78,170,0.14);background:#ffffff;">
+
+        <!-- ── HERO ── -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#1a2b6b 0%,#2d4eaa 55%,#4a72cc 100%);padding:0;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+
+              <!-- Logo row -->
+              <tr>
+                <td style="padding:22px 30px 0;">
+                  <table cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);
+                                 border-radius:9px;padding:7px 15px;">
+                        <span style="color:#ffffff;font-size:13px;font-weight:800;letter-spacing:0.06em;">
+                          ✦ FREELANCY
+                        </span>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- Hero text -->
+              <tr>
+                <td style="padding:26px 30px 46px;text-align:center;">
+                  <!-- Gold icon -->
+                  <div style="display:inline-block;width:62px;height:62px;line-height:62px;
+                              background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.32);
+                              border-radius:50%;text-align:center;font-size:26px;margin-bottom:14px;">
+                    ⭐
+                  </div>
+                  <h1 style="margin:0 0 6px;color:#ffffff;font-size:24px;font-weight:800;letter-spacing:-0.02em;">
+                    Paiement confirmé !
+                  </h1>
+                  <p style="margin:0;color:rgba(255,255,255,0.6);font-size:13px;">
+                    Reçu de paiement — Upgrade VIP
+                  </p>
+                </td>
+              </tr>
+
+            </table>
+            <!-- White curve -->
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="background:#ffffff;height:22px;border-radius:22px 22px 0 0;display:block;"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- ── BODY ── -->
+        <tr>
+          <td style="padding:6px 34px 32px;background:#ffffff;">
+
+            <!-- Greeting -->
+            <p style="font-size:15px;color:#1a2b6b;margin:0 0 4px;font-weight:700;">
+              Bonjour {{customerEmail}} 👋
+            </p>
+            <p style="font-size:13px;color:#8a9bc0;margin:0 0 26px;line-height:1.65;">
+              Nous confirmons la réception de votre paiement.<br/>
+              Votre abonnement <strong style="color:#b45309;">VIP</strong> est maintenant actif.
+            </p>
+
+            <!-- ── Receipt block ── -->
+            <table width="100%" cellpadding="0" cellspacing="0"
+                   style="border-radius:14px;overflow:hidden;
+                          border:1px solid #c5d8f8;margin-bottom:22px;">
+              <!-- Block header -->
+              <tr>
+                <td colspan="2"
+                    style="background:#ddeaf8;border-bottom:1px solid #c5d8f8;
+                           padding:11px 18px;">
+                  <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;
+                               text-transform:uppercase;color:#4a5a8a;">
+                    💳 Détails du paiement
+                  </span>
+                </td>
+              </tr>
+
+              <!-- Row: Plan -->
+              <tr style="border-bottom:1px solid #eaf3fd;">
+                <td style="padding:13px 18px;font-size:13px;color:#8a9bc0;">Plan</td>
+                <td style="padding:13px 18px;text-align:right;">
+                  <span style="background:rgba(245,158,11,0.1);color:#b45309;
+                               border:1px solid rgba(245,158,11,0.22);border-radius:50px;
+                               padding:3px 12px;font-size:11px;font-weight:800;letter-spacing:0.05em;">
+                    ⭐ VIP
+                  </span>
+                </td>
+              </tr>
+
+              <!-- Row: Original amount -->
+              <tr style="border-bottom:1px solid #eaf3fd;">
+                <td style="padding:13px 18px;font-size:13px;color:#8a9bc0;">Prix initial</td>
+                <td style="padding:13px 18px;text-align:right;
+                           font-size:13px;font-weight:800;color:#1a2b6b;letter-spacing:-0.01em;">
+                  {{originalAmount}}
+                </td>
+              </tr>
+
+              {{discountRow}}
+
+              <!-- Row: Paid amount -->
+              <tr style="border-bottom:1px solid #eaf3fd;">
+                <td style="padding:13px 18px;font-size:13px;color:#8a9bc0;">Montant payé</td>
+                <td style="padding:13px 18px;text-align:right;
+                           font-size:16px;font-weight:800;color:#1a2b6b;letter-spacing:-0.01em;">
+                  {{paidAmount}}
+                </td>
+              </tr>
+
+              <!-- Row: End date -->
+              <tr>
+                <td style="padding:13px 18px;font-size:13px;color:#8a9bc0;">Fin d'abonnement</td>
+                <td style="padding:13px 18px;text-align:right;
+                           font-size:13px;font-weight:700;color:#1a2b6b;">
+                  {{endDate}}
+                </td>
+              </tr>
+            </table>
+
+            <!-- ── Perks ── -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:26px;">
+              <tr>
+                <td style="padding-bottom:10px;">
+                  <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;
+                               text-transform:uppercase;color:#b8c7e0;">
+                    Ce que vous débloquez
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="50%" style="padding:0 5px 8px 0;vertical-align:top;">
+                        <table width="100%" cellpadding="0" cellspacing="0"
+                               style="background:#eaf3fd;border:1px solid #c5d8f8;border-radius:10px;">
+                          <tr>
+                            <td style="padding:10px 13px;font-size:12px;color:#4a5a8a;">
+                              <span style="color:#059669;font-weight:800;margin-right:5px;">✓</span>
+                              Candidatures illimitées
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                      <td width="50%" style="padding:0 0 8px 5px;vertical-align:top;">
+                        <table width="100%" cellpadding="0" cellspacing="0"
+                               style="background:#eaf3fd;border:1px solid #c5d8f8;border-radius:10px;">
+                          <tr>
+                            <td style="padding:10px 13px;font-size:12px;color:#4a5a8a;">
+                              <span style="color:#059669;font-weight:800;margin-right:5px;">✓</span>
+                              Priorité dans les résultats
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="50%" style="padding:0 5px 0 0;vertical-align:top;">
+                        <table width="100%" cellpadding="0" cellspacing="0"
+                               style="background:#eaf3fd;border:1px solid #c5d8f8;border-radius:10px;">
+                          <tr>
+                            <td style="padding:10px 13px;font-size:12px;color:#4a5a8a;">
+                              <span style="color:#059669;font-weight:800;margin-right:5px;">✓</span>
+                              Challenges VIP exclusifs
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                      <td width="50%" style="padding:0 0 0 5px;vertical-align:top;">
+                        <table width="100%" cellpadding="0" cellspacing="0"
+                               style="background:#eaf3fd;border:1px solid #c5d8f8;border-radius:10px;">
+                          <tr>
+                            <td style="padding:10px 13px;font-size:12px;color:#4a5a8a;">
+                              <span style="color:#059669;font-weight:800;margin-right:5px;">✓</span>
+                              Support dédié 24/7
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+
+            <!-- ── CTA ── -->
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="center" style="padding-bottom:24px;">
+                  <a href="{{dashboardUrl}}"
+                     style="display:inline-block;
+                            background:linear-gradient(135deg,#1a2b6b,#2d4eaa);
+                            color:#ffffff;text-decoration:none;
+                            padding:14px 38px;border-radius:50px;
+                            font-size:14px;font-weight:800;letter-spacing:0.01em;
+                            box-shadow:0 6px 20px rgba(45,78,170,0.32);">
+                    Accéder à mon espace →
+                  </a>
+                </td>
+              </tr>
+            </table>
+
+            <!-- ── Disclaimer ── -->
+            <p style="margin:0;font-size:12px;color:#b8c7e0;line-height:1.65;
+                      padding-top:18px;border-top:1px solid #eaf3fd;">
+              Si vous n'êtes pas à l'origine de cette opération, merci de contacter notre support immédiatement.<br/>
+              <strong style="color:#8a9bc0;">L'équipe Freelancy</strong>
+            </p>
+
+          </td>
+        </tr>
+
+        <!-- ── FOOTER ── -->
+        <tr>
+          <td style="background:#eaf3fd;border-top:1px solid #ddeaf8;
+                     padding:16px 30px;text-align:center;">
+            <p style="margin:0;font-size:11px;color:#b8c7e0;letter-spacing:0.02em;">
+              © {{year}} <strong style="color:#8a9bc0;">Freelancy</strong> — Smart Freelance Platform
+              &nbsp;·&nbsp; Ceci est un email automatique.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+      <!-- end card -->
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
