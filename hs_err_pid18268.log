@@ -1,0 +1,270 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_IN_PAGE_ERROR (0xc0000006) at pc=0x00007ff86f8f1989, pid=18268, tid=1556
+#
+# JRE version:  (17.0.12+1) (build )
+# Java VM: OpenJDK 64-Bit Server VM (17.0.12+1-b1207.37, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, windows-amd64)
+# Problematic frame:
+# C  [VCRUNTIME140.dll+0x1989]
+#
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Dmaven.multiModuleProjectDirectory=D:\projet_pi\backend\projet_Module -Djansi.passthrough=true -Dmaven.home=C:\Users\wiki\.m2\wrapper\dists\apache-maven-3.9.12-bin\5nmfsn99br87k5d4ajlekdq10k\apache-maven-3.9.12 -Dclassworlds.conf=C:\Users\wiki\.m2\wrapper\dists\apache-maven-3.9.12-bin\5nmfsn99br87k5d4ajlekdq10k\apache-maven-3.9.12\bin\m2.conf -Dmaven.ext.class.path=C:\Program Files\JetBrains\IntelliJ IDEA 2024.2.1\plugins\maven\lib\maven-event-listener.jar -javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2024.2.1\lib\idea_rt.jar=56664:C:\Program Files\JetBrains\IntelliJ IDEA 2024.2.1\bin -Dfile.encoding=UTF-8 org.codehaus.classworlds.Launcher -Didea.version=2024.2.1 -DskipTests=true install
+
+Host: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz, 8 cores, 15G,  Windows 11 , 64 bit Build 22621 (10.0.22621.5415)
+Time: Sun Mar  1 23:15:30 2026 Afr. centrale Ouest elapsed time: 0.043938 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread is native thread
+
+Stack: [0x000000f50dc00000,0x000000f50dd00000],  sp=0x000000f50dcff120,  free space=1020k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [VCRUNTIME140.dll+0x1989]
+V  [jvm.dll+0x6ab993]  mapping_create_shared+0x3f3  (perfMemory_windows.cpp:1500)
+V  [jvm.dll+0x6aa657]  PerfMemory::create_memory_region+0x17  (perfMemory_windows.cpp:1740)
+V  [jvm.dll+0x6aa200]  perfMemory_init+0x70  (perfMemory.cpp:62)
+V  [jvm.dll+0x370777]  vm_init_globals+0x27  (init.cpp:111)
+V  [jvm.dll+0x7f28f1]  Threads::create_vm+0x391  (thread.cpp:2871)
+V  [jvm.dll+0x3f4aaf]  JNI_CreateJavaVM_inner+0x8f  (jni.cpp:3654)
+V  [jvm.dll+0x3f6661]  JNI_CreateJavaVM+0x11  (jni.cpp:3746)
+C  [jli.dll+0x528f]  JavaMain+0x113  (java.c:413)
+C  [ucrtbase.dll+0x29333]
+C  [KERNEL32.DLL+0x1259d]
+C  [ntdll.dll+0x5af78]
+
+
+siginfo: EXCEPTION_IN_PAGE_ERROR (0xc0000006), writing address 0x0000020d3cd90000
+
+
+Registers:
+RAX=0x0000000000000000, RBX=0x0000020d3cd90000, RCX=0x0000000000010000, RDX=0x0000000000000000
+RSP=0x000000f50dcff120, RBP=0x0000020d3ee3fc90, RSI=0x0000020d3cd48470, RDI=0x0000020d3cd90000
+R8 =0x0000000000010000, R9 =0x0000000000000000, R10=0x0000000000000000, R11=0x0000020d3cd90000
+R12=0x0000000000000001, R13=0x00007ff818c789d0, R14=0x0000020d3cc66170, R15=0x0000000000010000
+RIP=0x00007ff86f8f1989, EFLAGS=0x0000000000010202
+
+
+Top of Stack: (sp=0x000000f50dcff120)
+0x000000f50dcff120:   0000000000000000 00007ff81894b993
+0x000000f50dcff130:   0000020d3ee3fc90 0000020d3cd48470
+0x000000f50dcff140:   0000020d3cd48470 00000000000001f0
+0x000000f50dcff150:   0000000000010000 000000f50dcff170
+0x000000f50dcff160:   000000f50dcff3e0 0000000000000104
+0x000000f50dcff170:   0000010100000103 0000020d3ee3fc94
+0x000000f50dcff180:   0000000000000000 0000000000000002
+0x000000f50dcff190:   0000000000000000 000000f50dcff249
+0x000000f50dcff1a0:   0000020d3cc50000 00007ff879aaccea
+0x000000f50dcff1b0:   0000020d3ca90000 000000f500000000
+0x000000f50dcff1c0:   00000000005c3a43 00007ff800000000
+0x000000f50dcff1d0:   0000020d3ca90000 0000000000000000
+0x000000f50dcff1e0:   0000000000000002 0000020d00000000
+0x000000f50dcff1f0:   0000020d3cc50150 0000000000000020
+0x000000f50dcff200:   0000000000000002 0000000000000000
+0x000000f50dcff210:   00007ff879a70000 0000000000000090
+0x000000f50dcff220:   0000000000006255 0000000000000000
+0x000000f50dcff230:   0000000000210007 0000000000000060
+0x000000f50dcff240:   0000020d3cc566d0 0000000000000000
+0x000000f50dcff250:   0000020d3ca90180 00007ff879ad3668
+0x000000f50dcff260:   0000000000000000 0000000000000000
+0x000000f50dcff270:   00007ff8188e6cf0 000000f50dcff9b8
+0x000000f50dcff280:   00007ff818c789d0 0000000000000001
+0x000000f50dcff290:   000000f50dcff350 0000000000000008
+0x000000f50dcff2a0:   0000000000000000 00007ff877581966
+0x000000f50dcff2b0:   0000000000000000 00007ff879aad6da
+0x000000f50dcff2c0:   00000000002b004b 0000000000000030
+0x000000f50dcff2d0:   0000020d3cc97fc0 00007ff81891c60c
+0x000000f50dcff2e0:   0000000000000014 000000f50dcf0000
+0x000000f50dcff2f0:   000000f500000000 0000020d3ca91080
+0x000000f50dcff300:   0000000000000013 00007ff81891b008
+0x000000f50dcff310:   0000020d3ca902ac 0000000000000030 
+
+Instructions: (pc=0x00007ff86f8f1989)
+0x00007ff86f8f1889:   49 03 c8 0f 10 44 11 f0 48 83 e9 10 49 83 e8 10
+0x00007ff86f8f1899:   f6 c1 0f 74 17 48 8b c1 48 83 e1 f0 0f 10 c8 0f
+0x00007ff86f8f18a9:   10 04 11 0f 11 08 4c 8b c1 4d 2b c3 4d 8b c8 49
+0x00007ff86f8f18b9:   c1 e9 07 74 6f 0f 29 01 eb 14 66 66 66 66 66 0f
+0x00007ff86f8f18c9:   1f 84 00 00 00 00 00 0f 29 41 10 0f 29 09 0f 10
+0x00007ff86f8f18d9:   44 11 f0 0f 10 4c 11 e0 48 81 e9 80 00 00 00 0f
+0x00007ff86f8f18e9:   29 41 70 0f 29 49 60 0f 10 44 11 50 0f 10 4c 11
+0x00007ff86f8f18f9:   40 49 ff c9 0f 29 41 50 0f 29 49 40 0f 10 44 11
+0x00007ff86f8f1909:   30 0f 10 4c 11 20 0f 29 41 30 0f 29 49 20 0f 10
+0x00007ff86f8f1919:   44 11 10 0f 10 0c 11 75 ae 0f 29 41 10 49 83 e0
+0x00007ff86f8f1929:   7f 0f 28 c1 4d 8b c8 49 c1 e9 04 74 1a 66 66 0f
+0x00007ff86f8f1939:   1f 84 00 00 00 00 00 0f 11 01 48 83 e9 10 0f 10
+0x00007ff86f8f1949:   04 11 49 ff c9 75 f0 49 83 e0 0f 74 08 41 0f 10
+0x00007ff86f8f1959:   0a 41 0f 11 0b 0f 11 01 49 8b c3 c3 cc cc cc cc
+0x00007ff86f8f1969:   cc cc cc cc cc cc cc cc cc cc cc cc cc 66 66 0f
+0x00007ff86f8f1979:   1f 84 00 00 00 00 00 57 8b c2 48 8b f9 49 8b c8
+0x00007ff86f8f1989:   f3 aa 49 8b c3 5f c3 cc cc cc cc cc cc 66 66 0f
+0x00007ff86f8f1999:   1f 84 00 00 00 00 00 4c 8b d9 0f b6 d2 49 b9 01
+0x00007ff86f8f19a9:   01 01 01 01 01 01 01 4c 0f af ca 49 83 f8 10 0f
+0x00007ff86f8f19b9:   86 f2 00 00 00 66 49 0f 6e c1 66 0f 60 c0 49 81
+0x00007ff86f8f19c9:   f8 80 00 00 00 77 10 e9 6b 00 00 00 66 66 66 0f
+0x00007ff86f8f19d9:   1f 84 00 00 00 00 00 f6 05 d5 49 01 00 02 75 97
+0x00007ff86f8f19e9:   0f 11 01 4c 03 c1 48 83 c1 10 48 83 e1 f0 4c 2b
+0x00007ff86f8f19f9:   c1 4d 8b c8 49 c1 e9 07 74 3d 4c 3b 0d 1e 46 01
+0x00007ff86f8f1a09:   00 0f 87 60 00 00 00 0f 29 01 0f 29 41 10 48 81
+0x00007ff86f8f1a19:   c1 80 00 00 00 0f 29 41 a0 0f 29 41 b0 49 ff c9
+0x00007ff86f8f1a29:   0f 29 41 c0 0f 29 41 d0 0f 29 41 e0 66 0f 29 41
+0x00007ff86f8f1a39:   f0 75 d4 49 83 e0 7f 4d 8b c8 49 c1 e9 04 74 13
+0x00007ff86f8f1a49:   0f 1f 80 00 00 00 00 0f 11 01 48 83 c1 10 49 ff
+0x00007ff86f8f1a59:   c9 75 f4 49 83 e0 0f 74 06 42 0f 11 44 01 f0 49
+0x00007ff86f8f1a69:   8b c3 c3 0f 1f 40 00 0f 2b 01 0f 2b 41 10 48 81
+0x00007ff86f8f1a79:   c1 80 00 00 00 0f 2b 41 a0 0f 2b 41 b0 49 ff c9 
+
+
+
+---------------  P R O C E S S  ---------------
+
+VM state: not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap address: 0x0000000000000000, size: 0 MB, Compressed Oops mode: 32-bit
+
+CDS archive(s) mapped at: [0x0000000000000000-0x0000000000000000-0x0000000000000000), size 0, SharedBaseAddress: 0x0000000800000000, ArchiveRelocationMode: 1.
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0, Narrow klass range: 0x0
+
+GC Precious Log:
+<Not initialized>
+
+Dll operation events (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes loaded (0 events):
+No events
+
+Classes unloaded (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+VM Operations (0 events):
+No events
+
+Events (0 events):
+No events
+
+
+Dynamic libraries:
+0x00007ff7a5b50000 - 0x00007ff7a5b5a000 	C:\Users\wiki\.jdks\jbr-17.0.12-1\bin\java.exe
+0x00007ff879a70000 - 0x00007ff879c88000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ff878c80000 - 0x00007ff878d44000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ff876fc0000 - 0x00007ff877393000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ff877570000 - 0x00007ff877681000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ff86f910000 - 0x00007ff86f927000 	C:\Users\wiki\.jdks\jbr-17.0.12-1\bin\jli.dll
+0x00007ff8788d0000 - 0x00007ff878a82000 	C:\WINDOWS\System32\USER32.dll
+0x00007ff8773a0000 - 0x00007ff8773c6000 	C:\WINDOWS\System32\win32u.dll
+0x00007ff877740000 - 0x00007ff877769000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ff8773d0000 - 0x00007ff8774eb000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ff86f8f0000 - 0x00007ff86f90b000 	C:\Users\wiki\.jdks\jbr-17.0.12-1\bin\VCRUNTIME140.dll
+0x00007ff864e50000 - 0x00007ff8650ec000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22621.6060_none_2712eda17382d24b\COMCTL32.dll
+0x00007ff877770000 - 0x00007ff877817000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ff876e30000 - 0x00007ff876eca000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ff878bc0000 - 0x00007ff878bf1000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007ff86f940000 - 0x00007ff86f94c000 	C:\Users\wiki\.jdks\jbr-17.0.12-1\bin\vcruntime140_1.dll
+0x00007ff863780000 - 0x00007ff86380d000 	C:\Users\wiki\.jdks\jbr-17.0.12-1\bin\msvcp140.dll
+0x00007ff8182a0000 - 0x00007ff818f2a000 	C:\Users\wiki\.jdks\jbr-17.0.12-1\bin\server\jvm.dll
+0x00007ff878ee0000 - 0x00007ff878f91000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ff878820000 - 0x00007ff8788c8000 	C:\WINDOWS\System32\sechost.dll
+0x00007ff876ed0000 - 0x00007ff876ef8000 	C:\WINDOWS\System32\bcrypt.dll
+0x00007ff878aa0000 - 0x00007ff878bb8000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ff878c00000 - 0x00007ff878c71000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ff875ee0000 - 0x00007ff875f2d000 	C:\WINDOWS\SYSTEM32\POWRPROF.dll
+0x00007ff869df0000 - 0x00007ff869e24000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ff864e20000 - 0x00007ff864e2a000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ff875e40000 - 0x00007ff875e53000 	C:\WINDOWS\SYSTEM32\UMPDC.dll
+0x00007ff875bd0000 - 0x00007ff875be8000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007ff86f8a0000 - 0x00007ff86f8aa000 	C:\Users\wiki\.jdks\jbr-17.0.12-1\bin\jimage.dll
+0x00007ff8742f0000 - 0x00007ff874523000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
+0x00007ff8780f0000 - 0x00007ff878481000 	C:\WINDOWS\System32\combase.dll
+0x00007ff8791e0000 - 0x00007ff8792b8000 	C:\WINDOWS\System32\OLEAUT32.dll
+0x00007ff8545e0000 - 0x00007ff854612000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
+0x00007ff877690000 - 0x00007ff87770b000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ff86f590000 - 0x00007ff86f59e000 	C:\Users\wiki\.jdks\jbr-17.0.12-1\bin\instrument.dll
+0x00007ff86f190000 - 0x00007ff86f1b5000 	C:\Users\wiki\.jdks\jbr-17.0.12-1\bin\java.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Users\wiki\.jdks\jbr-17.0.12-1\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22621.6060_none_2712eda17382d24b;C:\Users\wiki\.jdks\jbr-17.0.12-1\bin\server
+
+VM Arguments:
+jvm_args: -Dmaven.multiModuleProjectDirectory=D:\projet_pi\backend\projet_Module -Djansi.passthrough=true -Dmaven.home=C:\Users\wiki\.m2\wrapper\dists\apache-maven-3.9.12-bin\5nmfsn99br87k5d4ajlekdq10k\apache-maven-3.9.12 -Dclassworlds.conf=C:\Users\wiki\.m2\wrapper\dists\apache-maven-3.9.12-bin\5nmfsn99br87k5d4ajlekdq10k\apache-maven-3.9.12\bin\m2.conf -Dmaven.ext.class.path=C:\Program Files\JetBrains\IntelliJ IDEA 2024.2.1\plugins\maven\lib\maven-event-listener.jar -javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2024.2.1\lib\idea_rt.jar=56664:C:\Program Files\JetBrains\IntelliJ IDEA 2024.2.1\bin -Dfile.encoding=UTF-8 
+java_command: org.codehaus.classworlds.Launcher -Didea.version=2024.2.1 -DskipTests=true install
+java_class_path (initial): C:\Users\wiki\.m2\wrapper\dists\apache-maven-3.9.12-bin\5nmfsn99br87k5d4ajlekdq10k\apache-maven-3.9.12\boot\plexus-classworlds-2.9.0.jar;C:\Users\wiki\.m2\wrapper\dists\apache-maven-3.9.12-bin\5nmfsn99br87k5d4ajlekdq10k\apache-maven-3.9.12\boot\plexus-classworlds.license
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     uint ConcGCThreads                            = 2                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 8                                         {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 264185728                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 4226971648                                {product} {ergonomic}
+   size_t MinHeapSize                              = 6815736                                   {product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool UseCompressedClassPointers               = true                           {product lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                           {product lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+PATH=C:\Python314\Scripts\;C:\Python314\;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Users\wiki\Desktop\oracle\app\oracle\product\11.2.0\server;C:\Program Files (x86)\Common Files\Intel\Shared Libraries\redist\intel64\compiler;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\Strawberry\perl\bin;C:\instantclient12_2;C:\Program Files\Git\cmd;C:\oraclexe;C:\oraclexe\app\oracle\admin\XE;C:\instantclient12_2;C:\composer;C:\Program Files (x86)\CodeBlocks\MinGW\bin;C:\Program Files (x86)\GnuWin32\bin;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\ProgramData\chocolatey\bin;C:\Program Files\Vagrant\bin;D:\mongo\bin;D:\mongo\bin\mongodb-database-tools-windows-x86_64-100.13.0\bin;D:\PUTTY\;C:\Users\wiki\AppData\Local\Programs\Python\Python312\Scripts\;C:\Users\wiki\AppData\Local\Programs\Python\Python312\;C:\Users\wiki\scoop\shims;D:\xampp\php;C:\Users\wiki\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\wiki\AppData\Roaming\Composer\vendor\bin;C:\Users\wiki\.dotnet\tools;C:\Users\wiki\AppData\Roaming\npm;D:\mongosh\;D:\;D:\cursor\resources\app\bin
+USERNAME=wiki
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 140 Stepping 1, GenuineIntel
+TMP=C:\Users\wiki\AppData\Local\Temp
+TEMP=C:\Users\wiki\AppData\Local\Temp
+
+
+
+Periodic native trim disabled
+
+JNI global refs:
+JNI global refs: 0, weak refs: 0
+
+JNI global refs memory usage: 0, weak refs: 0
+
+Process memory usage:
+Resident Set Size: 42356K (0% of 16511608K total physical memory with 2149336K free physical memory)
+
+OOME stack traces (most recent first):
+Classloader memory used:
+Not available (crashed in non-Java thread)
+
+---------------  S Y S T E M  ---------------
+
+OS:
+ Windows 11 , 64 bit Build 22621 (10.0.22621.5415)
+OS uptime: 5 days 13:18 hours
+
+CPU: total 8 (initial active 8) 
+Processor Information for all 8 processors :
+  Max Mhz: 2419, Current Mhz: 2419, Mhz Limit: 2419
+
+Memory: 4k page, system-wide physical 16124M (2098M free)
+TotalPageFile size 28169M (AvailPageFile size 4382M)
+current process WorkingSet (physical memory assigned to process): 41M, peak: 41M
+current process commit charge ("private bytes"): 35M, peak: 35M
+
+vm_info: OpenJDK 64-Bit Server VM (17.0.12+1-b1207.37) for windows-amd64 JRE (17.0.12+1-b1207.37), built on 2024-09-25 by "builduser" with MS VC++ 16.10 / 16.11 (VS2019)
+
+END.
