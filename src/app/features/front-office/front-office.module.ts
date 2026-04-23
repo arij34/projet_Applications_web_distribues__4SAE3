@@ -17,6 +17,10 @@ import { StatsComponent } from './front-office/components/stats/stats.component'
 import { ProposalFilterPipe } from './front-office/components/projet-client/proposal-filter.pipe';
 import { ProjetWorkspaceComponent } from './front-office/components/projet-workspace/projet-workspace.component';
 
+// Subscription / Payment
+import { SubscriptionPageComponent } from '../subscription/pages/subscription-page/subscription-page.component';
+import { SubscriptionPaymentPageComponent } from '../subscription/pages/subscription-payment-page/subscription-payment-page.component';
+
 // Local - Skill Management
 import { SkillDashboardComponent } from './skillManagement/dashboardskill/skill-dashboard/skill-dashboard.component';
 import { EducationListComponent } from './skillManagement/education/education-list/education-list.component';
@@ -40,6 +44,10 @@ import { FreelancerSkillFormComponent } from './skillManagement/freelancer-skill
     StatsComponent,
     ProposalFilterPipe,
     ProjetWorkspaceComponent,
+
+    // Subscription / Payment
+    SubscriptionPageComponent,
+    SubscriptionPaymentPageComponent,
 
     // Local - Skill Management
     SkillDashboardComponent,

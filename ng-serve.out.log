@@ -1,0 +1,50 @@
+
+> pidev-freelancy@0.0.0 start
+> ng serve
+
+[33m>[39m Building...
+[32m√[39m Building...
+Application bundle generation failed. [13.806 seconds]
+
+Watch mode enabled. Watching for file changes...
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [5.439 seconds]
+
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.042 seconds]
+
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m                    [2m | [22m [1mRaw size[22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m                   [2m | [22m[36m505.22 kB[39m[2m | [22m
+[32mscripts.js[39m         [2m | [22m[2mscripts[22m                  [2m | [22m[36m212.29 kB[39m[2m | [22m
+[32mpolyfills.js[39m       [2m | [22m[2mpolyfills[22m                [2m | [22m [36m90.20 kB[39m[2m | [22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                     [2m | [22m [36m61.70 kB[39m[2m | [22m
+[32mchunk-VACJAQPH.js[39m  [2m | [22m[2m-[22m                        [2m | [22m  [36m4.15 kB[39m[2m | [22m
+[32mchunk-6QCPOG5G.js[39m  [2m | [22m[2m-[22m                        [2m | [22m  [36m1.56 kB[39m[2m | [22m
+[32mchunk-Y5RQAIA6.js[39m  [2m | [22m[2m-[22m                        [2m | [22m  [36m1.50 kB[39m[2m | [22m
+[32mchunk-7QBJVOVP.js[39m  [2m | [22m[2m-[22m                        [2m | [22m  [36m1.31 kB[39m[2m | [22m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m            [2m | [22m[1m877.92 kB[22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m                    [2m | [22m [1mRaw size[22m
+[32mchunk-M4ECB46K.js[39m  [2m | [22m[2mfront-office-module[22m      [2m | [22m[36m777.23 kB[39m[2m | [22m
+[32mchunk-QML7F4TB.js[39m  [2m | [22m[2mchallenges-module[22m        [2m | [22m[36m596.82 kB[39m[2m | [22m
+[32mchunk-SGTKBUL7.js[39m  [2m | [22m[2mback-office-module[22m       [2m | [22m[36m284.71 kB[39m[2m | [22m
+[32mchunk-KWFK2HBH.js[39m  [2m | [22m[2mchallenge-admin-module[22m   [2m | [22m[36m240.95 kB[39m[2m | [22m
+[32mchunk-VCLK6BFT.js[39m  [2m | [22m[2mchallenge-creation-module[22m[2m | [22m[36m145.70 kB[39m[2m | [22m
+[32mchunk-IUFFDX3M.js[39m  [2m | [22m[2m-[22m                        [2m | [22m [36m77.99 kB[39m[2m | [22m
+[32mchunk-WWNEBXU7.js[39m  [2m | [22m[2mevenement-module[22m         [2m | [22m [36m60.45 kB[39m[2m | [22m
+[32mchunk-BGCOELOG.js[39m  [2m | [22m[2m-[22m                        [2m | [22m [36m32.19 kB[39m[2m | [22m
+[32mchunk-6GQE5QLO.js[39m  [2m | [22m[2m-[22m                        [2m | [22m [36m10.27 kB[39m[2m | [22m
+[32mchunk-YZTJHV43.js[39m  [2m | [22m[2m-[22m                        [2m | [22m  [36m7.79 kB[39m[2m | [22m
+[32mchunk-L7I5TBZG.js[39m  [2m | [22m[2m-[22m                        [2m | [22m  [36m3.88 kB[39m[2m | [22m
+[32mchunk-ANZVIXPO.js[39m  [2m | [22m[2m-[22m                        [2m | [22m  [36m2.82 kB[39m[2m | [22m
+[32mchunk-IVJMAS4Q.js[39m  [2m | [22m[2m-[22m                        [2m | [22m[36m447 bytes[39m[2m | [22m
+
+Application bundle generation complete. [2.453 seconds]
+
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4200[22m/[39m

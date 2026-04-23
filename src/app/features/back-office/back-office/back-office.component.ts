@@ -32,6 +32,8 @@ export class BackOfficeComponent implements OnInit {
       filter(e => e instanceof NavigationEnd)
     ).subscribe((e: any) => {
       const url = e.urlAfterRedirects;
+      // If URL uses ?tab=, queryParams subscription controls activeTab.
+      if (/[?&]tab=/.test(url)) return;
       const match = url.match(/\/admin\/([^/?]+)/);
       if (match) {
         this.activeTab = match[1];

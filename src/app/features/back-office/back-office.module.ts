@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { BaseChartDirective } from 'ng2-charts';
 
 import { BackOfficeRoutingModule } from './back-office-routing.module';
 import { SharedModule } from '../../shared/shared.module';
@@ -15,6 +17,8 @@ import { ProjectsViewComponent } from './back-office/components/views/projects-v
 import { UsersViewComponent } from './back-office/components/views/users-view/users-view.component';
 import { StatsViewComponent } from './back-office/components/views/stats-view/stats-view.component';
 import { DeleteRequestsComponent } from './back-office/components/views/projects-view/delete-requests/delete-requests.component';
+import { SubscriptionsViewComponent } from './back-office/components/views/subscriptions-view/subscriptions-view.component';
+import { SubscriptionStatsViewComponent } from './back-office/components/views/subscription-stats-view/subscription-stats-view.component';
 
 // Local - Skill Management
 import { SkillListComponent } from './skillManagement/skill/skill-list/skill-list.component';
@@ -30,6 +34,8 @@ import { PendingSkillFormComponent } from './skillManagement/pending-skill/pendi
     ContractsViewComponent,
     ProjectsViewComponent,
     UsersViewComponent,
+    SubscriptionsViewComponent,
+    SubscriptionStatsViewComponent,
     StatsViewComponent,
     DeleteRequestsComponent,
 
@@ -43,6 +49,8 @@ import { PendingSkillFormComponent } from './skillManagement/pending-skill/pendi
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule,
+    BaseChartDirective,
     BackOfficeRoutingModule,
     SharedModule,
     SidebarComponent,   // standalone

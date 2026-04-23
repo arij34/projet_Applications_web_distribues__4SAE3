@@ -44,6 +44,9 @@
         <a class="nav-link" href="#pricing">
           <span>Pricing</span>
         </a>
+        <a class="nav-link" routerLink="/client/subscription" routerLinkActive="active" *ngIf="isClient">
+          <span>Subscription</span>
+        </a>
         <a class="nav-link" href="#contact">
           <span>Contact</span>
         </a>
@@ -138,6 +141,9 @@
       </a>
       <a class="mobile-nav-link" href="#pricing" (click)="closeMobileMenu()">
         Pricing
+      </a>
+      <a class="mobile-nav-link" routerLink="/client/subscription" routerLinkActive="active" (click)="closeMobileMenu()" *ngIf="isClient">
+        Subscription
       </a>
       <a class="mobile-nav-link" href="#contact" (click)="closeMobileMenu()">
         Contact

@@ -1,0 +1,2010 @@
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2305: Module '"ng2-charts"' has no exported member 'NgChartsModule'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office.module.ts:4:9:
+[37m      4 │ import { [32mNgChartsModule[37m } from 'ng2-charts';
+        ╵          [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: Value at position 3 in the NgModule.imports of BackOfficeModule is not a reference
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office.module.ts:47:11:
+[37m      47 │   imports: [32m[[37m
+         ╵            [32m^[0m
+
+  Unknown reference.
+
+    src/app/features/back-office/back-office.module.ts:51:4:
+[37m      51 │     [32mNgChartsModule[37m,
+         ╵     [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-backoffice-sidebar' is not a known element:
+1. If 'app-backoffice-sidebar' is an Angular component, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:3:2:
+[37m      3 │   [32m<app-backoffice-sidebar[37m
+        ╵   [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'activeTab' since it isn't a known property of 'app-backoffice-sidebar'.
+1. If 'app-backoffice-sidebar' is an Angular component and it has 'activeTab' input, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:4:4:
+[37m      4 │     [32m[activeTab]="activeTab"[37m
+        ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-backoffice-sidebar'.
+1. If 'app-backoffice-sidebar' is an Angular component and it has 'isOpen' input, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:5:4:
+[37m      5 │     [32m[isOpen]="sidebarOpen"[37m
+        ╵     [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'isMobile' since it isn't a known property of 'app-backoffice-sidebar'.
+1. If 'app-backoffice-sidebar' is an Angular component and it has 'isMobile' input, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:6:4:
+[37m      6 │     [32m[isMobile]="isMobile"[37m
+        ╵     [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type 'Event' is not assignable to parameter of type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:7:29:
+[37m      7 │     (tabChange)="onTabChange([32m$event[37m)"
+        ╵                              [32m~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-backoffice-header' is not a known element:
+1. If 'app-backoffice-header' is an Angular component, then verify that it is part of this module.
+2. If 'app-backoffice-header' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:13:4:
+[37m      13 │     [32m<app-backoffice-header (menuClick)="onMenuClick()">[37m</app-backo...
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'router-outlet' is not a known element:
+1. If 'router-outlet' is an Angular component, then verify that it is part of this module.
+2. If 'router-outlet' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:20:10:
+[37m      20 │           [32m<router-outlet>[37m</router-outlet>
+         ╵           [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-dashboard-view' is not a known element:
+1. If 'app-dashboard-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-dashboard-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:26:10:
+[37m      26 │           [32m<app-dashboard-view *ngIf="activeTab === 'dashboard'">[37m</...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-projects-view' is not a known element:
+1. If 'app-projects-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-projects-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:27:10:
+[37m      27 │           [32m<app-projects-view *ngIf="activeTab === 'projects'">[37m</ap...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-contracts-view' is not a known element:
+1. If 'app-contracts-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-contracts-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:28:10:
+[37m      28 │           [32m<app-contracts-view *ngIf="activeTab === 'contracts'">[37m</...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-users-view' is not a known element:
+1. If 'app-users-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-users-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:29:10:
+[37m      29 │           [32m<app-users-view *ngIf="activeTab === 'users'">[37m</app-user...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-subscriptions-view' is not a known element:
+1. If 'app-subscriptions-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-subscriptions-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:30:10:
+[37m      30 │           [32m<app-subscriptions-view *ngIf="activeTab === 'subscripti[37m...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-subscription-stats-view' is not a known element:
+1. If 'app-subscription-stats-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-subscription-stats-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:31:10:
+[37m      31 │           [32m<app-subscription-stats-view *ngIf="activeTab === 'subsc[37m...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-stats-view' is not a known element:
+1. If 'app-stats-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-stats-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:32:10:
+[37m      32 │           [32m<app-stats-view *ngIf="activeTab === 'stats'">[37m</app-stat...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/contracts-view/contracts-view.component.ts:104:14:
+[37m      104 │               [32m[(ngModel)]="searchTerm"[37m
+          ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/contracts-view/contracts-view.component.ts:110:12:
+[37m      110 │             [32m[(ngModel)]="statusFilter"[37m
+          ╵             [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/delete-requests/delete-requests.component.html:71:32:
+[37m      71 │ ...s="badge" [32m[ngClass]="statusConfig[project.status || 'OPEN'].css[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component DeleteRequestsComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/delete-requests/delete-requests.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./delete-requests.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:92:25:
+[37m      92 │ ...<input type="text" [32m[(ngModel)]="searchQuery"[37m (ngModelChange)="o...
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:95:12:
+[37m      95 │     <select [32m[(ngModel)]="filterStatus"[37m (ngModelChange)="onFilterCh...
+         ╵             [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:133:32:
+[37m      133 │ ...s="badge" [32m[ngClass]="statusConfig[project.status || 'OPEN'].cs[37m...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-delete-requests' is not a known element:
+1. If 'app-delete-requests' is an Angular component, then verify that it is part of this module.
+2. If 'app-delete-requests' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:149:4:
+[37m      149 │     [32m<app-delete-requests>[37m</app-delete-requests>
+          ╵     [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:283:30:
+[37m      283 │ ...s="badge" [32m[ngClass]="statusConfig[h.oldStatus || 'OPEN'].cssCl[37m...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8004: No pipe found with name 'number'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:29:84:
+[37m      29 │ ...bold text-gray-800 mt-1">{{ totalRevenue | [32mnumber[37m:'1.2-2' }}</div>
+         ╵                                               [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8004: No pipe found with name 'number'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:33:91:
+[37m      33 │ ...xt-gray-800 mt-1">{{ currentMonthRevenue | [32mnumber[37m:'1.2-2' }}</div>
+         ╵                                               [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'type' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:48:28:
+[37m      48 │ ...      <canvas baseChart [32m[type]="'line'"[37m [data]="paymentsCountCh...
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'data' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:48:44:
+[37m      48 │ ...[type]="'line'" [32m[data]="paymentsCountChartData"[37m [options]="line...
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'options' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:48:76:
+[37m      48 │ ... [data]="paymentsCountChartData" [32m[options]="lineOptions"[37m></canvas>
+         ╵                                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'type' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:52:28:
+[37m      52 │ ...      <canvas baseChart [32m[type]="'line'"[37m [data]="vipChartData" [...
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'data' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:52:44:
+[37m      52 │ ...hart [type]="'line'" [32m[data]="vipChartData"[37m [options]="lineOptio...
+         ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'options' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:52:66:
+[37m      52 │ ...]="'line'" [data]="vipChartData" [32m[options]="lineOptions"[37m></canvas>
+         ╵                                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'type' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:58:26:
+[37m      58 │         <canvas baseChart [32m[type]="'bar'"[37m [data]="revenueChartData"...
+         ╵                           [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'data' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:58:41:
+[37m      58 │ ...art [type]="'bar'" [32m[data]="revenueChartData"[37m [options]="barOpti...
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'options' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:58:67:
+[37m      58 │ ..."'bar'" [data]="revenueChartData" [32m[options]="barOptions"[37m></canvas>
+         ╵                                      [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:14:10:
+[37m      14 │           [32m[(ngModel)]="q"[37m
+         ╵           [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:100:34:
+[37m      100 │           <select class="s-input" [32m[(ngModel)]="editType"[37m>
+          ╵                                   [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:107:34:
+[37m      107 │           <select class="s-input" [32m[(ngModel)]="editStatus"[37m>
+          ╵                                   [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:114:45:
+[37m      114 │ ...  <input type="date" class="s-input" [32m[(ngModel)]="editEndDate"[37m />
+          ╵                                         [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:563:16:
+[37m      563 │                 [32m[(ngModel)]="searchQuery"[37m
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:604:24:
+[37m      604 │                         [32m[ngClass]="getRoleCss(r)"[37m
+          ╵                         [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:691:83:
+[37m      691 │ ...oles" class="role-badge" [32m[ngClass]="getRoleCss(r)"[37m>{{ r }}</span>
+          ╵                             [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:712:43:
+[37m      712 │ ...ss="field-input" [32m[(ngModel)]="form.firstName"[37m placeholder="Joh...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:716:43:
+[37m      716 │ ...ass="field-input" [32m[(ngModel)]="form.lastName"[37m placeholder="Doe...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:720:43:
+[37m      720 │ ...lass="field-input" [32m[(ngModel)]="form.email"[37m type="email" place...
+          ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:724:43:
+[37m      724 │ ...ass="field-input" [32m[(ngModel)]="form.password"[37m type="password" ...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:728:45:
+[37m      728 │ ...            <select class="field-select" [32m[(ngModel)]="form.role"[37m>
+          ╵                                             [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:736:45:
+[37m      736 │ ...         <select class="field-select" [32m[(ngModel)]="form.enabled"[37m>
+          ╵                                          [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngValue' since it isn't a known property of 'option'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:737:26:
+[37m      737 │                   <option [32m[ngValue]="true"[37m>Active</option>
+          ╵                           [32m~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngValue' since it isn't a known property of 'option'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:738:26:
+[37m      738 │                   <option [32m[ngValue]="false"[37m>Inactive</option>
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'formGroup' since it isn't a known property of 'form'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-form/skill-form.component.html:16:10:
+[37m      16 │     <form [32m[formGroup]="skillForm"[37m (ngSubmit)="onSubmit()">
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillFormComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-form/skill-form.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./skill-form.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-search-bar' is not a known element:
+1. If 'app-search-bar' is an Angular component, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:8:2:
+[37m      8 │   [32m<app-search-bar[37m
+        ╵   [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'filters' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'filters' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:10:4:
+[37m      10 │     [32m[filters]="search.config.filters"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'totalCount' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'totalCount' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:11:4:
+[37m      11 │     [32m[totalCount]="allSkills.length"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'resultCount' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'resultCount' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:12:4:
+[37m      12 │     [32m[resultCount]="filteredSkills.length"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'currentQuery' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'currentQuery' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:13:4:
+[37m      13 │     [32m[currentQuery]="currentQuery"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type 'Event' is not assignable to parameter of type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:14:28:
+[37m      14 │     (queryChange)="onSearch([32m$event[37m)"
+         ╵                             [32m~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type 'Event' is not assignable to parameter of type '{ field: string; value: string; }'.
+  Type 'Event' is missing the following properties from type '{ field: string; value: string; }': field, value[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:15:29:
+[37m      15 │     (filterChange)="onFilter([32m$event[37m)"
+         ╵                              [32m~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8004: No pipe found with name 'date'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:32:35:
+[37m      32 │           <td>{{ skill.createdAt | [32mdate[37m:'yyyy-MM-dd' }}</td>
+         ╵                                    [32m~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'routerLink' since it isn't a known property of 'a'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:34:15:
+[37m      34 │ ...       <a [32m[routerLink]="['/admin/skills/form', skill.idS]"[37m clas...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2305: Module '"ng2-charts"' has no exported member 'NgChartsModule'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office.module.ts:4:9:
+[37m      4 │ import { [32mNgChartsModule[37m } from 'ng2-charts';
+        ╵          [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS-991010: Value at position 3 in the NgModule.imports of BackOfficeModule is not a reference
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office.module.ts:47:11:
+[37m      47 │   imports: [32m[[37m
+         ╵            [32m^[0m
+
+  Unknown reference.
+
+    src/app/features/back-office/back-office.module.ts:51:4:
+[37m      51 │     [32mNgChartsModule[37m,
+         ╵     [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-backoffice-sidebar' is not a known element:
+1. If 'app-backoffice-sidebar' is an Angular component, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:3:2:
+[37m      3 │   [32m<app-backoffice-sidebar[37m
+        ╵   [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'activeTab' since it isn't a known property of 'app-backoffice-sidebar'.
+1. If 'app-backoffice-sidebar' is an Angular component and it has 'activeTab' input, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:4:4:
+[37m      4 │     [32m[activeTab]="activeTab"[37m
+        ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-backoffice-sidebar'.
+1. If 'app-backoffice-sidebar' is an Angular component and it has 'isOpen' input, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:5:4:
+[37m      5 │     [32m[isOpen]="sidebarOpen"[37m
+        ╵     [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'isMobile' since it isn't a known property of 'app-backoffice-sidebar'.
+1. If 'app-backoffice-sidebar' is an Angular component and it has 'isMobile' input, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:6:4:
+[37m      6 │     [32m[isMobile]="isMobile"[37m
+        ╵     [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type 'Event' is not assignable to parameter of type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:7:29:
+[37m      7 │     (tabChange)="onTabChange([32m$event[37m)"
+        ╵                              [32m~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-backoffice-header' is not a known element:
+1. If 'app-backoffice-header' is an Angular component, then verify that it is part of this module.
+2. If 'app-backoffice-header' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:13:4:
+[37m      13 │     [32m<app-backoffice-header (menuClick)="onMenuClick()">[37m</app-backo...
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'router-outlet' is not a known element:
+1. If 'router-outlet' is an Angular component, then verify that it is part of this module.
+2. If 'router-outlet' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:20:10:
+[37m      20 │           [32m<router-outlet>[37m</router-outlet>
+         ╵           [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-dashboard-view' is not a known element:
+1. If 'app-dashboard-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-dashboard-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:26:10:
+[37m      26 │           [32m<app-dashboard-view *ngIf="activeTab === 'dashboard'">[37m</...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-projects-view' is not a known element:
+1. If 'app-projects-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-projects-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:27:10:
+[37m      27 │           [32m<app-projects-view *ngIf="activeTab === 'projects'">[37m</ap...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-contracts-view' is not a known element:
+1. If 'app-contracts-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-contracts-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:28:10:
+[37m      28 │           [32m<app-contracts-view *ngIf="activeTab === 'contracts'">[37m</...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-users-view' is not a known element:
+1. If 'app-users-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-users-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:29:10:
+[37m      29 │           [32m<app-users-view *ngIf="activeTab === 'users'">[37m</app-user...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-subscriptions-view' is not a known element:
+1. If 'app-subscriptions-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-subscriptions-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:30:10:
+[37m      30 │           [32m<app-subscriptions-view *ngIf="activeTab === 'subscripti[37m...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-subscription-stats-view' is not a known element:
+1. If 'app-subscription-stats-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-subscription-stats-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:31:10:
+[37m      31 │           [32m<app-subscription-stats-view *ngIf="activeTab === 'subsc[37m...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-stats-view' is not a known element:
+1. If 'app-stats-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-stats-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:32:10:
+[37m      32 │           [32m<app-stats-view *ngIf="activeTab === 'stats'">[37m</app-stat...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/contracts-view/contracts-view.component.ts:104:14:
+[37m      104 │               [32m[(ngModel)]="searchTerm"[37m
+          ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/contracts-view/contracts-view.component.ts:110:12:
+[37m      110 │             [32m[(ngModel)]="statusFilter"[37m
+          ╵             [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/delete-requests/delete-requests.component.html:71:32:
+[37m      71 │ ...s="badge" [32m[ngClass]="statusConfig[project.status || 'OPEN'].css[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component DeleteRequestsComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/delete-requests/delete-requests.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./delete-requests.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:92:25:
+[37m      92 │ ...<input type="text" [32m[(ngModel)]="searchQuery"[37m (ngModelChange)="o...
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:95:12:
+[37m      95 │     <select [32m[(ngModel)]="filterStatus"[37m (ngModelChange)="onFilterCh...
+         ╵             [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:133:32:
+[37m      133 │ ...s="badge" [32m[ngClass]="statusConfig[project.status || 'OPEN'].cs[37m...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-delete-requests' is not a known element:
+1. If 'app-delete-requests' is an Angular component, then verify that it is part of this module.
+2. If 'app-delete-requests' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:149:4:
+[37m      149 │     [32m<app-delete-requests>[37m</app-delete-requests>
+          ╵     [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:283:30:
+[37m      283 │ ...s="badge" [32m[ngClass]="statusConfig[h.oldStatus || 'OPEN'].cssCl[37m...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8004: No pipe found with name 'number'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:29:84:
+[37m      29 │ ...bold text-gray-800 mt-1">{{ totalRevenue | [32mnumber[37m:'1.2-2' }}</div>
+         ╵                                               [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8004: No pipe found with name 'number'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:33:91:
+[37m      33 │ ...xt-gray-800 mt-1">{{ currentMonthRevenue | [32mnumber[37m:'1.2-2' }}</div>
+         ╵                                               [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'type' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:48:28:
+[37m      48 │ ...      <canvas baseChart [32m[type]="'line'"[37m [data]="paymentsCountCh...
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'data' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:48:44:
+[37m      48 │ ...[type]="'line'" [32m[data]="paymentsCountChartData"[37m [options]="line...
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'options' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:48:76:
+[37m      48 │ ... [data]="paymentsCountChartData" [32m[options]="lineOptions"[37m></canvas>
+         ╵                                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'type' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:52:28:
+[37m      52 │ ...      <canvas baseChart [32m[type]="'line'"[37m [data]="vipChartData" [...
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'data' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:52:44:
+[37m      52 │ ...hart [type]="'line'" [32m[data]="vipChartData"[37m [options]="lineOptio...
+         ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'options' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:52:66:
+[37m      52 │ ...]="'line'" [data]="vipChartData" [32m[options]="lineOptions"[37m></canvas>
+         ╵                                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'type' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:58:26:
+[37m      58 │         <canvas baseChart [32m[type]="'bar'"[37m [data]="revenueChartData"...
+         ╵                           [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'data' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:58:41:
+[37m      58 │ ...art [type]="'bar'" [32m[data]="revenueChartData"[37m [options]="barOpti...
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'options' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:58:67:
+[37m      58 │ ..."'bar'" [data]="revenueChartData" [32m[options]="barOptions"[37m></canvas>
+         ╵                                      [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:14:10:
+[37m      14 │           [32m[(ngModel)]="q"[37m
+         ╵           [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:100:34:
+[37m      100 │           <select class="s-input" [32m[(ngModel)]="editType"[37m>
+          ╵                                   [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:107:34:
+[37m      107 │           <select class="s-input" [32m[(ngModel)]="editStatus"[37m>
+          ╵                                   [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:114:45:
+[37m      114 │ ...  <input type="date" class="s-input" [32m[(ngModel)]="editEndDate"[37m />
+          ╵                                         [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:563:16:
+[37m      563 │                 [32m[(ngModel)]="searchQuery"[37m
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:604:24:
+[37m      604 │                         [32m[ngClass]="getRoleCss(r)"[37m
+          ╵                         [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:691:83:
+[37m      691 │ ...oles" class="role-badge" [32m[ngClass]="getRoleCss(r)"[37m>{{ r }}</span>
+          ╵                             [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:712:43:
+[37m      712 │ ...ss="field-input" [32m[(ngModel)]="form.firstName"[37m placeholder="Joh...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:716:43:
+[37m      716 │ ...ass="field-input" [32m[(ngModel)]="form.lastName"[37m placeholder="Doe...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:720:43:
+[37m      720 │ ...lass="field-input" [32m[(ngModel)]="form.email"[37m type="email" place...
+          ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:724:43:
+[37m      724 │ ...ass="field-input" [32m[(ngModel)]="form.password"[37m type="password" ...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:728:45:
+[37m      728 │ ...            <select class="field-select" [32m[(ngModel)]="form.role"[37m>
+          ╵                                             [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:736:45:
+[37m      736 │ ...         <select class="field-select" [32m[(ngModel)]="form.enabled"[37m>
+          ╵                                          [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngValue' since it isn't a known property of 'option'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:737:26:
+[37m      737 │                   <option [32m[ngValue]="true"[37m>Active</option>
+          ╵                           [32m~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngValue' since it isn't a known property of 'option'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:738:26:
+[37m      738 │                   <option [32m[ngValue]="false"[37m>Inactive</option>
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'formGroup' since it isn't a known property of 'form'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-form/skill-form.component.html:16:10:
+[37m      16 │     <form [32m[formGroup]="skillForm"[37m (ngSubmit)="onSubmit()">
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillFormComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-form/skill-form.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./skill-form.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-search-bar' is not a known element:
+1. If 'app-search-bar' is an Angular component, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:8:2:
+[37m      8 │   [32m<app-search-bar[37m
+        ╵   [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'filters' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'filters' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:10:4:
+[37m      10 │     [32m[filters]="search.config.filters"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'totalCount' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'totalCount' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:11:4:
+[37m      11 │     [32m[totalCount]="allSkills.length"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'resultCount' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'resultCount' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:12:4:
+[37m      12 │     [32m[resultCount]="filteredSkills.length"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'currentQuery' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'currentQuery' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:13:4:
+[37m      13 │     [32m[currentQuery]="currentQuery"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type 'Event' is not assignable to parameter of type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:14:28:
+[37m      14 │     (queryChange)="onSearch([32m$event[37m)"
+         ╵                             [32m~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type 'Event' is not assignable to parameter of type '{ field: string; value: string; }'.
+  Type 'Event' is missing the following properties from type '{ field: string; value: string; }': field, value[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:15:29:
+[37m      15 │     (filterChange)="onFilter([32m$event[37m)"
+         ╵                              [32m~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8004: No pipe found with name 'date'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:32:35:
+[37m      32 │           <td>{{ skill.createdAt | [32mdate[37m:'yyyy-MM-dd' }}</td>
+         ╵                                    [32m~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'routerLink' since it isn't a known property of 'a'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:34:15:
+[37m      34 │ ...       <a [32m[routerLink]="['/admin/skills/form', skill.idS]"[37m clas...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-backoffice-sidebar' is not a known element:
+1. If 'app-backoffice-sidebar' is an Angular component, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:3:2:
+[37m      3 │   [32m<app-backoffice-sidebar[37m
+        ╵   [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'activeTab' since it isn't a known property of 'app-backoffice-sidebar'.
+1. If 'app-backoffice-sidebar' is an Angular component and it has 'activeTab' input, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:4:4:
+[37m      4 │     [32m[activeTab]="activeTab"[37m
+        ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'isOpen' since it isn't a known property of 'app-backoffice-sidebar'.
+1. If 'app-backoffice-sidebar' is an Angular component and it has 'isOpen' input, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:5:4:
+[37m      5 │     [32m[isOpen]="sidebarOpen"[37m
+        ╵     [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'isMobile' since it isn't a known property of 'app-backoffice-sidebar'.
+1. If 'app-backoffice-sidebar' is an Angular component and it has 'isMobile' input, then verify that it is part of this module.
+2. If 'app-backoffice-sidebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:6:4:
+[37m      6 │     [32m[isMobile]="isMobile"[37m
+        ╵     [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type 'Event' is not assignable to parameter of type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:7:29:
+[37m      7 │     (tabChange)="onTabChange([32m$event[37m)"
+        ╵                              [32m~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-backoffice-header' is not a known element:
+1. If 'app-backoffice-header' is an Angular component, then verify that it is part of this module.
+2. If 'app-backoffice-header' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:13:4:
+[37m      13 │     [32m<app-backoffice-header (menuClick)="onMenuClick()">[37m</app-backo...
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'router-outlet' is not a known element:
+1. If 'router-outlet' is an Angular component, then verify that it is part of this module.
+2. If 'router-outlet' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:20:10:
+[37m      20 │           [32m<router-outlet>[37m</router-outlet>
+         ╵           [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-dashboard-view' is not a known element:
+1. If 'app-dashboard-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-dashboard-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:26:10:
+[37m      26 │           [32m<app-dashboard-view *ngIf="activeTab === 'dashboard'">[37m</...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-projects-view' is not a known element:
+1. If 'app-projects-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-projects-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:27:10:
+[37m      27 │           [32m<app-projects-view *ngIf="activeTab === 'projects'">[37m</ap...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-contracts-view' is not a known element:
+1. If 'app-contracts-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-contracts-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:28:10:
+[37m      28 │           [32m<app-contracts-view *ngIf="activeTab === 'contracts'">[37m</...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-users-view' is not a known element:
+1. If 'app-users-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-users-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:29:10:
+[37m      29 │           [32m<app-users-view *ngIf="activeTab === 'users'">[37m</app-user...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-subscriptions-view' is not a known element:
+1. If 'app-subscriptions-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-subscriptions-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:30:10:
+[37m      30 │           [32m<app-subscriptions-view *ngIf="activeTab === 'subscripti[37m...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-subscription-stats-view' is not a known element:
+1. If 'app-subscription-stats-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-subscription-stats-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:31:10:
+[37m      31 │           [32m<app-subscription-stats-view *ngIf="activeTab === 'subsc[37m...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-stats-view' is not a known element:
+1. If 'app-stats-view' is an Angular component, then verify that it is part of this module.
+2. If 'app-stats-view' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/back-office.component.html:32:10:
+[37m      32 │           [32m<app-stats-view *ngIf="activeTab === 'stats'">[37m</app-stat...
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component BackOfficeComponent.
+
+    src/app/features/back-office/back-office/back-office.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./back-office.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/contracts-view/contracts-view.component.ts:104:14:
+[37m      104 │               [32m[(ngModel)]="searchTerm"[37m
+          ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/contracts-view/contracts-view.component.ts:110:12:
+[37m      110 │             [32m[(ngModel)]="statusFilter"[37m
+          ╵             [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/delete-requests/delete-requests.component.html:71:32:
+[37m      71 │ ...s="badge" [32m[ngClass]="statusConfig[project.status || 'OPEN'].css[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component DeleteRequestsComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/delete-requests/delete-requests.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./delete-requests.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:92:25:
+[37m      92 │ ...<input type="text" [32m[(ngModel)]="searchQuery"[37m (ngModelChange)="o...
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:95:12:
+[37m      95 │     <select [32m[(ngModel)]="filterStatus"[37m (ngModelChange)="onFilterCh...
+         ╵             [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:133:32:
+[37m      133 │ ...s="badge" [32m[ngClass]="statusConfig[project.status || 'OPEN'].cs[37m...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-delete-requests' is not a known element:
+1. If 'app-delete-requests' is an Angular component, then verify that it is part of this module.
+2. If 'app-delete-requests' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:149:4:
+[37m      149 │     [32m<app-delete-requests>[37m</app-delete-requests>
+          ╵     [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.html:283:30:
+[37m      283 │ ...s="badge" [32m[ngClass]="statusConfig[h.oldStatus || 'OPEN'].cssCl[37m...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component ProjectsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/projects-view/projects-view.component.ts:7:15:
+[37m      7 │   templateUrl: [32m'./projects-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8004: No pipe found with name 'number'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:29:84:
+[37m      29 │ ...bold text-gray-800 mt-1">{{ totalRevenue | [32mnumber[37m:'1.2-2' }}</div>
+         ╵                                               [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8004: No pipe found with name 'number'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:33:91:
+[37m      33 │ ...xt-gray-800 mt-1">{{ currentMonthRevenue | [32mnumber[37m:'1.2-2' }}</div>
+         ╵                                               [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'type' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:48:28:
+[37m      48 │ ...      <canvas baseChart [32m[type]="'line'"[37m [data]="paymentsCountCh...
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'data' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:48:44:
+[37m      48 │ ...[type]="'line'" [32m[data]="paymentsCountChartData"[37m [options]="line...
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'options' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:48:76:
+[37m      48 │ ... [data]="paymentsCountChartData" [32m[options]="lineOptions"[37m></canvas>
+         ╵                                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'type' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:52:28:
+[37m      52 │ ...      <canvas baseChart [32m[type]="'line'"[37m [data]="vipChartData" [...
+         ╵                            [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'data' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:52:44:
+[37m      52 │ ...hart [type]="'line'" [32m[data]="vipChartData"[37m [options]="lineOptio...
+         ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'options' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:52:66:
+[37m      52 │ ...]="'line'" [data]="vipChartData" [32m[options]="lineOptions"[37m></canvas>
+         ╵                                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'type' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:58:26:
+[37m      58 │         <canvas baseChart [32m[type]="'bar'"[37m [data]="revenueChartData"...
+         ╵                           [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'data' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:58:41:
+[37m      58 │ ...art [type]="'bar'" [32m[data]="revenueChartData"[37m [options]="barOpti...
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'options' since it isn't a known property of 'canvas'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscription-stats-view/subscription-stats-view.component.ts:58:67:
+[37m      58 │ ..."'bar'" [data]="revenueChartData" [32m[options]="barOptions"[37m></canvas>
+         ╵                                      [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:14:10:
+[37m      14 │           [32m[(ngModel)]="q"[37m
+         ╵           [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:100:34:
+[37m      100 │           <select class="s-input" [32m[(ngModel)]="editType"[37m>
+          ╵                                   [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:107:34:
+[37m      107 │           <select class="s-input" [32m[(ngModel)]="editStatus"[37m>
+          ╵                                   [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.html:114:45:
+[37m      114 │ ...  <input type="date" class="s-input" [32m[(ngModel)]="editEndDate"[37m />
+          ╵                                         [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SubscriptionsViewComponent.
+
+    src/app/features/back-office/back-office/components/views/subscriptions-view/subscriptions-view.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./subscriptions-view.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:563:16:
+[37m      563 │                 [32m[(ngModel)]="searchQuery"[37m
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:604:24:
+[37m      604 │                         [32m[ngClass]="getRoleCss(r)"[37m
+          ╵                         [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:691:83:
+[37m      691 │ ...oles" class="role-badge" [32m[ngClass]="getRoleCss(r)"[37m>{{ r }}</span>
+          ╵                             [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:712:43:
+[37m      712 │ ...ss="field-input" [32m[(ngModel)]="form.firstName"[37m placeholder="Joh...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:716:43:
+[37m      716 │ ...ass="field-input" [32m[(ngModel)]="form.lastName"[37m placeholder="Doe...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:720:43:
+[37m      720 │ ...lass="field-input" [32m[(ngModel)]="form.email"[37m type="email" place...
+          ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:724:43:
+[37m      724 │ ...ass="field-input" [32m[(ngModel)]="form.password"[37m type="password" ...
+          ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:728:45:
+[37m      728 │ ...            <select class="field-select" [32m[(ngModel)]="form.role"[37m>
+          ╵                                             [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngModel' since it isn't a known property of 'select'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:736:45:
+[37m      736 │ ...         <select class="field-select" [32m[(ngModel)]="form.enabled"[37m>
+          ╵                                          [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngValue' since it isn't a known property of 'option'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:737:26:
+[37m      737 │                   <option [32m[ngValue]="true"[37m>Active</option>
+          ╵                           [32m~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngValue' since it isn't a known property of 'option'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/back-office/components/views/users-view/users-view.component.ts:738:26:
+[37m      738 │                   <option [32m[ngValue]="false"[37m>Inactive</option>
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'formGroup' since it isn't a known property of 'form'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-form/skill-form.component.html:16:10:
+[37m      16 │     <form [32m[formGroup]="skillForm"[37m (ngSubmit)="onSubmit()">
+         ╵           [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillFormComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-form/skill-form.component.ts:9:15:
+[37m      9 │   templateUrl: [32m'./skill-form.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'app-search-bar' is not a known element:
+1. If 'app-search-bar' is an Angular component, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:8:2:
+[37m      8 │   [32m<app-search-bar[37m
+        ╵   [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'filters' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'filters' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:10:4:
+[37m      10 │     [32m[filters]="search.config.filters"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'totalCount' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'totalCount' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:11:4:
+[37m      11 │     [32m[totalCount]="allSkills.length"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'resultCount' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'resultCount' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:12:4:
+[37m      12 │     [32m[resultCount]="filteredSkills.length"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'currentQuery' since it isn't a known property of 'app-search-bar'.
+1. If 'app-search-bar' is an Angular component and it has 'currentQuery' input, then verify that it is part of this module.
+2. If 'app-search-bar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:13:4:
+[37m      13 │     [32m[currentQuery]="currentQuery"[37m
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type 'Event' is not assignable to parameter of type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:14:28:
+[37m      14 │     (queryChange)="onSearch([32m$event[37m)"
+         ╵                             [32m~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5: Argument of type 'Event' is not assignable to parameter of type '{ field: string; value: string; }'.
+  Type 'Event' is missing the following properties from type '{ field: string; value: string; }': field, value[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:15:29:
+[37m      15 │     (filterChange)="onFilter([32m$event[37m)"
+         ╵                              [32m~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8004: No pipe found with name 'date'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:32:35:
+[37m      32 │           <td>{{ skill.createdAt | [32mdate[37m:'yyyy-MM-dd' }}</td>
+         ╵                                    [32m~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'routerLink' since it isn't a known property of 'a'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.html:34:15:
+[37m      34 │ ...       <a [32m[routerLink]="['/admin/skills/form', skill.idS]"[37m clas...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component SkillListComponent.
+
+    src/app/features/back-office/skillManagement/skill/skill-list/skill-list.component.ts:8:15:
+[37m      8 │   templateUrl: [32m'./skill-list.component.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m

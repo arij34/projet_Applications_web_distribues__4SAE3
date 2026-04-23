@@ -9,6 +9,8 @@ import { AddProjectComponent } from './front-office/components/projet-client/add
 import { StatsComponent } from './front-office/components/stats/stats.component';
 import { ProjetWorkspaceComponent } from './front-office/components/projet-workspace/projet-workspace.component';
 import { WorkspaceAccessGuard } from '../../core/guards/workspace-access.guard';
+import { RoleGuard } from '../../core/auth/role.guard';
+import { KC_ROLES } from '../../core/auth/roles';
 
 import { SkillDashboardComponent } from './skillManagement/dashboardskill/skill-dashboard/skill-dashboard.component';
 import { EducationListComponent } from './skillManagement/education/education-list/education-list.component';
@@ -19,6 +21,8 @@ import { AvailabilityListComponent } from './skillManagement/availability/availa
 import { AvailabilityFormComponent } from './skillManagement/availability/availability-form/availability-form.component';
 import { FreelancerSkillListComponent } from './skillManagement/freelancer-skill/freelancer-skill-list/freelancer-skill-list.component';
 import { FreelancerSkillFormComponent } from './skillManagement/freelancer-skill/freelancer-skill-form/freelancer-skill-form.component';
+import { SubscriptionPageComponent } from '../subscription/pages/subscription-page/subscription-page.component';
+import { SubscriptionPaymentPageComponent } from '../subscription/pages/subscription-payment-page/subscription-payment-page.component';
 
 const routes: Routes = [
   {
@@ -42,6 +46,20 @@ const routes: Routes = [
       { path: 'discover/:id',          component: ProjetFreelancerDetailComponent },
       { path: 'stats',                 component: StatsComponent },
       { path: 'projet-client',         component: ProjetClientComponent },
+
+      // ── Subscription / Payment (CLIENT) ──────────────────────────
+      {
+        path: 'subscription',
+        component: SubscriptionPageComponent,
+        canActivate: [RoleGuard],
+        data: { roles: [KC_ROLES.CLIENT] }
+      },
+      {
+        path: 'subscription/pay',
+        component: SubscriptionPaymentPageComponent,
+        canActivate: [RoleGuard],
+        data: { roles: [KC_ROLES.CLIENT] }
+      },
 
       // ── Skill Management ──────────────────────────────────────
 
