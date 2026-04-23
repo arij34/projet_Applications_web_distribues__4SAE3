@@ -1,0 +1,12 @@
+services:
+  project-service:
+    container_name: project-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/Evenment?createDatabaseIfNotExist=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://host.docker.internal:8761/eureka/
+    ports:
+      - "8084:8084"
+    restart: unless-stopped
