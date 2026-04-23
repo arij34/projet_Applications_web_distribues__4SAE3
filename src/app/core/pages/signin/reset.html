@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html class="login-pf" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sign in to smart-platform</title>
+    <link rel="icon" href="/resources/0xujl/login/keycloak.v2/img/favicon.ico" />
+            <link href="/resources/0xujl/common/keycloak/vendor/patternfly-v5/patternfly.min.css" rel="stylesheet" />
+            <link href="/resources/0xujl/common/keycloak/vendor/patternfly-v5/patternfly-addons.css" rel="stylesheet" />
+            <link href="/resources/0xujl/login/keycloak.v2/css/styles.css" rel="stylesheet" />
+    <script type="importmap">
+        {
+            "imports": {
+                "rfc4648": "/resources/0xujl/common/keycloak/vendor/rfc4648/rfc4648.js"
+            }
+        }
+    </script>
+      <script type="module" async blocking="render">
+          const DARK_MODE_CLASS = "pf-v5-theme-dark";
+          const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+          updateDarkMode(mediaQuery.matches);
+          mediaQuery.addEventListener("change", (event) => updateDarkMode(event.matches));
+
+          function updateDarkMode(isEnabled) {
+            const { classList } = document.documentElement;
+
+            if (isEnabled) {
+              classList.add(DARK_MODE_CLASS);
+            } else {
+              classList.remove(DARK_MODE_CLASS);
+            }
+          }
+      </script>
+    <script type="module" src="/resources/0xujl/login/keycloak.v2/js/passwordVisibility.js"></script>
+    <script type="module">
+        import { startSessionPolling } from "/resources/0xujl/login/keycloak.v2/js/authChecker.js";
+
+        startSessionPolling(
+            "/realms/smart-platform/login-actions/restart?client_id=angular-app&tab_id=SFErDakcGa4&client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDIwMC9zaWduaW4iLCJydCI6ImNvZGUifQ&skip_logout=true"
+        );
+    </script>
+        <script type="module">
+            import { checkAuthSession } from "/resources/0xujl/login/keycloak.v2/js/authChecker.js";
+
+            checkAuthSession(
+                "pIowafr5H/d56LmVe1/M12wyZRnuiHrl0dQ9Oi2z/5U"
+            );
+        </script>
+    <script>
+      // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1404468
+      const isFirefox = true;
+    </script>
+</head>
+
+<body id="keycloak-bg" class="" data-page-id="login-login-reset-password">
+<div class="pf-v5-c-login">
+  <div class="pf-v5-c-login__container">
+    <header id="kc-header" class="pf-v5-c-login__header">
+      <div id="kc-header-wrapper"
+              class="pf-v5-c-brand">smart-platform</div>
+    </header>
+    <main class="pf-v5-c-login__main">
+      <div class="pf-v5-c-login__main-header">
+        <h1 class="pf-v5-c-title pf-m-3xl" id="kc-page-title">        Forgot Your Password?
+</h1>
+      </div>
+      <div class="pf-v5-c-login__main-body">
+
+
+        <form id="kc-reset-password-form" class="pf-v5-c-form pf-v5-u-w-100" action="https://localhost:8443/realms/smart-platform/login-actions/reset-credentials?session_code=o7yLCE0lcIMELw3HQXYWHhllrv48NEaI9iWy0zSEBr0&amp;execution=418415ac-b0a4-4276-ab0d-914a164f4c75&amp;client_id=angular-app&amp;tab_id=SFErDakcGa4&amp;client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDIwMC9zaWduaW4iLCJydCI6ImNvZGUifQ" method="post">
+
+<div class="pf-v5-c-form__group">
+    <div class="pf-v5-c-form__group-label pf-v5-u-pb-xs">
+        <label for="username" class="pf-v5-c-form__label">
+        <span class="pf-v5-c-form__label-text">
+                            Username or email
+
+        </span>
+        </label>
+    </div>
+
+    <span class="pf-v5-c-form-control ">
+        <input id="username" name="username" value="" type="text" autocomplete="off" autofocus
+                aria-invalid=""/>
+    </span>
+
+    <div id="input-error-container-username">
+    </div>
+</div>
+
+
+  <div class="pf-v5-c-form__group">
+    <div class="pf-v5-c-form__actions pf-v5-u-pt-xs pf-v5-u-flex-wrap">
+  <button class="pf-v5-c-button pf-m-primary pf-m-block " name="" id="kc-form-buttons"
+          type="submit" >
+  Submit
+  </button>
+  <a id="" href="/realms/smart-platform/login-actions/authenticate?client_id=angular-app&amp;tab_id=SFErDakcGa4&amp;client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDIwMC9zaWduaW4iLCJydCI6ImNvZGUifQ" class="pf-v5-c-button pf-m-secondary pf-m-block ">« Back to Login</a>
+    </div>
+  </div>
+
+        </form>
+
+
+          <div class="pf-v5-c-login__main-footer">
+
+                  <div id="kc-info" class="pf-v5-c-login__main-footer-band pf-v5-c-form pf-v5-u-w-100">
+                      <div id="kc-info-wrapper" class="pf-v5-c-login__main-footer-band-item">
+        <span class="pf-v5-u-font-size-sm pf-v5-u-color-200">
+                Enter your username or email address and we will send you instructions on how to create a new password.
+        </span>
+                      </div>
+                  </div>
+          </div>
+      </div>
+
+        <div class="pf-v5-c-login__main-footer">
+        </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>

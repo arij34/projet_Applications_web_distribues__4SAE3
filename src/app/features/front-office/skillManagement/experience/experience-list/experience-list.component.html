@@ -1,0 +1,57 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Experiences</h2>
+    <a [routerLink]="['/front/experience/create']" class="btn-primary-modern">+ Add</a>
+  </div>
+
+  <!-- ✅ BARRE DE RECHERCHE -->
+  <app-search-bar
+    placeholder="Search by title, company..."
+    [filters]="search.config.filters || []"
+    [totalCount]="allItems.length"
+    [resultCount]="filteredItems.length"
+    [currentQuery]="currentQuery"
+    (queryChange)="onSearch($event)"
+    (filterChange)="onFilter($event)"
+    (reset)="onReset()">
+  </app-search-bar>
+
+  <div *ngIf="successMessage" class="alert-success-modern">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert-danger-modern">{{ errorMessage }}</div>
+  <div *ngIf="loading" class="loading-box"><div class="spinner-border"></div></div>
+
+  <div class="table-card" *ngIf="!loading">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Job Title</th><th>Company</th>
+          <th>Description</th><th>Start / End</th><th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredItems">
+          <td>{{ item.id }}</td>
+          <td class="fw-600">{{ item.title }}</td>
+          <td>{{ item.company }}</td>
+          <td>{{ item.description || '-' }}</td>
+          <td>
+            {{ item.startDate ? (item.startDate | date:'dd/MM/yyyy') : '-' }} -
+            {{ item.endDate   ? (item.endDate   | date:'dd/MM/yyyy') : 'Present' }}
+          </td>
+          <td class="actions-cell">
+            <a [routerLink]="['/front/experience/edit', item.id]" class="action-icon edit-icon">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <button (click)="deleteItem(item.id!)" class="action-icon delete-icon">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredItems.length === 0">
+          <td colspan="6" class="empty-state">No experiences found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <a routerLink="/front/dashboard-skill" class="btn-back-modern">← Back to Dashboard</a>
+</div>

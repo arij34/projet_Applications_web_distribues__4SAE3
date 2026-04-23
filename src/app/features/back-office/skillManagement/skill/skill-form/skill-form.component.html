@@ -1,0 +1,77 @@
+<div class="page-container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h2>Ajouter Skill</h2>
+  </div>
+
+  <!-- CARD -->
+  <div class="form-card">
+
+    <!-- ERROR GLOBAL -->
+    <div *ngIf="skillForm.invalid && skillForm.touched" class="alert-error">
+      Name, Normalized Name and Category are required
+    </div>
+
+    <form [formGroup]="skillForm" (ngSubmit)="onSubmit()">
+
+      <!-- NAME -->
+      <div class="form-group">
+        <label>Name *</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          placeholder="Enter skill name"
+        />
+        <small *ngIf="skillForm.get('name')?.touched && skillForm.get('name')?.invalid">
+          Name is required
+        </small>
+      </div>
+
+      <!-- NORMALIZED NAME -->
+      <div class="form-group">
+        <label>Normalized Name *</label>
+        <input
+          type="text"
+          formControlName="normalizedName"
+          class="form-control"
+          placeholder="Enter normalized name"
+        />
+        <small *ngIf="skillForm.get('normalizedName')?.touched && skillForm.get('normalizedName')?.invalid">
+          Normalized Name is required
+        </small>
+      </div>
+
+      <!-- CATEGORY -->
+      <div class="form-group">
+        <label>Category *</label>
+        <select formControlName="category" class="form-control">
+          <option value="">Select category</option>
+          <option value="Frontend">Frontend</option>
+          <option value="Backend">Backend</option>
+          <option value="DevOps">DevOps</option>
+          <option value="Mobile">Mobile</option>
+          <option value="Database">Database</option>
+        </select>
+        <small *ngIf="skillForm.get('category')?.touched && skillForm.get('category')?.invalid">
+          Category is required
+        </small>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="form-actions">
+        <button type="submit" class="btn-primary-modern" [disabled]="skillForm.invalid">
+          Save Skill
+        </button>
+
+        <a routerLink="/back-office/skills" class="btn-secondary-modern">
+          Cancel
+        </a>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

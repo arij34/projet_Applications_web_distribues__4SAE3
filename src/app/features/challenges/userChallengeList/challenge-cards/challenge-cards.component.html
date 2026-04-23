@@ -1,0 +1,159 @@
+<div 
+  class="challenge-card"
+  [class.hovered]="isHovered"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()">
+  
+  <!-- Trending Badge -->
+  <div *ngIf="trending" class="trending-badge">
+    🔥 Trending
+  </div>
+
+  <!-- LEFT SECTION - Thumbnail -->
+  <div class="thumbnail-wrapper">
+    <span *ngIf="status" class="status-badge status-on-image" [ngClass]="getStatusClass()">
+      {{ getStatusLabel() }}
+    </span>
+    <div class="thumbnail-container">
+      <img [src]="imageUrl" [alt]="title" class="thumbnail-image" />
+      <div class="thumbnail-overlay"></div>
+    </div>
+  </div>
+
+  <!-- CENTER SECTION - Content -->
+  <div class="content-section">
+    <!-- Title & Badges -->
+    <div class="header-row">
+      <h3 class="title">{{ title }}</h3>
+      <span class="difficulty-badge" [ngClass]="getDifficultyClass()">
+        {{ difficulty }}
+      </span>
+    </div>
+
+    <!-- Description -->
+    <p class="description">{{ description }}</p>
+
+    <!-- Tags Row -->
+    <div class="tags-row">
+      <span *ngFor="let tag of tags" class="tag">
+        {{ tag }}
+      </span>
+    </div>
+
+    <!-- Status Row -->
+    <div class="status-section">
+      <div class="status-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <span>{{ participants }} Participants</span>
+      </div>
+      <div class="status-dates">
+        <div class="status-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 2v4"/>
+            <path d="M16 2v4"/>
+            <rect width="18" height="18" x="3" y="4" rx="2"/>
+            <path d="M3 10h18"/>
+          </svg>
+          <span>{{ formatDate(startDate) }} – {{ formatDate(endDate) }}</span>
+        </div>
+        <div class="status-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>{{ duration }} Duration</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SECTION - Reward + Join -->
+  <div class="right-section" [class.hovered]="isHovered">
+    <div class="points-display">
+      <svg class="trophy-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+        <path d="M4 22h16"/>
+        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+      </svg>
+      <div class="points-number">{{ points }}</div>
+      <div class="points-label">Points</div>
+    </div>
+    <button class="join-btn" [class.coming-soon-btn]="isComingSoon" [class.view-results-btn]="isViewResults" (click)="onJoinClick()">
+      <!-- Coming Soon icon -->
+      <svg *ngIf="isComingSoon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <!-- View Results icon -->
+      <svg *ngIf="isViewResults" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 3v18h18"/>
+        <path d="M7 16l4-8 4 4 4-6"/>
+      </svg>
+      <!-- Default icon -->
+      <svg *ngIf="!isComingSoon && !isViewResults" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+        <polyline points="10 17 15 12 10 7"/>
+        <line x1="15" y1="12" x2="3" y2="12"/>
+      </svg>
+      {{ isComingSoon ? 'Coming Soon' : buttonLabel }}
+    </button>
+  </div>
+</div>
+
+<!-- Coming Soon Modal -->
+<div *ngIf="showComingSoonModal" class="modal-overlay fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" (click)="onModalOverlayClick($event)">
+  <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
+    <!-- Header with gradient -->
+    <div class="bg-gradient-to-br from-[#4F46E5] to-[#6366F1] px-8 pt-8 pb-12 text-center relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+      <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+      <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke-width="2"/>
+          <polyline points="12 6 12 12 16 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-1">Challenge Not Yet Available</h3>
+      <p class="text-white/80 text-sm">This challenge hasn't started yet</p>
+    </div>
+
+    <!-- Content -->
+    <div class="px-8 py-6 -mt-6">
+      <div class="bg-[#F8FAFC] rounded-xl p-5 border border-gray-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-[#4F46E5]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-[#4F46E5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Scheduled Start Date</p>
+            <p class="text-lg font-bold text-gray-900">{{ formatDate(startDate) }}</p>
+          </div>
+        </div>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          <strong class="text-gray-800">{{ title }}</strong> is scheduled to begin on
+          <strong class="text-[#4F46E5]">{{ formatDate(startDate) }}</strong>.
+          You'll be able to join and participate once the challenge officially starts.
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-8 pb-6">
+      <button
+        (click)="closeComingSoonModal()"
+        class="w-full py-3 bg-[#4F46E5] text-white rounded-xl hover:bg-[#4338CA] transition-colors font-medium text-sm">
+        Got it
+      </button>
+    </div>
+  </div>
+</div>

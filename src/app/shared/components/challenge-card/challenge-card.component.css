@@ -1,0 +1,275 @@
+/* Challenge Card - Reference design: image top, content below */
+
+.challenge-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(2, 6, 111, 0.12);
+  border: 1px solid #D8D8D8;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.challenge-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(2, 6, 111, 0.2);
+  border-color: #02066F;
+}
+
+/* Image header - top section with rounded corners */
+.card-image-header {
+  position: relative;
+  height: 180px;
+  min-height: 180px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px 12px 0 0;
+}
+
+.card-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+/* Badges overlay on image - pill shaped, light grey */
+.card-image-badges {
+  position: absolute;
+  inset: 12px 12px auto auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  z-index: 1;
+}
+
+.image-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.9);
+  color: #02066F;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.image-badge.category-pill {
+  order: 0;
+}
+
+.image-badge.points-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.points-icon {
+  width: 16px;
+  height: 16px;
+  color: #a16207;
+}
+
+.card-image-badges {
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  bottom: auto;
+}
+
+/* Card body - content below image */
+.card-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.diff-text {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.diff-text.diff-easy {
+  color: #166534;
+}
+
+.diff-text.diff-medium {
+  color: #a16207;
+}
+
+.diff-text.diff-hard {
+  color: #E74C3C;
+}
+
+.diff-text.diff-expert {
+  color: #991b1b;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2B2F36;
+  margin: 0 0 12px 0;
+  line-height: 1.3;
+}
+
+.challenge-card:hover .card-title {
+  color: #02066F;
+}
+
+.card-description {
+  color: #6B7280;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  flex-grow: 1;
+}
+
+/* Progress Section */
+.progress-section {
+  margin-bottom: 16px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.progress-percentage {
+  font-size: 12px;
+  font-weight: 600;
+  color: #3FA66B;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #E8EEF7;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #3FA66B;
+  border-radius: 6px;
+  transition: width 0.6s ease;
+}
+
+/* Dates Bar */
+.dates-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #E8EEF7 0%, #F0F4FA 100%);
+  border: 1px solid #D0D9E8;
+  border-radius: 8px;
+}
+
+.date-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #D8D8D8;
+  white-space: nowrap;
+}
+
+.date-chip-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #02066F;
+}
+
+.date-chip-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2B2F36;
+}
+
+/* Card Footer */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid #E8EEF7;
+  margin-top: auto;
+}
+
+.participants-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6B7280;
+}
+
+.participants-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.participants-text {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.join-button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: #02066F;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(2, 6, 111, 0.3);
+}
+
+.join-button:hover {
+  box-shadow: 0 4px 12px rgba(2, 6, 111, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 16px 20px;
+  }
+  
+  .card-title {
+    font-size: 18px;
+  }
+  
+  .card-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .join-button {
+    width: 100%;
+  }
+}

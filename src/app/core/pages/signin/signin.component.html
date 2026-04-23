@@ -1,0 +1,72 @@
+<div class="min-h-screen flex items-center justify-center px-4" style="padding-top: 100px;">
+  <div class="w-full max-w-md bg-white border border-gray-100 rounded-2xl shadow-lg p-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">Sign in to your account</h2>
+    <p class="text-sm text-gray-500 mb-6">Welcome back.</p>
+
+    <div *ngIf="error" class="mb-4 p-3 rounded bg-red-50 text-red-700 text-sm">{{ error }}</div>
+
+    <button
+      class="w-full py-2 rounded-lg bg-indigo-600 text-white font-semibold disabled:opacity-60"
+      type="button"
+      (click)="signIn()"
+      [disabled]="loading">
+      {{ loading ? 'Redirecting...' : 'Sign In' }}
+    </button>
+
+    <div class="my-4 flex items-center gap-3">
+      <div class="h-px bg-gray-200 flex-1"></div>
+      <div class="text-xs text-gray-400">or</div>
+      <div class="h-px bg-gray-200 flex-1"></div>
+    </div>
+
+    <button
+      class="w-full py-2 rounded-lg border border-gray-200 text-gray-800 font-semibold hover:bg-gray-50 disabled:opacity-60"
+      type="button"
+      (click)="openGoogleRolePicker()"
+      [disabled]="loading">
+      Sign in with Google
+    </button>
+
+    <!-- Role picker modal (shown after clicking "Sign in with Google") -->
+    <div *ngIf="googleRolePickerOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/50" (click)="closeGoogleRolePicker()"></div>
+
+      <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-xl p-6">
+        <h3 class="text-lg font-bold text-gray-800">Choose your role</h3>
+        <p class="text-sm text-gray-500 mt-1">This role will be used to access the correct dashboard.</p>
+
+        <div class="mt-5 flex flex-col gap-2">
+          <button
+            class="w-full py-2 rounded-lg bg-indigo-600 text-white font-semibold disabled:opacity-60"
+            type="button"
+            (click)="chooseRole('CLIENT')"
+            [disabled]="loading">
+            Continue as Client
+          </button>
+
+          <button
+            class="w-full py-2 rounded-lg border border-gray-200 text-gray-800 font-semibold hover:bg-gray-50 disabled:opacity-60"
+            type="button"
+            (click)="chooseRole('FREELANCER')"
+            [disabled]="loading">
+            Continue as Freelancer
+          </button>
+        </div>
+
+        <button class="mt-4 text-sm text-gray-500 hover:underline" type="button" (click)="closeGoogleRolePicker()">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-5 flex items-center justify-between text-sm">
+      <a class="text-indigo-600 hover:underline cursor-pointer" (click)="resetPassword()">
+        Forgot password?
+      </a>
+
+      <a class="text-gray-600 hover:underline" routerLink="/signup">
+        Create account
+      </a>
+    </div>
+  </div>
+</div>

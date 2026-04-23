@@ -1,0 +1,135 @@
+<div class="form-wrapper">
+  <div class="form-card">
+
+    <!-- HEADER -->
+    <div class="form-header">
+      <h2 class="form-title">
+        {{ isEditMode ? 'Edit Availability' : 'Add Availability' }}
+      </h2>
+    </div>
+
+    <div class="form-body">
+
+      <!-- ERROR -->
+      <div *ngIf="errorMessage" class="form-preview-box">
+        {{ errorMessage }}
+      </div>
+
+      <!-- LOADER -->
+      <div *ngIf="loading" class="text-center py-4">
+        <div class="spinner-border text-primary"></div>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #f="ngForm" *ngIf="!loading">
+
+        <!-- ===================== -->
+        <!-- PERIOD -->
+        <!-- ===================== -->
+        <div class="form-group">
+          <label>Period *</label>
+
+          <div class="chip-group">
+            <div *ngFor="let p of periods">
+              <input type="checkbox"
+                     class="btn-check"
+                     [id]="p.key"
+                     [checked]="isPeriodSelected(p.key)"
+                     (change)="togglePeriod(p.key)">
+
+              <label class="chip" [for]="p.key">
+                {{ p.label }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== -->
+        <!-- HOURS -->
+        <!-- ===================== -->
+        <div class="form-group">
+          <label>Hours per day *</label>
+
+          <input type="number"
+                 [(ngModel)]="item.hoursPerDay"
+                 name="hoursPerDay"
+                 required
+                 min="1"
+                 [max]="getMaxHours()"
+                 (ngModelChange)="onHoursChange()"
+                 [disabled]="item.selectedPeriods.length === 0"
+                 class="form-control">
+
+          <small *ngIf="item.selectedPeriods.length > 0">
+            Max: {{ getMaxHours() }}h
+          </small>
+        </div>
+
+        <!-- ===================== -->
+        <!-- DAYS -->
+        <!-- ===================== -->
+        <div class="form-group">
+          <label>Available days *</label>
+
+          <div class="chip-group secondary">
+            <div *ngFor="let day of daysOfWeek">
+              <input type="checkbox"
+                     class="btn-check"
+                     [id]="day.key"
+                     [checked]="isDaySelected(day.key)"
+                     (change)="toggleDay(day.key)">
+
+              <label class="chip secondary" [for]="day.key">
+                {{ day.label }}
+              </label>
+            </div>
+          </div>
+
+          <small class="mt-2 d-block">
+            {{ item.selectedDays.length }} day(s) selected
+          </small>
+        </div>
+
+        <!-- ===================== -->
+        <!-- PREVIEW -->
+        <!-- ===================== -->
+        <div *ngIf="preview" class="form-preview-box">
+
+  <div class="preview-row">
+    <strong>{{ preview.hoursPerWeek }}h / week</strong>
+  </div>
+
+  <div class="preview-row mt-2">
+    <span class="status-badge"
+         [ngClass]="getStatusClass(preview.status || '')">
+{{ formatStatus(preview.status || '') }}
+    </span>
+  </div>
+
+</div>
+
+        <!-- ===================== -->
+        <!-- ACTIONS -->
+        <!-- ===================== -->
+        <div class="form-actions">
+
+          <a routerLink="/front/availability"
+             class="btn-secondary-modern">
+            Cancel
+          </a>
+
+          <button type="submit"
+                  class="btn-primary-modern"
+                  [disabled]="f.invalid
+                    || item.selectedDays.length === 0
+                    || item.selectedPeriods.length === 0
+                    || item.hoursPerDay <= 0">
+
+            {{ isEditMode ? 'Update' : 'Create' }}
+          </button>
+
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

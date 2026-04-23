@@ -1,0 +1,88 @@
+<div class="bg-white border border-[#E5E7EB] rounded-[12px] overflow-hidden hover:shadow-lg transition-all group">
+  <div class="flex flex-col lg:flex-row">
+    <!-- Image Section -->
+    <div class="lg:w-80 h-64 lg:h-auto relative overflow-hidden">
+      <img
+        [src]="challenge.imageUrl"
+        [alt]="challenge.title"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+      <div class="absolute top-4 left-4">
+        <span [class]="'px-3 py-1 rounded-full text-xs font-medium ' + getDifficultyColor(challenge.difficulty)">
+          {{ challenge.difficulty }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="flex-1 p-6 flex flex-col">
+      <div class="flex-1">
+        <div class="flex items-start justify-between mb-3">
+          <h3 class="text-2xl font-semibold text-[#1F2937] group-hover:text-[#1E3A8A] transition-colors">
+            {{ challenge.title }}
+          </h3>
+        </div>
+        
+        <p class="text-[#6B7280] mb-4 line-clamp-2">
+          {{ challenge.description }}
+        </p>
+
+        <!-- Progress Bar -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-[#1F2937]">Progress</span>
+            <span class="text-sm font-semibold text-[#1E3A8A]">{{ challenge.progress }}%</span>
+          </div>
+          <div class="w-full bg-[#E5E7EB] rounded-full h-3 overflow-hidden">
+            <div
+              [class]="'h-full rounded-full transition-all duration-300 ' + getProgressColor(challenge.progress)"
+              [style.width.%]="challenge.progress"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span
+            *ngFor="let tag of challenge.tags"
+            class="px-3 py-1 bg-[#F5EDE3] text-[#1F2937] rounded-[6px] text-xs font-medium"
+          >
+            {{ tag }}
+          </span>
+        </div>
+
+        <!-- Meta Information -->
+        <div class="flex flex-wrap items-center gap-4 text-sm text-[#6B7280] mb-6">
+          <div class="flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ challenge.estimatedTime }}</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>Started {{ challenge.startedAt }}</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span>Last activity: {{ challenge.lastActivity }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-3">
+        <button class="flex-1 bg-[#1E3A8A] text-white py-3 px-6 rounded-[12px] hover:bg-[#1E3A8A]/90 transition-colors font-medium">
+          Continue Challenge
+        </button>
+        <button class="bg-[#EBF4FF] text-[#1E3A8A] py-3 px-6 rounded-[12px] hover:bg-[#EBF4FF]/80 transition-colors font-medium">
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

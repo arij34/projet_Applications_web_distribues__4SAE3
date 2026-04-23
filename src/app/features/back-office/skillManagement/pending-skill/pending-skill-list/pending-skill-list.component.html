@@ -1,0 +1,52 @@
+<div class="page-container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h2>Pending Skills</h2>
+  </div>
+
+  <!-- TABLE CARD -->
+  <div class="table-card">
+
+    <table class="modern-table">
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Suggested Name</th>
+          <th>Normalized</th>
+          <th>Suggested By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let skill of skills">
+          <td>{{ skill.id }}</td>
+          <td>{{ skill.suggestedName }}</td>
+          <td>{{ skill.normalizedName }}</td>
+          <td>{{ skill.suggestedBy }}</td>
+          <td class="actions">
+            <button class="btn-approve"
+                    (click)="approve(skill.id)">
+              Approve
+            </button>
+
+            <button class="btn-reject"
+                    (click)="reject(skill.id)">
+              Reject
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="skills.length === 0">
+          <td colspan="5" class="empty-state">
+            No pending skills found
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+
+  </div>
+</div>

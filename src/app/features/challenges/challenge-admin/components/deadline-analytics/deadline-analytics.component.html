@@ -1,0 +1,79 @@
+<div class="space-y-6">
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="flex items-center justify-center py-16">
+    <div class="w-8 h-8 border-2 border-[#4F46E5] border-t-transparent rounded-full animate-spin"></div>
+    <span class="ml-3 text-gray-500 text-sm">Loading task analytics...</span>
+  </div>
+
+  <!-- Stats Summary Cards -->
+  <div *ngIf="!isLoading" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white rounded-xl border border-gray-200 p-5 text-center">
+      <div class="text-3xl font-bold text-[#1F2937]">{{ totalTasks }}</div>
+      <div class="text-sm text-gray-500 mt-1">Total Tasks</div>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-5 text-center">
+      <div class="text-3xl font-bold text-[#059669]">{{ completedCount }}</div>
+      <div class="text-sm text-gray-500 mt-1">Completed</div>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-5 text-center">
+      <div class="text-3xl font-bold text-[#F59E0B]">{{ inProgressCount }}</div>
+      <div class="text-sm text-gray-500 mt-1">In Progress</div>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-5 text-center">
+      <div class="text-3xl font-bold text-[#EF4444]">{{ incompleteCount }}</div>
+      <div class="text-sm text-gray-500 mt-1">Incomplete</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div *ngIf="!isLoading" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Overall Task Status - Pie Chart -->
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <div class="mb-6">
+        <h3 class="text-lg mb-2 flex items-center gap-2">
+          <svg class="w-5 h-5 text-[#4F46E5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          Overall Task Status
+        </h3>
+        <p class="text-sm text-gray-600">Completion status across all challenges</p>
+      </div>
+      <div class="h-80">
+        <canvas
+          *ngIf="deadlinePieData"
+          baseChart
+          [data]="deadlinePieData"
+          [options]="deadlinePieOptions"
+          [type]="'pie'">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Task Count by Status - Bar Chart -->
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <div class="mb-6">
+        <h3 class="text-lg mb-2 flex items-center gap-2">
+          <svg class="w-5 h-5 text-[#4F46E5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+          </svg>
+          Tasks by Status
+        </h3>
+        <p class="text-sm text-gray-600">Number of tasks in each status</p>
+      </div>
+      <div class="h-[300px]">
+        <canvas
+          *ngIf="taskBarData"
+          baseChart
+          [data]="taskBarData"
+          [options]="taskBarOptions"
+          [type]="'bar'">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && totalTasks === 0" class="text-center py-12">
+    <p class="text-gray-500">No tasks found across challenges.</p>
+  </div>
+</div>

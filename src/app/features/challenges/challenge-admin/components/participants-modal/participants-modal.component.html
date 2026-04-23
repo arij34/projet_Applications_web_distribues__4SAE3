@@ -1,0 +1,119 @@
+<div *ngIf="isOpen" class="modal-overlay fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" (click)="onOverlayClick($event)">
+  <div class="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
+    <!-- Header -->
+    <div class="bg-white border-b border-gray-200 px-6 py-4">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-xl">Challenge Participants</h2>
+          <p class="text-sm text-gray-600">{{ challenge?.title }}</p>
+        </div>
+        <button
+          (click)="onClose()"
+          class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Search & Filter -->
+      <div class="flex gap-3">
+        <div class="relative flex-1">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            placeholder="Search participants..."
+            class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/20"
+          />
+        </div>
+        <select
+          [(ngModel)]="filterStatus"
+          class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/20">
+          <option value="all">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Completed">Completed</option>
+          <option value="Dropped">Dropped</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Participants List -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <div class="space-y-3">
+        <div
+          *ngFor="let participant of filteredParticipants; trackBy: trackByParticipant"
+          class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex items-center gap-4">
+            <!-- Avatar -->
+            <div class="w-12 h-12 bg-gradient-to-br from-[#4F46E5] to-[#22D3EE] rounded-full flex items-center justify-center text-white flex-shrink-0">
+              <span *ngIf="!participant.avatar">{{ participant.name.charAt(0) }}</span>
+              <img *ngIf="participant.avatar" [src]="participant.avatar" [alt]="participant.name" class="w-full h-full rounded-full object-cover" />
+            </div>
+
+            <!-- Info -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <h4 class="truncate">{{ participant.name }}</h4>
+                <span [class]="'px-2 py-0.5 rounded-full text-xs border ' + getStatusColor(participant.status)">
+                  {{ participant.status }}
+                </span>
+              </div>
+              <p class="text-sm text-gray-600 truncate">{{ participant.email }}</p>
+              <div class="flex items-center gap-4 mt-2 text-xs text-gray-600">
+                <span>Enrolled: {{ participant.enrolledDate }}</span>
+                <span>Last active: {{ participant.lastActivity }}</span>
+              </div>
+            </div>
+
+            <!-- Progress -->
+            <div class="text-right flex-shrink-0">
+              <div class="text-2xl mb-1">{{ participant.progress }}%</div>
+              <div class="text-xs text-gray-600">{{ participant.tasksCompleted }}/{{ participant.totalTasks }} tasks</div>
+              <div class="mt-2">
+                <div class="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div [style.width.%]="participant.progress" class="h-full bg-[#4F46E5] transition-all"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="filteredParticipants.length === 0" class="text-center py-12">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg mb-2">No participants found</h3>
+        <p class="text-sm text-gray-600">Try adjusting your search or filter criteria</p>
+      </div>
+    </div>
+
+    <!-- Footer Stats -->
+    <div class="border-t border-gray-200 px-6 py-4 bg-gray-50">
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div>
+          <div class="text-2xl mb-1">{{ participants.length }}</div>
+          <div class="text-xs text-gray-600">Total</div>
+        </div>
+        <div>
+          <div class="text-2xl mb-1 text-green-600">
+            {{ activeCount }}
+          </div>
+          <div class="text-xs text-gray-600">Active</div>
+        </div>
+        <div>
+          <div class="text-2xl mb-1 text-blue-600">
+            {{ completedCount }}
+          </div>
+          <div class="text-xs text-gray-600">Completed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

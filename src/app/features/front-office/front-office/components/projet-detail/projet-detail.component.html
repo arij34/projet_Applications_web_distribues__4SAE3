@@ -1,0 +1,442 @@
+<div class="detail-wrapper">
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading project...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-state" *ngIf="errorMessage && !isLoading">
+    <div class="error-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <h3>{{ errorMessage }}</h3>
+    <button class="btn-back" (click)="goBack()">← Go Back</button>
+  </div>
+
+  <!-- CONTENT -->
+  <ng-container *ngIf="!isLoading && !errorMessage && project as p">
+  <div class="detail-content">
+
+    <!-- BACK BUTTON -->
+    <button class="btn-back-top" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+    </button>
+
+    <!-- HERO CARD -->
+    <div class="hero-card">
+      <div class="hero-card-left">
+        <div class="hero-badges">
+          <span class="status-badge" [ngClass]="statusConfig[p.status || 'DRAFT'].cssClass">
+            {{ statusConfig[p.status || 'DRAFT'].label }}
+          </span>
+          <span class="client-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Client {{ p.clientId }}
+          </span>
+        </div>
+        <h1 class="hero-title">{{ p.title }}</h1>
+        <p class="hero-description">{{ p.description }}</p>
+      </div>
+
+      <div class="hero-card-right">
+        <div class="progress-circle-wrapper">
+          <svg class="progress-circle" width="120" height="120" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f5f9" stroke-width="10"/>
+            <circle cx="60" cy="60" r="50" fill="none"
+                    [attr.stroke]="statusConfig[p.status || 'DRAFT'].color"
+                    stroke-width="10" stroke-linecap="round"
+                    stroke-dasharray="314"
+                    [attr.stroke-dashoffset]="314 - (314 * getProgressValue(p.status) / 100)"
+                    transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="progress-circle-text">
+            <span class="progress-value">{{ getProgressValue(p.status) }}%</span>
+            <span class="progress-label">Progress</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO GRID -->
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-icon icon-blue">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <div class="info-card-body">
+          <p class="info-card-label">Deadline</p>
+          <p class="info-card-value">{{ formatDate(p.deadline) }}</p>
+          <p class="info-card-sub" [ngClass]="{
+            'text-danger':  getDaysLeft(p.deadline) < 0,
+            'text-warning': getDaysLeft(p.deadline) >= 0 && getDaysLeft(p.deadline) <= 7,
+            'text-success': getDaysLeft(p.deadline) > 7
+          }">
+            {{ getDaysLeft(p.deadline) < 0 ? 'Expired' :
+               getDaysLeft(p.deadline) === 0 ? 'Due today' :
+               getDaysLeft(p.deadline) + ' days remaining' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-icon icon-indigo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="info-card-body">
+          <p class="info-card-label">Created At</p>
+          <p class="info-card-value">{{ formatDateTime(p.createdAt) }}</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-icon icon-violet">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+        </div>
+        <div class="info-card-body">
+          <p class="info-card-label">Last Updated</p>
+          <p class="info-card-value">{{ p.updatedAt ? formatDateTime(p.updatedAt) : 'Not updated yet' }}</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-icon icon-emerald">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="info-card-body">
+          <p class="info-card-label">Current Status</p>
+          <p class="info-card-value">{{ statusConfig[p.status || 'DRAFT'].label }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <h3 class="section-title">Project Progress</h3>
+        <span class="progress-percent">{{ getProgressValue(p.status) }}%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill"
+             [style.width.%]="getProgressValue(p.status)"
+             [style.background]="statusConfig[p.status || 'DRAFT'].color">
+        </div>
+      </div>
+      <div class="progress-steps">
+        <span class="step-done">Draft</span>
+        <span [class.step-done]="p.status === 'OPEN' || p.status === 'IN_PROGRESS' || p.status === 'COMPLETED'">Open</span>
+        <span [class.step-done]="p.status === 'IN_PROGRESS' || p.status === 'COMPLETED'">In Progress</span>
+        <span [class.step-done]="p.status === 'COMPLETED'">Completed</span>
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="skills-section" *ngIf="p.skills && p.skills.length > 0">
+      <h3 class="section-title">Required Skills</h3>
+      <div class="skills-grid">
+        <div class="skill-card" *ngFor="let skill of p.skills">
+          <div class="skill-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </div>
+          {{ skill.skillName }}
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE REQUEST BANNER -->
+    <div class="delete-banner" *ngIf="p.deleteRequested">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      A deletion request has been sent. Waiting for admin approval.
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="section-divider" *ngIf="analysis || isLoadingAnalysis">
+      <div class="section-divider-line"></div>
+      <span class="section-divider-label">Smart Insights</span>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <!-- LOADING ANALYSIS -->
+    <div class="analysis-loading" *ngIf="isLoadingAnalysis">
+      <div class="analysis-spinner"></div>
+      <p>Loading analysis...</p>
+    </div>
+
+    <!-- ANALYSIS BLOCK -->
+    <ng-container *ngIf="analysis && !isLoadingAnalysis">
+
+      <!-- Header -->
+      <div class="analysis-header">
+        <div class="analysis-header-left">
+          <h2 class="analysis-title">Smart Insights</h2>
+          <p class="analysis-subtitle">Automated analysis generated for this project</p>
+        </div>
+        <div class="feasibility-circle-wrapper">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <circle cx="65" cy="65" r="54" fill="none" stroke="#f1f5f9" stroke-width="10"/>
+            <circle cx="65" cy="65" r="54" fill="none"
+                    [attr.stroke]="getFeasibilityColor()"
+                    stroke-width="10" stroke-linecap="round"
+                    stroke-dasharray="339.3"
+                    [attr.stroke-dashoffset]="getCircleDash(analysis.feasibilityScore)"
+                    transform="rotate(-90 65 65)"/>
+          </svg>
+          <div class="feasibility-text">
+            <span class="feasibility-score">{{ analysis.feasibilityScore }}</span>
+            <span class="feasibility-max">/100</span>
+            <span class="feasibility-label" [style.color]="getFeasibilityColor()">
+              {{ getFeasibilityLabel() }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 1: Budget + Profit -->
+      <div class="analysis-row">
+
+        <div class="analysis-card">
+          <div class="acard-header">
+            <div class="acard-icon blue">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23"/>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <h4 class="acard-title">Budget Estimate</h4>
+          </div>
+          <div class="budget-main-value">${{ analysis.budgetRecommended | number }}</div>
+          <div class="budget-range">${{ analysis.budgetMin | number }} – ${{ analysis.budgetMax | number }}</div>
+          <div class="budget-rate">Avg. Hourly Rate: <strong>${{ analysis.hourlyRateAvg }}/hr</strong></div>
+          <div class="budget-bar-labels">
+            <span>Min</span><span>Recommended</span><span>Max</span>
+          </div>
+          <div class="budget-bar-track">
+            <div class="budget-bar-fill"></div>
+            <div class="budget-bar-dot"></div>
+          </div>
+        </div>
+
+        <div class="analysis-card">
+          <div class="acard-header">
+            <div class="acard-icon green">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                <polyline points="17 6 23 6 23 12"/>
+              </svg>
+            </div>
+            <h4 class="acard-title">Profit Breakdown</h4>
+          </div>
+          <div class="profit-list">
+            <div class="profit-item">
+              <div class="profit-item-left">
+                <span class="profit-dot" style="background:#3b82f6"></span>
+                <span>Platform Fee (10%)</span>
+              </div>
+              <div class="profit-item-right">
+                <strong>${{ analysis.platformRevenue | number }}</strong>
+                <div class="mini-bar"><div class="mini-bar-fill" style="width:10%; background:#3b82f6"></div></div>
+              </div>
+            </div>
+            <div class="profit-item">
+              <div class="profit-item-left">
+                <span class="profit-dot" style="background:#22c55e"></span>
+                <span>Freelancer Profit (20%)</span>
+              </div>
+              <div class="profit-item-right">
+                <strong>${{ analysis.freelancerProfit | number }}</strong>
+                <div class="mini-bar"><div class="mini-bar-fill" style="width:20%; background:#22c55e"></div></div>
+              </div>
+            </div>
+            <div class="profit-item">
+              <div class="profit-item-left">
+                <span class="profit-dot" style="background:#64748b"></span>
+                <span>Net Project Cost</span>
+              </div>
+              <div class="profit-item-right">
+                <strong>${{ analysis.netProjectCost | number }}</strong>
+                <div class="mini-bar"><div class="mini-bar-fill" style="width:70%; background:#64748b"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ROW 2: Duration + Complexity + Freelancers -->
+      <div class="analysis-row-3">
+
+        <div class="analysis-card-sm">
+          <div class="acard-header">
+            <div class="acard-icon orange">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <h4 class="acard-title">Duration</h4>
+          </div>
+          <div class="stat-big">{{ analysis.durationEstimatedWeeks }} <span class="stat-unit">weeks</span></div>
+          <div class="stat-range">{{ analysis.durationMinWeeks }}–{{ analysis.durationMaxWeeks }} weeks range</div>
+          <div class="duration-warning" *ngIf="analysis.durationWarning">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            </svg>
+            {{ analysis.durationWarning }}
+          </div>
+        </div>
+
+        <div class="analysis-card-sm">
+          <div class="acard-header">
+            <div class="acard-icon purple">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <h4 class="acard-title">Complexity</h4>
+          </div>
+          <div class="complexity-badge"
+               [style.background]="getComplexityColor() + '20'"
+               [style.color]="getComplexityColor()">
+            {{ analysis.complexityLevel }}
+          </div>
+          <div class="complexity-score-row">
+            <span class="complexity-score-label">Score</span>
+            <span class="complexity-score-val" [style.color]="getComplexityColor()">
+              {{ analysis.complexityScore }}
+            </span>
+          </div>
+          <div class="complexity-bar-track">
+            <div class="complexity-bar-fill"
+                 [style.width.%]="(analysis.complexityScore / 20) * 100"
+                 [style.background]="getComplexityColor()">
+            </div>
+          </div>
+        </div>
+
+        <div class="analysis-card-sm">
+          <div class="acard-header">
+            <div class="acard-icon teal">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <h4 class="acard-title">Freelancers</h4>
+          </div>
+          <div class="stat-big">~{{ analysis.freelancersEstimatedCount }}
+            <span class="stat-unit">available</span>
+          </div>
+          <div class="availability-badge"
+               [ngClass]="{
+                 'avail-high':   analysis.freelancersAvailability === 'High',
+                 'avail-medium': analysis.freelancersAvailability === 'Medium',
+                 'avail-low':    analysis.freelancersAvailability === 'Low'
+               }">
+            <span class="avail-dot"></span>
+            {{ analysis.freelancersAvailability }} Availability
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ROW 3: Risk -->
+      <div class="risk-card" [style.border-left-color]="getRiskColor()">
+        <div class="risk-card-header">
+          <div class="acard-header">
+            <div class="acard-icon"
+                 [style.background]="getRiskColor() + '20'"
+                 [style.color]="getRiskColor()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <h4 class="acard-title">Risk Assessment</h4>
+          </div>
+          <span class="risk-level-pill" [style.background]="getRiskColor()">
+            {{ analysis.riskLevel }} Risk
+          </span>
+        </div>
+        <div class="risk-score-row">
+          <span class="risk-score-label">Risk Score: {{ analysis.riskScore * 10 }} / 100</span>
+          <span class="risk-score-val" [style.color]="getRiskColor()">{{ analysis.riskScore }}/10</span>
+        </div>
+        <div class="risk-bar-track">
+          <div class="risk-bar-fill"
+               [style.width.%]="analysis.riskScore * 10"
+               [style.background]="getRiskColor()">
+          </div>
+        </div>
+        <div class="risk-factors" *ngIf="getRiskFactorsArray().length > 0">
+          <span class="risk-factor-tag" *ngFor="let factor of getRiskFactorsArray()">
+            ⚠ {{ factor }}
+          </span>
+        </div>
+        <div class="risk-advice">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ analysis.riskAdvice }}
+        </div>
+      </div>
+
+    </ng-container>
+
+  </div>
+  </ng-container>
+
+</div>

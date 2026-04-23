@@ -1,0 +1,318 @@
+<div class="page-container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Projects</h1>
+      <p class="page-subtitle">Manage and track your projects</p>
+    </div>
+    <!-- Bouton View History dans le header -->
+    <button (click)="openHistoryDrawer()"
+            style="display:flex;align-items:center;gap:0.5rem;
+                   padding:0.6rem 1.1rem;background:white;
+                   border:1.5px solid #e2e8f0;border-radius:10px;
+                   font-size:0.875rem;font-weight:600;color:#475569;
+                   cursor:pointer;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      Deletion History
+      <span *ngIf="deleteHistory.length > 0"
+            style="background:#1a73e8;color:white;font-size:0.7rem;
+                   border-radius:99px;padding:0.1rem 0.5rem;font-weight:700;">
+        {{ deleteHistory.length }}
+      </span>
+    </button>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card border-gray">
+      <div>
+        <p class="stat-label">TOTAL PROJECTS</p>
+        <p class="stat-value">{{ totalProjects }}</p>
+      </div>
+      <div class="stat-icon icon-gray">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="stat-card border-blue">
+      <div>
+        <p class="stat-label">OPEN PROJECTS</p>
+        <p class="stat-value">{{ openProjects }}</p>
+      </div>
+      <div class="stat-icon icon-blue">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polygon points="10 8 16 12 10 16 10 8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="stat-card border-yellow">
+      <div>
+        <p class="stat-label">IN PROGRESS</p>
+        <p class="stat-value">{{ inProgressProjects }}</p>
+      </div>
+      <div class="stat-icon icon-yellow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/>
+        </svg>
+      </div>
+    </div>
+    <div class="stat-card border-green">
+      <div>
+        <p class="stat-label">COMPLETED</p>
+        <p class="stat-value">{{ completedProjects }}</p>
+      </div>
+      <div class="stat-icon icon-green">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters-bar">
+    <div class="search-wrapper">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()"
+             placeholder="Search for a project..." class="search-input">
+    </div>
+    <select [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()" class="filter-select">
+      <option value="ALL">All statuses</option>
+      <option value="OPEN">Open</option>
+      <option value="IN_PROGRESS">In Progress</option>
+      <option value="COMPLETED">Completed</option>
+    </select>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading projects...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-state" *ngIf="errorMessage && !isLoading">
+    {{ errorMessage }}
+  </div>
+
+  <!-- PROJECTS TABLE -->
+  <div class="table-container" *ngIf="!isLoading && !errorMessage">
+    <table class="project-table">
+      <thead>
+        <tr>
+          <th>Project Title</th>
+          <th>Description</th>
+          <th>Client</th>
+          <th>Status</th>
+          <th>Deadline</th>
+          <th>Created At</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let project of filteredProjects" class="table-row">
+          <td class="td-title">{{ project.title }}</td>
+          <td class="td-description">{{ project.description }}</td>
+          <td class="td-client">Client {{ project.clientId }}</td>
+          <td>
+            <span class="badge" [ngClass]="statusConfig[project.status || 'OPEN'].cssClass">
+              {{ statusConfig[project.status || 'OPEN'].label }}
+            </span>
+          </td>
+          <td class="td-date">{{ formatDate(project.deadline) }}</td>
+          <td class="td-date">{{ formatDate(project.createdAt) }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="empty-state" *ngIf="filteredProjects.length === 0">
+      <p>No projects found.</p>
+    </div>
+  </div>
+
+  <!-- DELETE REQUESTS -->
+  <div class="table-container" style="margin-top:2rem;" *ngIf="!isLoading">
+    <app-delete-requests></app-delete-requests>
+  </div>
+
+</div>
+
+<!-- ── OVERLAY ── -->
+<div *ngIf="showHistoryDrawer"
+     (click)="closeHistoryDrawer()"
+     style="position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(15,23,42,0.45);z-index:9998;
+            animation:fadeIn .25s ease;">
+</div>
+
+<!-- ── DRAWER LATÉRAL ── -->
+<div *ngIf="showHistoryDrawer"
+     style="position:fixed;top:0;right:0;width:480px;max-width:95vw;height:100vh;
+            background:white;z-index:9999;display:flex;flex-direction:column;
+            box-shadow:-8px 0 40px rgba(0,0,0,0.15);
+            animation:slideInRight .3s ease;">
+
+  <!-- Drawer Header -->
+  <div style="padding:1.5rem 1.75rem;border-bottom:1px solid #f1f5f9;
+              display:flex;align-items:center;justify-content:space-between;
+              flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <div style="width:40px;height:40px;background:#eff6ff;border-radius:10px;
+                  display:flex;align-items:center;justify-content:center;color:#1a73e8;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:700;color:#0f172a;margin:0;">
+          Deletion History
+        </h3>
+        <p style="font-size:0.75rem;color:#94a3b8;margin:0;">
+          Last 30 days · {{ deleteHistory.length }} action{{ deleteHistory.length !== 1 ? 's' : '' }}
+        </p>
+      </div>
+    </div>
+    <button (click)="closeHistoryDrawer()"
+            style="width:34px;height:34px;border-radius:50%;background:#f8fafc;
+                   border:1px solid #e2e8f0;cursor:pointer;display:flex;
+                   align-items:center;justify-content:center;color:#64748b;
+                   font-size:1.1rem;transition:all .2s;">
+      &times;
+    </button>
+  </div>
+
+  <!-- Drawer Body -->
+  <div style="flex:1;overflow-y:auto;padding:1.25rem 1.75rem;">
+
+    <!-- Loading -->
+    <div *ngIf="isLoadingHistory"
+         style="display:flex;flex-direction:column;align-items:center;
+                justify-content:center;height:200px;gap:0.75rem;color:#94a3b8;">
+      <div style="width:28px;height:28px;border:3px solid #e2e8f0;
+                  border-top-color:#1a73e8;border-radius:50%;
+                  animation:spin .7s linear infinite;"></div>
+      <p style="font-size:0.875rem;margin:0;">Loading history...</p>
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="!isLoadingHistory && deleteHistory.length === 0"
+         style="display:flex;flex-direction:column;align-items:center;
+                justify-content:center;height:200px;gap:0.75rem;">
+      <div style="width:56px;height:56px;background:#f8fafc;border-radius:50%;
+                  display:flex;align-items:center;justify-content:center;color:#cbd5e1;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <p style="color:#94a3b8;font-size:0.875rem;margin:0;font-weight:500;">
+        No actions in the last 30 days
+      </p>
+    </div>
+
+    <!-- Liste des entrées -->
+    <div *ngIf="!isLoadingHistory && deleteHistory.length > 0"
+         style="display:flex;flex-direction:column;gap:0.75rem;">
+
+      <div *ngFor="let h of deleteHistory"
+           style="border:1.5px solid #f1f5f9;border-radius:14px;
+                  padding:1rem 1.25rem;transition:box-shadow .2s;
+                  background:white;">
+
+        <!-- Ligne 1 : titre + badge action -->
+        <div style="display:flex;align-items:center;justify-content:space-between;
+                    margin-bottom:0.5rem;">
+          <span style="font-size:0.9375rem;font-weight:700;color:#0f172a;">
+            {{ h.projectTitle }}
+          </span>
+
+          <span *ngIf="h.adminAction === 'APPROVED'"
+                style="display:inline-flex;align-items:center;gap:0.3rem;
+                       padding:0.25rem 0.7rem;border-radius:99px;
+                       background:#dcfce7;color:#15803d;
+                       font-size:0.75rem;font-weight:700;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Approved
+          </span>
+
+          <span *ngIf="h.adminAction === 'REJECTED'"
+                style="display:inline-flex;align-items:center;gap:0.3rem;
+                       padding:0.25rem 0.7rem;border-radius:99px;
+                       background:#fee2e2;color:#dc2626;
+                       font-size:0.75rem;font-weight:700;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+            Rejected
+          </span>
+        </div>
+
+        <!-- Ligne 2 : infos secondaires -->
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+          <span style="font-size:0.78rem;color:#64748b;display:flex;align-items:center;gap:0.3rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Client {{ h.clientId }}
+          </span>
+
+          <span class="badge" [ngClass]="statusConfig[h.oldStatus || 'OPEN'].cssClass"
+                style="font-size:0.72rem;">
+            {{ statusConfig[h.oldStatus || 'OPEN'].label }}
+          </span>
+
+          <span style="font-size:0.78rem;color:#94a3b8;margin-left:auto;
+                       display:flex;align-items:center;gap:0.3rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            {{ formatDateTime(h.changedAt) }}
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Animations CSS inline -->
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(0); }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>

@@ -1,0 +1,48 @@
+<div class="card">
+  <h2 class="card__title">Step 1 — Connect Your GitHub Account</h2>
+  <p class="card__text">
+    To generate your private repository, we need your GitHub username.
+  </p>
+
+  <div class="input-group">
+    <label for="github-username" class="label">
+      GitHub Username
+    </label>
+    <input
+      id="github-username"
+      type="text"
+      class="input"
+      [class.input--error]="errorMessage"
+      placeholder="e.g. johndoe-dev"
+      [(ngModel)]="username"
+      (ngModelChange)="onUsernameChange()"
+      [disabled]="isLoading"
+    />
+    <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+    <p *ngIf="!errorMessage" class="helper-text">
+      Make sure this is your exact GitHub username.
+    </p>
+  </div>
+
+  <div class="info-box info-box--beige">
+    <h4 class="info-box__title">Why do we need this?</h4>
+    <p class="info-box__text">We will automatically:</p>
+    <ul class="info-box__list">
+      <li>• Create a private repository for you</li>
+      <li>• Add you as a collaborator</li>
+      <li>• Send you a GitHub invitation</li>
+    </ul>
+  </div>
+
+  <div class="actions actions--end">
+    <button 
+      class="btn btn--primary" 
+      (click)="onContinue()"
+      [disabled]="!username.trim() || isLoading"
+    >
+      <span *ngIf="isLoading" class="spinner"></span>
+      <span *ngIf="!isLoading">Continue</span>
+      <span *ngIf="isLoading">Creating repository...</span>
+    </button>
+  </div>
+</div>

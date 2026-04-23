@@ -1,0 +1,111 @@
+<!-- src/app/modules/challenge-creation/components/step1-challenge-info/step1-challenge-info.component.html -->
+
+<div class="step-container">
+    <div class="step-header">
+      <h2 class="step-title">Challenge Information</h2>
+      <p class="step-description">Provide the basic details about your coding challenge</p>
+    </div>
+  
+    <form [formGroup]="form" class="form-content">
+      <!-- Title -->
+      <div class="form-group">
+        <label for="title" class="form-label">Challenge Title *</label>
+        <input 
+          id="title"
+          type="text"
+          formControlName="title"
+          class="form-input"
+          placeholder="e.g., Build a Real-time Chat Application">
+      </div>
+  
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description" class="form-label">Description *</label>
+        <div class="textarea-wrapper">
+          <textarea 
+            id="description"
+            formControlName="description"
+            class="form-textarea"
+            rows="6"
+            placeholder="Provide a detailed description of the challenge, including objectives, requirements, and what participants will learn..."></textarea>
+          <span class="char-counter">{{ form.value.description?.length || 0 }} / {{ maxDescriptionLength }}</span>
+        </div>
+      </div>
+  
+      <!-- Category and Difficulty -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category" class="form-label">Category *</label>
+          <select id="category" formControlName="category" class="form-select">
+            <option value="">Select a category</option>
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+  
+        <div class="form-group">
+          <label for="difficulty" class="form-label">Difficulty Level *</label>
+          <select id="difficulty" formControlName="difficulty" class="form-select">
+            <option value="">Select difficulty</option>
+            <option value="easy">🟢 Easy</option>
+            <option value="medium">🟡 Medium</option>
+            <option value="hard">🔴 Hard</option>
+          </select>
+        </div>
+      </div>
+  
+      <!-- Technologies -->
+      <div class="form-group">
+        <label for="technologies" class="form-label">Technologies *</label>
+        <select 
+          id="technologies"
+          formControlName="selectedTech"
+          (change)="addTechnology($any($event.target).value)"
+          class="form-select">
+          <option value="">Add technologies used in this challenge</option>
+          <option *ngFor="let tech of availableTechOptions" [value]="tech">{{ tech }}</option>
+        </select>
+  
+        <div *ngIf="technologies.length > 0" class="tech-badges">
+          <span *ngFor="let tech of technologies" class="tech-badge">
+            {{ tech }}
+            <button type="button" (click)="removeTechnology(tech)" class="badge-remove">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </span>
+        </div>
+      </div>
+  
+      <!-- Image Upload -->
+      <div class="form-group">
+        <label class="form-label">Challenge Banner</label>
+        
+        <div *ngIf="form.value.image; else uploadArea" class="image-preview">
+          <img [src]="form.value.image" alt="Challenge banner" class="preview-img">
+          <button type="button" (click)="removeImage()" class="image-remove">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+  
+        <ng-template #uploadArea>
+          <label for="image-upload" class="upload-area">
+            <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+            </svg>
+            <p class="upload-text">Click to upload challenge banner</p>
+            <p class="upload-subtext">PNG, JPG up to 10MB</p>
+            <input 
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              class="hidden">
+          </label>
+        </ng-template>
+      </div>
+    </form>
+  </div>
+  

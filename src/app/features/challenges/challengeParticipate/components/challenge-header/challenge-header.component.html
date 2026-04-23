@@ -1,0 +1,64 @@
+<div class="challenge-header-card">
+  <div class="gradient-overlay"></div>
+  
+  <!-- Encouragement Badge -->
+  <div class="encouragement-badge">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+    </svg>
+    You're doing great!
+  </div>
+
+  <div class="content-wrapper">
+    <div class="icon-wrapper">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" 
+              fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    
+    <!-- Encouragement Text -->
+    <div class="encouragement-text">
+      <p>
+        <svg fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        {{ completedCount() }} out of {{ totalCount() }} tasks completed - Keep up the momentum!
+      </p>
+    </div>
+    
+    <!-- Header Countdown -->
+    <div class="header-countdown">
+      <div class="header-countdown-left">
+        <div class="countdown-icon-wrapper">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="countdown-text">
+          <span class="countdown-label">Deadline Approaching</span>
+          <span class="countdown-urgency">Time is running out!</span>
+        </div>
+      </div>
+      <div class="header-countdown-timer">
+        <div class="deadline-date-wrapper">
+          <span class="deadline-label">Due Date</span>
+          <div class="deadline-date">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            20/02/2026
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="challenge-title">{{ title() }}</h1>
+    <p class="challenge-description">{{ description() }}</p>
+  </div>
+  <div class="decorative-circles">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+  </div>
+</div>

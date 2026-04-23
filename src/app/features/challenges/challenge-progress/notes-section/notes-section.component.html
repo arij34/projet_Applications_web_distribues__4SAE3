@@ -1,0 +1,26 @@
+<div class="bg-white rounded-[14px] shadow-sm p-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold text-[#1F2937]">Personal Notes</h2>
+    <div *ngIf="lastSaved && !isSaving" class="flex items-center gap-1 text-[#16A34A] text-sm">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <span>Saved</span>
+    </div>
+    <span *ngIf="isSaving" class="text-sm text-[#6B7280]">Saving...</span>
+  </div>
+  
+  <textarea
+    [(ngModel)]="notes"
+    (ngModelChange)="onNotesChange($event)"
+    placeholder="Write reminders, ideas, or important notes..."
+    [maxLength]="maxCharacters"
+    class="w-full h-40 p-4 bg-[#F5EDE3]/30 border border-gray-200 rounded-[14px] resize-none focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] focus:border-transparent text-[#1F2937] placeholder:text-[#6B7280]"
+  ></textarea>
+  
+  <div class="flex items-center justify-between mt-2">
+    <p class="text-xs text-[#6B7280]">
+      {{ characterCount }} / {{ maxCharacters }} characters
+    </p>
+  </div>
+</div>

@@ -1,0 +1,877 @@
+<div class="page-wrapper">
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="page-content">
+
+    <!-- HEADER -->
+   <div class="page-header">
+  <div>
+    <h1 class="page-title">My Projects</h1>
+    <p class="page-subtitle">Manage, track, and optimize your projects effortlessly.</p>
+  </div>
+  <div style="display:flex; gap:0.75rem; align-items:center;">
+
+    <!-- ← BOUTON STATS AJOUTÉ -->
+    <button class="btn-new-project" (click)="goToStats()"
+            style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="18" y1="20" x2="18" y2="10"/>
+        <line x1="12" y1="20" x2="12" y2="4"/>
+        <line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      Analytics
+    </button>
+
+    <button class="btn-new-project" (click)="showAddForm = !showAddForm">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      New Project
+    </button>
+
+  </div>
+</div>
+
+    <!-- FORMULAIRE AJOUT -->
+    <div class="add-form-wrapper" *ngIf="showAddForm">
+      <app-add-project (projectAdded)="onProjectAdded()"></app-add-project>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon icon-indigo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+          </div>
+          <span class="stat-badge">Total</span>
+        </div>
+        <p class="stat-label">Total Projects</p>
+        <p class="stat-value">{{ totalProjects }}</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon icon-violet">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polygon points="10 8 16 12 10 16 10 8"/>
+            </svg>
+          </div>
+          <span class="stat-badge">Active</span>
+        </div>
+        <p class="stat-label">Open Projects</p>
+        <p class="stat-value">{{ openProjects }}</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon icon-emerald">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <span class="stat-badge">Done</span>
+        </div>
+        <p class="stat-label">Completed</p>
+        <p class="stat-value">{{ completedProjects }}</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon icon-amber">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/>
+            </svg>
+          </div>
+          <span class="stat-badge">WIP</span>
+        </div>
+        <p class="stat-label">In Progress</p>
+        <p class="stat-value">{{ inProgressProjects }}</p>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="search-wrapper">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()"
+               placeholder="Search projects..." class="search-input">
+      </div>
+      <div class="selects-wrapper">
+        <div class="select-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" class="select-icon">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          <select [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()" class="custom-select">
+            <option value="ALL">All Status</option>
+            <option value="DRAFT">Draft</option>
+            <option value="OPEN">Open</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="COMPLETED">Completed</option>
+          </select>
+        </div>
+        <div class="select-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" class="select-icon">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <polyline points="19 12 12 19 5 12"/>
+          </svg>
+          <select [(ngModel)]="sortBy" (ngModelChange)="onSortChange()" class="custom-select">
+            <option value="newest">Newest</option>
+            <option value="deadline">Deadline</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Loading projects...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div class="error-state" *ngIf="errorMessage && !isLoading">{{ errorMessage }}</div>
+
+    <!-- PROJECT GRID -->
+    <div class="project-grid" *ngIf="!isLoading && !errorMessage">
+
+      <div class="project-card" *ngFor="let project of filteredProjects">
+        <div class="card-glow"></div>
+        <div class="card-body">
+
+          <div class="card-header">
+            <h3 class="card-title">{{ project.title }}</h3>
+            <span class="status-badge" [ngClass]="statusConfig[project.status || 'OPEN'].cssClass">
+              {{ statusConfig[project.status || 'OPEN'].label }}
+            </span>
+          </div>
+
+          <p class="card-description">{{ project.description }}</p>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-icon icon-indigo">
+               
+              </div>
+              
+            </div>
+            <div class="info-item info-item-right">
+              <div class="info-right">
+                <p class="info-label">Deadline</p>
+                <p class="info-value">{{ formatDate(project.deadline) }}</p>
+              </div>
+              <div class="info-icon icon-violet">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-section">
+            <div class="progress-header">
+              <span class="progress-label">Progress</span>
+              <span class="progress-value">{{ getProgressValue(project.id, project.status) }}%</span>
+            </div>
+            <div class="progress-fill" [style.width.%]="getProgressValue(project.id, project.status)">
+          </div>
+
+          <div class="card-footer">
+            <div class="card-date">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              Created {{ formatDate(project.createdAt) }}
+            </div>
+            <div class="card-actions">
+              <button class="action-btn action-btn-proposals" title="View Proposals"
+          (click)="openProposalsModal(project)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  </button>
+  <button class="action-btn action-btn-chat" title="Discussion"
+          (click)="goToWorkspace(project)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+  </button>
+
+              <button class="action-btn" title="View" (click)="viewProject(project.id!)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+              <button class="action-btn action-btn-edit" title="Edit"
+                      (click)="openEditModal(project)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="action-btn action-btn-delete" title="Delete"
+        (click)="openDeleteModal(project)"
+        [disabled]="showDeleteModal"
+        [style.opacity]="showDeleteModal ? '0.4' : '1'"
+        [style.cursor]="showDeleteModal ? 'not-allowed' : 'pointer'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  <path d="M10 11v6M14 11v6"/>
+                  <path d="M9 6V4h6v2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div class="empty-state" *ngIf="filteredProjects.length === 0">
+        <div class="empty-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <h3>No projects found</h3>
+        <p>Try adjusting your search or filters.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DELETE -->
+<div *ngIf="showDeleteModal"
+     style="position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(0,0,0,0.5);display:flex;align-items:center;
+            justify-content:center;z-index:99999;"
+     (click)="closeDeleteModal()">
+  <div style="background:white;border-radius:24px;padding:2rem;max-width:440px;
+              width:90%;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,0.2);"
+       (click)="$event.stopPropagation()">
+
+    <div [style]="isDraftDelete ?
+      'width:72px;height:72px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;color:#ef4444;' :
+      'width:72px;height:72px;background:#fffbeb;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;color:#f59e0b;'">
+      <svg *ngIf="isDraftDelete" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        <path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+      </svg>
+      <svg *ngIf="!isDraftDelete" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+
+    <h3 style="font-size:1.25rem;font-weight:700;color:#0f172a;margin:0 0 0.75rem 0;">
+      {{ isDraftDelete ? 'Delete Project' : 'Request Deletion' }}
+    </h3>
+
+    <p style="color:#64748b;font-size:0.9375rem;margin:0 0 1.5rem 0;line-height:1.6;">
+      <span *ngIf="isDraftDelete">
+        Are you sure you want to delete
+        <strong style="color:#0f172a;">{{ projectToDelete?.title }}</strong> ?
+        This action is irreversible.
+      </span>
+      <span *ngIf="!isDraftDelete">
+        The project <strong style="color:#0f172a;">{{ projectToDelete?.title }}</strong>
+        has status <strong>{{ projectToDelete?.status }}</strong>.
+        A deletion request will be sent to the admin for approval.
+      </span>
+    </p>
+
+    <div *ngIf="deleteMessage === 'success'"
+         style="background:#f0fdf4;border:1px solid #86efac;color:#15803d;
+                padding:0.75rem;border-radius:10px;margin-bottom:1rem;font-size:0.875rem;">
+      ✅ Deletion request sent successfully to the admin!
+    </div>
+
+    <div style="display:flex;gap:0.75rem;" *ngIf="deleteMessage !== 'success'">
+      <button (click)="closeDeleteModal()" [disabled]="isDeleting"
+              style="flex:1;padding:0.75rem;background:white;border:2px solid #e2e8f0;
+                     border-radius:12px;font-size:0.9375rem;font-weight:500;
+                     color:#374151;cursor:pointer;">
+        Cancel
+      </button>
+     <button (click)="confirmDelete()" [disabled]="isDeleting"
+        [style]="isDraftDelete ?
+  'flex:1;padding:0.75rem;background:#2563eb;border:none;border-radius:12px;font-size:0.9375rem;font-weight:500;color:white;cursor:pointer;' :
+  'flex:1;padding:0.75rem;background:#1a73e8;border:none;border-radius:12px;font-size:0.9375rem;font-weight:500;color:white;cursor:pointer;box-shadow:0 4px 14px rgba(26,115,232,0.35);'">
+  {{ isDeleting ? 'Processing...' : (isDraftDelete ? 'Delete' : 'Send Request') }}
+</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL EDIT -->
+<div *ngIf="showEditModal"
+     style="position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(15,23,42,0.55);display:flex;align-items:center;
+            justify-content:center;z-index:99999;backdrop-filter:blur(4px);"
+     (click)="closeEditModal()">
+
+  <div style="background:white;border-radius:24px;padding:0;max-width:540px;
+              width:93%;box-shadow:0 32px 80px rgba(0,0,0,0.22);
+              max-height:92vh;overflow-y:auto;"
+       (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div style="padding:1.75rem 2rem 1.25rem;border-bottom:1px solid #f1f5f9;
+                display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:0.875rem;">
+        <div style="width:42px;height:42px;background:#2563eb;border-radius:12px;
+                    display:flex;align-items:center;justify-content:center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+               fill="none" stroke="white" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 style="font-size:1.125rem;font-weight:800;color:#0f172a;margin:0;">Edit Project</h3>
+          <p style="font-size:0.75rem;color:#94a3b8;margin:0;">Changes trigger automatic re-analysis</p>
+        </div>
+      </div>
+      <button (click)="closeEditModal()"
+              style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:50%;
+                     width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+                     cursor:pointer;color:#64748b;font-size:1.1rem;transition:all .2s;">
+        &times;
+      </button>
+    </div>
+
+    <div style="padding:1.75rem 2rem;">
+
+      <!-- Global error -->
+      <div *ngIf="updateError"
+           style="background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;
+                  padding:0.75rem 1rem;border-radius:10px;margin-bottom:1rem;
+                  font-size:0.875rem;display:flex;align-items:center;gap:0.5rem;">
+        ⚠️ {{ updateError }}
+      </div>
+
+      <!-- Title -->
+      <div style="margin-bottom:1rem;">
+        <label style="display:block;font-weight:600;color:#374151;
+                       margin-bottom:0.4rem;font-size:0.8125rem;">
+          Title *
+        </label>
+        <input type="text" [(ngModel)]="editForm.title" name="editTitle"
+               (ngModelChange)="onEditFieldChange()"
+               [style]="editErrors['title'] ?
+                 'width:100%;padding:0.75rem 1rem;border:1.5px solid #fca5a5;border-radius:10px;font-size:0.9375rem;box-sizing:border-box;font-family:inherit;outline:none;background:#fef2f2;' :
+                 'width:100%;padding:0.75rem 1rem;border:1.5px solid #e2e8f0;border-radius:10px;font-size:0.9375rem;box-sizing:border-box;font-family:inherit;outline:none;'"
+               placeholder="Project title">
+        <div *ngIf="editErrors['title']"
+             style="color:#dc2626;font-size:0.78rem;margin-top:0.3rem;display:flex;align-items:center;gap:0.3rem;">
+          ⚠ {{ editErrors['title'] }}
+        </div>
+        <div *ngIf="!editErrors['title'] && editForm.title.length >= 5"
+             style="color:#16a34a;font-size:0.78rem;margin-top:0.3rem;">
+          ✓ Good title
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div style="margin-bottom:1rem;">
+        <label style="display:block;font-weight:600;color:#374151;
+                       margin-bottom:0.4rem;font-size:0.8125rem;">
+          Description
+          <span style="color:#94a3b8;font-weight:400;margin-left:0.5rem;">
+            {{ editForm.description.length }} chars
+          </span>
+        </label>
+        <textarea [(ngModel)]="editForm.description" name="editDescription" rows="3"
+                  (ngModelChange)="onEditFieldChange()"
+                  [style]="editErrors['description'] ?
+                    'width:100%;padding:0.75rem 1rem;border:1.5px solid #fca5a5;border-radius:10px;font-size:0.9375rem;box-sizing:border-box;font-family:inherit;resize:none;outline:none;background:#fef2f2;' :
+                    'width:100%;padding:0.75rem 1rem;border:1.5px solid #e2e8f0;border-radius:10px;font-size:0.9375rem;box-sizing:border-box;font-family:inherit;resize:none;outline:none;'"
+                  placeholder="Project description"></textarea>
+        <div *ngIf="editErrors['description']"
+             style="color:#dc2626;font-size:0.78rem;margin-top:0.3rem;">
+          ⚠ {{ editErrors['description'] }}
+        </div>
+      </div>
+
+      <!-- Deadline -->
+      <div style="margin-bottom:1rem;">
+        <label style="display:block;font-weight:600;color:#374151;
+                       margin-bottom:0.4rem;font-size:0.8125rem;">
+          Deadline *
+        </label>
+        <input type="date" [(ngModel)]="editForm.deadline" name="editDeadline"
+               [min]="today"
+               [style]="editErrors['deadline'] ?
+                 'width:100%;padding:0.75rem 1rem;border:1.5px solid #fca5a5;border-radius:10px;font-size:0.9375rem;box-sizing:border-box;font-family:inherit;outline:none;background:#fef2f2;' :
+                 'width:100%;padding:0.75rem 1rem;border:1.5px solid #e2e8f0;border-radius:10px;font-size:0.9375rem;box-sizing:border-box;font-family:inherit;outline:none;'">
+        <div *ngIf="editErrors['deadline']"
+             style="color:#dc2626;font-size:0.78rem;margin-top:0.3rem;">
+          ⚠ {{ editErrors['deadline'] }}
+        </div>
+        <div *ngIf="editForm.deadline && !editErrors['deadline']"
+             style="color:#64748b;font-size:0.78rem;margin-top:0.3rem;">
+          📅 {{ getDaysUntilDeadline() }} days from today
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block;font-weight:600;color:#374151;
+                       margin-bottom:0.4rem;font-size:0.8125rem;">
+          Status
+        </label>
+        <select [(ngModel)]="editForm.status" name="editStatus"
+                style="width:100%;padding:0.75rem 1rem;border:1.5px solid #e2e8f0;
+                       border-radius:10px;font-size:0.9375rem;box-sizing:border-box;
+                       font-family:inherit;outline:none;background:white;">
+          <option value="DRAFT">Draft</option>
+          <option value="OPEN">Open</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="COMPLETED">Completed</option>
+        </select>
+      </div>
+
+      <!-- RE-ANALYSIS SECTION -->
+
+      <!-- Outdated indicator -->
+      <div *ngIf="analysisOutdated && !isReanalyzing"
+           style="background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;
+                  padding:0.75rem 1rem;margin-bottom:1rem;display:flex;
+                  align-items:center;gap:0.6rem;font-size:0.8125rem;color:#92400e;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Content changed — re-analyzing automatically...
+      </div>
+
+      <!-- Loading re-analysis -->
+      <div *ngIf="isReanalyzing"
+           style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;
+                  padding:0.875rem 1rem;margin-bottom:1rem;display:flex;
+                  align-items:center;gap:0.75rem;">
+        <div style="width:18px;height:18px;border:2px solid #bfdbfe;
+                    border-top-color:#2563eb;border-radius:50%;
+                    animation:spin .7s linear infinite;flex-shrink:0;"></div>
+        <div>
+          <p style="font-size:0.8125rem;font-weight:600;color:#1d4ed8;margin:0;">
+            Analyzing changes...
+          </p>
+          <p style="font-size:0.75rem;color:#64748b;margin:0;">
+            Detecting skills, complexity and risks
+          </p>
+        </div>
+      </div>
+
+      <!-- Re-analysis results -->
+      <div *ngIf="reanalysisResult && !isReanalyzing"
+           style="border:1.5px solid #e2e8f0;border-radius:14px;
+                  overflow:hidden;margin-bottom:1rem;">
+
+        <!-- Header résultats -->
+        <div style="background:#f8fafc;padding:0.75rem 1rem;border-bottom:1px solid #e2e8f0;
+                    display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:0.8125rem;font-weight:700;color:#0f172a;">
+            🔍 Updated Analysis
+          </span>
+          <div style="display:flex;gap:0.5rem;align-items:center;">
+            <span style="font-size:0.72rem;padding:0.2rem 0.6rem;border-radius:99px;
+                         background:#dcfce7;color:#15803d;font-weight:600;">
+              ✓ Updated
+            </span>
+          </div>
+        </div>
+
+        <div style="padding:1rem;display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+
+          <!-- Complexity -->
+          <div style="background:#f8fafc;border-radius:10px;padding:0.75rem;">
+            <p style="font-size:0.68rem;color:#94a3b8;font-weight:600;
+                       text-transform:uppercase;letter-spacing:.05em;margin:0 0 0.25rem;">
+              Complexity
+            </p>
+            <p style="font-size:0.9375rem;font-weight:700;color:#0f172a;margin:0;">
+              {{ reanalysisResult.complexity.level }}
+            </p>
+          </div>
+
+          <!-- Risk -->
+          <div style="background:#f8fafc;border-radius:10px;padding:0.75rem;">
+            <p style="font-size:0.68rem;color:#94a3b8;font-weight:600;
+                       text-transform:uppercase;letter-spacing:.05em;margin:0 0 0.25rem;">
+              Risk
+            </p>
+            <p style="font-size:0.9375rem;font-weight:700;margin:0;"
+               [style.color]="reanalysisResult.risk.level === 'Low' ? '#16a34a' :
+                               reanalysisResult.risk.level === 'Medium' ? '#d97706' : '#dc2626'">
+              {{ reanalysisResult.risk.level }}
+            </p>
+          </div>
+
+          <!-- Duration -->
+          <div style="background:#f8fafc;border-radius:10px;padding:0.75rem;">
+            <p style="font-size:0.68rem;color:#94a3b8;font-weight:600;
+                       text-transform:uppercase;letter-spacing:.05em;margin:0 0 0.25rem;">
+              Duration
+            </p>
+            <p style="font-size:0.9375rem;font-weight:700;color:#0f172a;margin:0;">
+              {{ reanalysisResult.duration.min_weeks }}–{{ reanalysisResult.duration.max_weeks }} wks
+            </p>
+          </div>
+
+          <!-- Budget -->
+          <div style="background:#f8fafc;border-radius:10px;padding:0.75rem;">
+            <p style="font-size:0.68rem;color:#94a3b8;font-weight:600;
+                       text-transform:uppercase;letter-spacing:.05em;margin:0 0 0.25rem;">
+              Budget
+            </p>
+            <p style="font-size:0.9375rem;font-weight:700;color:#0f172a;margin:0;">
+              ${{ reanalysisResult.budget.recommended | number }}
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Skills détectés -->
+        <div style="padding:0 1rem 1rem;">
+          <p style="font-size:0.72rem;color:#94a3b8;font-weight:600;
+                     text-transform:uppercase;letter-spacing:.05em;margin:0 0 0.5rem;">
+            Detected Skills
+          </p>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
+            <span *ngFor="let skill of reanalysisResult.skills"
+                  style="padding:0.25rem 0.625rem;background:#eff6ff;color:#1d4ed8;
+                         border-radius:99px;font-size:0.75rem;font-weight:500;
+                         border:1px solid #bfdbfe;">
+              {{ skill.name }}
+            </span>
+            <span *ngIf="reanalysisResult.skills.length === 0"
+                  style="font-size:0.78rem;color:#94a3b8;">
+              No skills detected
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Buttons -->
+      <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+        <button (click)="closeEditModal()" [disabled]="isUpdating"
+                style="flex:1;padding:0.75rem;background:white;border:1.5px solid #e2e8f0;
+                       border-radius:12px;font-size:0.9375rem;font-weight:500;
+                       color:#374151;cursor:pointer;transition:all .2s;">
+          Cancel
+        </button>
+        <button (click)="confirmUpdate()" [disabled]="isUpdating || isReanalyzing"
+                [style]="isUpdating || isReanalyzing ?
+                  'flex:1;padding:0.75rem;background:#94a3b8;border:none;border-radius:12px;font-size:0.9375rem;font-weight:600;color:white;cursor:not-allowed;' :
+                  'flex:1;padding:0.75rem;background:#2563eb;border:none;border-radius:12px;font-size:0.9375rem;font-weight:600;color:white;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.35);transition:all .2s;'">
+          {{ isUpdating ? 'Saving...' : isReanalyzing ? 'Analyzing...' : 'Save Changes' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ... tout le contenu existant ... -->
+
+<!-- TOAST -->
+<div *ngIf="showToast"
+     style="position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);
+            background:#1a73e8;color:white;padding:0.875rem 1.5rem;
+            border-radius:14px;font-size:0.9375rem;font-weight:500;
+            box-shadow:0 8px 32px rgba(26,115,232,0.35);
+            display:flex;align-items:center;gap:0.625rem;
+            z-index:999999;animation:slideUp .3s ease;">
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="2.5">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+  {{ toastMessage }}
+</div>          <!-- ← fermeture du toast ICI -->
+
+<!-- MODAL PROPOSALS -->
+<div *ngIf="showProposalsModal"
+     style="position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(15,23,42,0.6);display:flex;align-items:center;
+            justify-content:center;z-index:99999;backdrop-filter:blur(4px);"
+     (click)="closeProposalsModal()">
+
+  <div style="background:white;border-radius:24px;width:92%;max-width:680px;
+              max-height:88vh;display:flex;flex-direction:column;
+              box-shadow:0 32px 80px rgba(0,0,0,0.25);"
+       (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div style="padding:1.5rem 1.75rem;border-bottom:1px solid #f1f5f9;
+                display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:.875rem;">
+        <div style="width:42px;height:42px;background:#eff6ff;border-radius:12px;
+                    display:flex;align-items:center;justify-content:center;color:#2563eb;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div>
+          <h3 style="font-size:1.0625rem;font-weight:800;color:#0f172a;margin:0;">Proposals</h3>
+          <p style="font-size:.75rem;color:#94a3b8;margin:0;">
+            {{ selectedProjectForProposals?.title }}
+          </p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem;">
+        <span style="background:#eff6ff;color:#2563eb;font-size:.8rem;
+                     font-weight:700;padding:.3rem .75rem;border-radius:99px;">
+          {{ proposals.length }} proposal{{ proposals.length !== 1 ? 's' : '' }}
+        </span>
+        <button (click)="closeProposalsModal()"
+                style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:50%;
+                       width:34px;height:34px;display:flex;align-items:center;
+                       justify-content:center;cursor:pointer;color:#64748b;font-size:1.1rem;">
+          &times;
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div style="padding:.875rem 1.75rem;border-bottom:1px solid #f1f5f9;
+                display:flex;gap:.5rem;flex-shrink:0;flex-wrap:wrap;">
+      <button (click)="proposalsFilter = 'ALL'"
+              [style.background]="proposalsFilter === 'ALL' ? '#2563eb' : '#f8fafc'"
+              [style.color]="proposalsFilter === 'ALL' ? 'white' : '#64748b'"
+              [style.border]="proposalsFilter === 'ALL' ? 'none' : '1px solid #e2e8f0'"
+              style="padding:.375rem .875rem;border-radius:8px;font-size:.78rem;
+                     font-weight:600;cursor:pointer;font-family:inherit;">
+        All ({{ proposals.length }})
+      </button>
+      <button (click)="proposalsFilter = 'PENDING'"
+              [style.background]="proposalsFilter === 'PENDING' ? '#d97706' : '#f8fafc'"
+              [style.color]="proposalsFilter === 'PENDING' ? 'white' : '#64748b'"
+              [style.border]="proposalsFilter === 'PENDING' ? 'none' : '1px solid #e2e8f0'"
+              style="padding:.375rem .875rem;border-radius:8px;font-size:.78rem;
+                     font-weight:600;cursor:pointer;font-family:inherit;">
+        Pending ({{ countByStatus('PENDING') }})
+      </button>
+      <button (click)="proposalsFilter = 'ACCEPTED'"
+              [style.background]="proposalsFilter === 'ACCEPTED' ? '#16a34a' : '#f8fafc'"
+              [style.color]="proposalsFilter === 'ACCEPTED' ? 'white' : '#64748b'"
+              [style.border]="proposalsFilter === 'ACCEPTED' ? 'none' : '1px solid #e2e8f0'"
+              style="padding:.375rem .875rem;border-radius:8px;font-size:.78rem;
+                     font-weight:600;cursor:pointer;font-family:inherit;">
+        Accepted ({{ countByStatus('ACCEPTED') }})
+      </button>
+      <button (click)="proposalsFilter = 'REJECTED'"
+              [style.background]="proposalsFilter === 'REJECTED' ? '#dc2626' : '#f8fafc'"
+              [style.color]="proposalsFilter === 'REJECTED' ? 'white' : '#64748b'"
+              [style.border]="proposalsFilter === 'REJECTED' ? 'none' : '1px solid #e2e8f0'"
+              style="padding:.375rem .875rem;border-radius:8px;font-size:.78rem;
+                     font-weight:600;cursor:pointer;font-family:inherit;">
+        Rejected ({{ countByStatus('REJECTED') }})
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div style="overflow-y:auto;flex:1;padding:1.25rem 1.75rem;">
+
+      <!-- Loading -->
+      <div *ngIf="isLoadingProposals"
+           style="display:flex;align-items:center;justify-content:center;
+                  padding:3rem;gap:1rem;color:#94a3b8;">
+        <div style="width:24px;height:24px;border:2px solid #e2e8f0;
+                    border-top-color:#2563eb;border-radius:50%;
+                    animation:spin .7s linear infinite;"></div>
+        Loading proposals...
+      </div>
+
+      <!-- Empty -->
+      <div *ngIf="!isLoadingProposals && filteredProposals.length === 0"
+           style="text-align:center;padding:3rem;color:#94a3b8;">
+        <div style="font-size:2.5rem;margin-bottom:.75rem;">📭</div>
+        <p style="font-weight:600;color:#64748b;margin:0 0 .25rem;">No proposals yet</p>
+        <p style="font-size:.8125rem;margin:0;">
+          {{ proposalsFilter !== 'ALL' ? 'No ' + proposalsFilter + ' proposals' :
+             'Freelancers haven\'t applied yet' }}
+        </p>
+      </div>
+
+      <!-- Proposal cards -->
+      <div *ngFor="let proposal of filteredProposals"
+           style="border:1.5px solid #e2e8f0;border-radius:16px;
+                  padding:1.25rem;margin-bottom:1rem;"
+           [style.border-color]="proposal.status === 'ACCEPTED' ? '#86efac' :
+                                  proposal.status === 'REJECTED' ? '#fca5a5' : '#e2e8f0'">
+
+        <!-- Card header -->
+        <div style="display:flex;justify-content:space-between;
+                    align-items:flex-start;margin-bottom:1rem;">
+          <div style="display:flex;align-items:center;gap:.75rem;">
+            <div style="width:44px;height:44px;border-radius:12px;background:#eff6ff;
+                        display:flex;align-items:center;justify-content:center;
+                        font-size:1rem;font-weight:800;color:#2563eb;flex-shrink:0;">
+              {{ proposal.freelancerName ? (proposal.freelancerName | slice:0:1) : 'F' }}{{ proposal.freelancerName ? '' : proposal.freelancerId }}
+            </div>
+            <div>
+              <p style="font-size:.9rem;font-weight:700;color:#0f172a;margin:0;">
+                {{ proposal.freelancerName || ('Freelancer #' + proposal.freelancerId) }}
+              </p>
+              <p style="font-size:.72rem;color:#94a3b8;margin:0;">
+                Applied {{ formatDateTime(proposal.createdAt) }}
+              </p>
+            </div>
+          </div>
+          <span style="font-size:.72rem;font-weight:700;padding:.3rem .75rem;border-radius:99px;"
+                [style.background]="getStatusBg(proposal.status)"
+                [style.color]="getStatusColor(proposal.status)">
+            {{ proposal.status }}
+          </span>
+        </div>
+
+        <!-- Métriques -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1rem;">
+          <div style="background:#f8fafc;border-radius:10px;padding:.75rem;text-align:center;">
+            <p style="font-size:.65rem;color:#94a3b8;font-weight:600;
+                       text-transform:uppercase;letter-spacing:.05em;margin:0 0 .25rem;">Bid</p>
+            <p style="font-size:1rem;font-weight:800;color:#0f172a;margin:0;">
+              ${{ proposal.bidAmount | number }}
+            </p>
+          </div>
+          <div style="background:#f8fafc;border-radius:10px;padding:.75rem;text-align:center;">
+            <p style="font-size:.65rem;color:#94a3b8;font-weight:600;
+                       text-transform:uppercase;letter-spacing:.05em;margin:0 0 .25rem;">Delivery</p>
+            <p style="font-size:1rem;font-weight:800;color:#0f172a;margin:0;">
+              {{ proposal.deliveryWeeks }}
+              <span style="font-size:.7rem;color:#64748b;font-weight:500;">wks</span>
+            </p>
+          </div>
+          <div style="background:#f8fafc;border-radius:10px;padding:.75rem;text-align:center;">
+            <p style="font-size:.65rem;color:#94a3b8;font-weight:600;
+                       text-transform:uppercase;letter-spacing:.05em;margin:0 0 .25rem;">Available</p>
+            <p style="font-size:.8rem;font-weight:700;color:#0f172a;margin:0;">
+              {{ proposal.availableFrom ? formatDate(proposal.availableFrom) : 'Now' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Cover Letter -->
+        <div *ngIf="proposal.coverLetter"
+             style="background:#f8fafc;border-radius:10px;padding:.875rem;margin-bottom:.75rem;">
+          <p style="font-size:.68rem;color:#94a3b8;font-weight:600;
+                     text-transform:uppercase;letter-spacing:.05em;margin:0 0 .4rem;">
+            Cover Letter
+          </p>
+          <p style="font-size:.8125rem;color:#374151;line-height:1.6;margin:0;">
+            {{ proposal.coverLetter }}
+          </p>
+        </div>
+
+        <!-- Question -->
+        <div *ngIf="proposal.questionToClient"
+             style="background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;
+                    padding:.875rem;margin-bottom:.75rem;">
+          <p style="font-size:.68rem;color:#92400e;font-weight:600;
+                     text-transform:uppercase;letter-spacing:.05em;margin:0 0 .4rem;">
+            ❓ Question
+          </p>
+          <p style="font-size:.8125rem;color:#78350f;line-height:1.6;margin:0;">
+            {{ proposal.questionToClient }}
+          </p>
+        </div>
+
+        <!-- Portfolio -->
+        <div *ngIf="proposal.portfolioUrl" style="margin-bottom:.875rem;">
+          <a [href]="proposal.portfolioUrl" target="_blank"
+             style="display:inline-flex;align-items:center;gap:.4rem;
+                    color:#2563eb;font-size:.8125rem;font-weight:600;text-decoration:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            View Portfolio
+          </a>
+        </div>
+
+        <!-- Actions -->
+        <div *ngIf="proposal.status === 'PENDING'"
+             style="display:flex;gap:.625rem;padding-top:.75rem;border-top:1px solid #f1f5f9;">
+          <button (click)="updateProposalStatus(proposal.id, 'ACCEPTED')"
+                  [disabled]="updatingProposalId === proposal.id"
+                  style="flex:1;padding:.625rem;background:#16a34a;color:white;border:none;
+                         border-radius:10px;font-size:.8125rem;font-weight:700;cursor:pointer;
+                         display:flex;align-items:center;justify-content:center;gap:.4rem;
+                         font-family:inherit;">
+            ✅ {{ updatingProposalId === proposal.id ? 'Processing...' : 'Accept' }}
+          </button>
+          <button (click)="updateProposalStatus(proposal.id, 'REJECTED')"
+                  [disabled]="updatingProposalId === proposal.id"
+                  style="flex:1;padding:.625rem;background:white;color:#dc2626;
+                         border:1.5px solid #fca5a5;border-radius:10px;font-size:.8125rem;
+                         font-weight:700;cursor:pointer;display:flex;align-items:center;
+                         justify-content:center;gap:.4rem;font-family:inherit;">
+            ❌ Reject
+          </button>
+        </div>
+
+        <div *ngIf="proposal.status !== 'PENDING'"
+             style="padding-top:.75rem;border-top:1px solid #f1f5f9;
+                    font-size:.75rem;color:#94a3b8;text-align:center;">
+          This proposal has been {{ proposal.status | lowercase }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

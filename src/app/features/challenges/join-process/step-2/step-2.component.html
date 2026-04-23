@@ -1,0 +1,69 @@
+<div class="card card--alt">
+  <div class="card__header">
+    <div class="card__icon card__icon--primary">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+      </svg>
+    </div>
+    <div class="card__body">
+      <h2 class="card__title">Step 2 — Repository Created!</h2>
+      <p class="card__text">Your private repository has been successfully created.</p>
+      
+      <div class="repo-details">
+        <div class="repo-details__item">
+          <span class="repo-details__label">Repository</span>
+          <a [href]="repoUrl" target="_blank" rel="noopener noreferrer" class="repo-details__link">{{ repoName }}</a>
+        </div>
+        <div class="repo-details__item">
+          <span class="repo-details__label">Collaborator</span>
+          <span class="repo-details__value">{{ username }}</span>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist__item checklist__item--done">
+          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 6 9 17l-5-5"/>
+          </svg>
+          <span>Private repository created inside the organization</span>
+        </div>
+        <div class="checklist__item checklist__item--done">
+          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 6 9 17l-5-5"/>
+          </svg>
+          <span>Collaboration invitation sent to your GitHub account</span>
+        </div>
+        <div class="checklist__item">
+          <svg class="check-icon check-icon--pending" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>
+          </svg>
+          <span>You need to accept the invitation (next step)</span>
+        </div>
+      </div>
+
+      <div class="info-box info-box--yellow">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>
+        </svg>
+        <p style="color: #92400E; font-size: 0.875rem; margin: 0;">
+          You must accept the GitHub invitation before cloning the repository.
+        </p>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--outline" (click)="onBack()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+          </svg>
+          Back
+        </button>
+        <button class="btn btn--primary" (click)="onContinue()">
+          Continue
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

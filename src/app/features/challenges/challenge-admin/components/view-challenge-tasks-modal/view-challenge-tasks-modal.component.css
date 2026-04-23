@@ -1,0 +1,61 @@
+.modal-overlay {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-container {
+  animation: slideUp 0.25s ease-out;
+}
+
+.challenge-info-card .info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.challenge-info-card .info-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+}
+
+.challenge-info-card .info-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.challenge-info-card .info-value-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border-width: 1px;
+  width: fit-content;
+}
+
+.task-card {
+  background: linear-gradient(to right, #ffffff, #fafafa);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,175 @@
+.card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.card--alt {
+  background-color: #EBF4FF;
+  border-left: none;
+}
+
+.card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.card__icon {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card__icon--primary {
+  background-color: #1E3A8A;
+  color: white;
+}
+
+.card__body {
+  flex: 1;
+}
+
+.card__title {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #1F2937;
+}
+
+.card__text {
+  margin-bottom: 1rem;
+  color: #1F2937;
+  line-height: 1.5;
+}
+
+.repo-details {
+  background-color: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.repo-details__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.repo-details__item + .repo-details__item {
+  border-top: 1px solid #F3F4F6;
+}
+
+.repo-details__label {
+  font-size: 0.875rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.repo-details__value {
+  font-size: 0.875rem;
+  color: #1F2937;
+  font-weight: 600;
+}
+
+.repo-details__link {
+  font-size: 0.875rem;
+  color: #1E3A8A;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.repo-details__link:hover {
+  text-decoration: underline;
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.checklist__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: #1F2937;
+}
+
+.checklist__item--done {
+  color: #16A34A;
+}
+
+.check-icon {
+  color: #16A34A;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.check-icon--pending {
+  color: #D97706;
+}
+
+.info-box {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.info-box--yellow {
+  background-color: #FEF3C7;
+}
+
+.info-box svg {
+  color: #D97706;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.btn--primary {
+  background-color: #1E3A8A;
+  color: white;
+}
+
+.btn--primary:hover {
+  background-color: #1e40af;
+}
+
+.btn--outline {
+  background-color: white;
+  color: #1F2937;
+  border: 1px solid #D1D5DB;
+}
+
+.btn--outline:hover {
+  background-color: #F9FAFB;
+}

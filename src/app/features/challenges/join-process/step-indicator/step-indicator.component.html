@@ -1,0 +1,26 @@
+<div class="step-indicator">
+  <div 
+    *ngFor="let step of steps" 
+    class="step-indicator__item"
+  >
+    <div 
+      class="step-indicator__circle"
+      [class.step-indicator__circle--active]="currentStep === step.id"
+      [class.step-indicator__circle--completed]="currentStep > step.id"
+      [class.step-indicator__circle--inactive]="currentStep < step.id"
+    >
+      <svg *ngIf="currentStep > step.id" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 6 9 17l-5-5"/>
+      </svg>
+      <span *ngIf="currentStep <= step.id">{{ step.id }}</span>
+    </div>
+    <span 
+      class="step-indicator__text"
+      [class.step-indicator__text--active]="currentStep === step.id"
+      [class.step-indicator__text--completed]="currentStep > step.id"
+      [class.step-indicator__text--inactive]="currentStep < step.id"
+    >
+      {{ step.title }}
+    </span>
+  </div>
+</div>

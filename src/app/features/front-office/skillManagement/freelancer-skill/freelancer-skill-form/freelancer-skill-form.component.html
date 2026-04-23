@@ -1,0 +1,93 @@
+<div class="form-wrapper">
+  <div class="form-card">
+
+    <div class="form-header">
+      <h2 class="form-title">
+        {{ isEditMode ? 'Update skill' : 'Add skill' }}
+      </h2>
+    </div>
+
+    <div class="form-body">
+
+      <div *ngIf="loading" class="text-center py-3">
+        <div class="spinner-border text-primary"></div>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #f="ngForm" *ngIf="!loading">
+
+        <!-- Skill Input -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">
+            Skill <span class="text-danger">*</span>
+          </label>
+
+          <input type="text"
+                 class="form-control"
+                 [(ngModel)]="skillInput"
+                 [ngModelOptions]="{standalone: true}"
+                 (input)="onSkillTyping()"
+                 name="skillInput"
+                 required
+                 placeholder="Ex: angular, java, spring...">
+
+          <!-- Suggestion -->
+          <div *ngIf="showSuggestion" class="suggestion-box">
+            Did you mean
+            <span class="suggestion-link"
+                  (click)="applySuggestion()">
+              {{ suggestedSkill?.name }}
+            </span> ?
+            <small class="text-muted">
+              ({{ confidenceScore | number:'1.0-0' }}%)
+            </small>
+          </div>
+        </div>
+
+        <!-- Years -->
+        <div class="mb-3">
+          <label>Years of experience *</label>
+
+          <input type="number"
+                 [(ngModel)]="item.yearsExperience"
+                 name="yearsExperience"
+                 required
+                 min="0"
+                 (ngModelChange)="onYearsChange()"
+                 #yearsExperience="ngModel"
+                 class="form-control">
+
+          <small class="text-danger"
+                 *ngIf="yearsExperience.invalid && yearsExperience.touched">
+            Valid years required
+          </small>
+        </div>
+
+        <!-- Level -->
+        <div class="mb-3">
+          <label>Level</label>
+          <input type="text"
+                 class="form-control"
+                 [value]="levelLabel"
+                 disabled>
+        </div>
+
+        <div class="form-actions">
+          <a routerLink="/front/freelancer-skills"
+             class="btn btn-secondary">
+            Cancel
+          </a>
+          <button type="button"
+        class="btn btn-primary"
+        (click)="onSubmit()">
+  {{ isEditMode ? 'Update' : 'Create' }}
+</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

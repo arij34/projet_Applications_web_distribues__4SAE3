@@ -1,0 +1,20 @@
+<div class="bg-white rounded-xl border border-gray-200 p-6">
+  <div class="mb-6">
+    <h3 class="text-lg mb-2 flex items-center gap-2">
+      <svg class="w-5 h-5 text-[#4F46E5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+      </svg>
+      Technology Popularity
+    </h3>
+    <p class="text-sm text-gray-600">Most popular technologies across all challenges</p>
+  </div>
+
+  <div class="h-80">
+    <canvas 
+      baseChart
+      [data]="chartData"
+      [options]="chartOptions"
+      [type]="'pie'">
+    </canvas>
+  </div>
+</div>

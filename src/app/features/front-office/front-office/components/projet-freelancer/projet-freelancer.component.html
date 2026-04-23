@@ -1,0 +1,201 @@
+<div class="page-wrapper">
+
+  <!-- Background -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="page-content">
+
+    <!-- HERO SECTION -->
+    <div class="hero-section">
+      <div class="hero-shapes">
+        <div class="hero-shape-1"></div>
+        <div class="hero-shape-2"></div>
+      </div>
+
+      <div class="hero-body">
+        <h1 class="hero-title">Discover Projects</h1>
+        <p class="hero-subtitle">
+          Find projects that match your skills and grow your freelance career.
+        </p>
+
+        <div class="search-bar">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"
+                 width="20" height="20" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+
+            <input type="text"
+                   [(ngModel)]="searchQuery"
+                   (ngModelChange)="onSearchChange()"
+                   placeholder="Search by keyword..."
+                   class="search-input">
+          </div>
+
+          <div class="select-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor"
+                 stroke-width="2" class="select-icon">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+
+            <select [(ngModel)]="sortBy"
+                    (ngModelChange)="onSortChange()"
+                    class="sort-select">
+              <option value="newest">Newest</option>
+              <option value="deadline">Deadline</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Loading projects...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div class="error-state" *ngIf="errorMessage && !isLoading">
+      {{ errorMessage }}
+    </div>
+
+    <!-- PROJECTS -->
+    <div *ngIf="!isLoading && !errorMessage">
+
+      <!-- TABS -->
+      <div class="tabs-wrapper">
+
+        <span 
+          class="tab-link"
+          [class.active]="activeTab === 'all'"
+          (click)="switchTab('all')">
+          All Projects
+        </span>
+
+        <span 
+          class="tab-link"
+          [class.active]="activeTab === 'saved'"
+          (click)="switchTab('saved')">
+          Saved Projects
+        </span>
+
+        <span 
+          class="tab-link"
+          [class.active]="activeTab === 'discussion'"
+          (click)="switchTab('discussion')">
+          Discussion
+        </span>
+
+      </div>
+
+      <!-- TITLE SECTION -->
+      <div class="projects-header">
+        <h2 class="projects-title">
+          {{
+            activeTab === 'all' ? 'Available Projects' :
+            activeTab === 'saved' ? 'Saved Projects' :
+            'Discussion Projects'
+          }}
+        </h2>
+
+        <p class="projects-count">
+          {{ filteredProjects.length }}
+          project{{ filteredProjects.length !== 1 ? 's' : '' }} found
+        </p>
+      </div>
+
+      <!-- GRID -->
+      <div class="project-grid" *ngIf="filteredProjects.length > 0">
+
+        <div class="project-card"
+             *ngFor="let project of filteredProjects">
+
+          <!-- Card Top -->
+          <div class="card-top">
+            <div class="card-top-left">
+              <h3 class="card-title">{{ project.title }}</h3>
+
+              <div class="card-meta">
+                <span class="client-label">
+                  Client {{ project.clientId }}
+                </span>
+                <span class="status-open">Open</span>
+              </div>
+            </div>
+
+            <div class="deadline-badge"
+                 [ngClass]="getDaysLeftClass(project.deadline)">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="14" height="14"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+
+              {{ getDaysLeft(project.deadline) }}
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="card-description">
+            {{ project.description }}
+          </p>
+
+          <!-- Info -->
+          <div class="card-info">
+
+            <div class="info-item">
+              <span>{{ formatDate(project.deadline) }}</span>
+            </div>
+
+            <div class="info-item">
+              <span>Posted {{ formatDate(project.createdAt) }}</span>
+            </div>
+
+          </div>
+
+          <!-- Actions -->
+          <div class="card-actions">
+
+            <!-- View -->
+            <button 
+              class="icon-btn view-icon"
+              (click)="viewProject(project.id)"
+              title="View Details">
+              👁
+            </button>
+
+            <!-- Open Discussion -->
+            <button
+              *ngIf="activeTab === 'discussion'"
+              class="btn-apply"
+              (click)="goToWorkspace(project.id)">
+              Open Discussion
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- EMPTY -->
+      <div class="empty-state"
+           *ngIf="filteredProjects.length === 0">
+        <h3>No projects found</h3>
+        <p>Try adjusting your search to find more opportunities.</p>
+      </div>
+
+    </div>
+
+  </div>
+</div>

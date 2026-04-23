@@ -1,0 +1,30 @@
+<div class="countdown-card">
+  <div class="card-header">
+    <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+    <h3>Time Remaining</h3>
+  </div>
+  <div class="timer-display">
+    <div class="time-unit">
+      <div class="time-value">{{ padNumber(timeLeft.days) }}</div>
+      <div class="time-label">Days</div>
+    </div>
+    <div class="time-separator">:</div>
+    <div class="time-unit">
+      <div class="time-value">{{ padNumber(timeLeft.hours) }}</div>
+      <div class="time-label">Hours</div>
+    </div>
+    <div class="time-separator">:</div>
+    <div class="time-unit">
+      <div class="time-value">{{ padNumber(timeLeft.minutes) }}</div>
+      <div class="time-label">Minutes</div>
+    </div>
+    <div class="time-separator">:</div>
+    <div class="time-unit">
+      <div class="time-value">{{ padNumber(timeLeft.seconds) }}</div>
+      <div class="time-label">Seconds</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+/* Page-specific styles - Header bar with design tokens */
+.challenges-header-inner {
+  padding-inline: calc(var(--spacing) * 6);
+  padding-block: calc(var(--spacing) * 6);
+}
+.challenges-header-title {
+  color: var(--foreground);
+}
+.challenges-header-subtitle {
+  color: var(--muted-foreground);
+}
+.challenges-header-search-icon {
+  color: var(--muted-foreground);
+}
+.challenges-header-back-btn {
+  color: var(--foreground);
+}
+.challenges-header-back-btn:hover {
+  background-color: var(--muted);
+}
+.challenges-header-create-btn {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: var(--radius);
+}
+.challenges-header-create-btn:hover {
+  opacity: 0.9;
+}
+.challenges-header-search {
+  background-color: var(--input-background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.challenges-main-content {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 2rem;
+  padding-block: 2rem;
+}
+
+/* Success toast animation */
+.animate-fade-in {
+  animation: saveToastFadeIn 0.3s ease-out;
+}
+@keyframes saveToastFadeIn {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}

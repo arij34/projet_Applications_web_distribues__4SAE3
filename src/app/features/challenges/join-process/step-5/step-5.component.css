@@ -1,0 +1,140 @@
+.card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.card--alt {
+  background-color: #EBF4FF;
+  border-left: none;
+}
+
+.card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.card__icon {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card__icon--primary {
+  background-color: #1E3A8A;
+  color: white;
+}
+
+.card__body {
+  flex: 1;
+}
+
+.card__title {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #1F2937;
+}
+
+.card__text {
+  margin-bottom: 1rem;
+  color: #1F2937;
+  line-height: 1.5;
+}
+
+.ordered-list {
+  list-style: decimal;
+  list-style-position: inside;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: #1F2937;
+}
+
+.code-block {
+  position: relative;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  background-color: #1F2937;
+  margin-bottom: 2rem;
+}
+
+.code {
+  font-size: 0.875rem;
+  color: white;
+  font-family: 'Courier New', monospace;
+  white-space: pre;
+  margin: 0;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-button:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+}
+
+.icon {
+  color: #9CA3AF;
+}
+
+.icon--success {
+  color: #4ADE80;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.btn--success {
+  background-color: #16A34A;
+  color: white;
+}
+
+.btn--success:hover {
+  background-color: #15803d;
+}
+
+.btn--outline {
+  background-color: white;
+  color: #1F2937;
+  border: 1px solid #D1D5DB;
+}
+
+.btn--outline:hover {
+  background-color: #F9FAFB;
+}

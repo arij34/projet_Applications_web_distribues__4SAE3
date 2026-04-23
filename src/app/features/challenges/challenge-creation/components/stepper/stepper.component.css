@@ -1,0 +1,109 @@
+/* src/app/modules/challenge-creation/components/stepper/stepper.component.css */
+
+.stepper-container {
+  width: 100%;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.stepper-wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.stepper-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.stepper-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.stepper-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 2px solid;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+/* Completed: solid dark blue circle with white checkmark */
+.stepper-circle.completed {
+  background-color: #4F46E5;
+  border-color: #4F46E5;
+  color: #ffffff;
+}
+
+/* Current: dark blue outline, white background */
+.stepper-circle.current {
+  background-color: #ffffff;
+  border-color: #4F46E5;
+  color: #4F46E5;
+}
+
+/* Pending: light grey outline */
+.stepper-circle.pending {
+  background-color: #ffffff;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+}
+
+.check-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: #ffffff;
+}
+
+.stepper-title {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  text-align: center;
+  max-width: 110px;
+  line-height: 1.2;
+  transition: color 0.25s ease;
+}
+
+.stepper-title.current {
+  color: #4F46E5;
+  font-weight: 500;
+}
+
+.stepper-title.completed {
+  color: #4F46E5;
+  font-weight: 500;
+}
+
+.stepper-title.pending {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+/* Solid connector lines - align with circle center */
+.stepper-line {
+  flex: 1;
+  min-width: 0.5rem;
+  height: 2px;
+  margin: 1.125rem 0.5rem 0;
+  align-self: flex-start;
+  transition: background-color 0.25s ease;
+  background-color: #e5e7eb;
+}
+
+.stepper-line.completed {
+  background-color: #4F46E5;
+}
+  

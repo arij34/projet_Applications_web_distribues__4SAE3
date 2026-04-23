@@ -1,0 +1,163 @@
+.submission-card {
+  background: linear-gradient(135deg, rgba(137, 207, 240, 0.05) 0%, rgba(2, 6, 111, 0.05) 100%);
+  border: 2px solid rgba(137, 207, 240, 0.15);
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 8px 24px rgba(137, 207, 240, 0.1);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.header-icon {
+  width: 44px;
+  height: 44px;
+  background: #02066F;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.header-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.card-header h3 {
+  color: #02066F;
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.submission-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(249, 115, 22, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  color: #9a3412;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.submission-message.success {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+  color: #166534;
+}
+
+.submission-message svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  color: #374151;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-bottom: 0.625rem;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.github-input {
+  width: 100%;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  border: 2px solid rgba(2, 6, 111, 0.15);
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  background: white;
+  color: #1f2937;
+  transition: all 0.2s ease;
+}
+
+.github-input:focus {
+  outline: none;
+  border-color: #02066F;
+  box-shadow: 0 0 0 3px rgba(2, 6, 111, 0.1);
+}
+
+.github-input:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.submit-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #02066F 0%, #89CFF0 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(2, 6, 111, 0.3);
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(2, 6, 111, 0.4);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.submit-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 768px) {
+  .submission-card {
+    padding: 1.5rem;
+  }
+
+  .submit-button {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+}

@@ -1,0 +1,88 @@
+<app-header></app-header>
+
+<div class="page-wrapper">
+  <div class="container">
+    <!-- Simple Challenge Title -->
+    <h1 class="challenge-title-simple">{{ challengeTitle }}</h1>
+
+    <!-- Encouragement Text -->
+    <div class="encouragement-text">
+      <p>
+        <svg fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        {{ completedCount }} out of {{ tasks.length }} tasks completed - Keep up the momentum!
+      </p>
+    </div>
+    
+    <!-- Header Countdown -->
+    <div class="header-countdown">
+      <div class="header-countdown-left">
+        <div class="countdown-icon-wrapper">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="countdown-text">
+          <span class="countdown-label">Deadline Approaching</span>
+          <span class="countdown-urgency">Time is running out!</span>
+        </div>
+      </div>
+      <div class="header-countdown-timer">
+        <div class="deadline-date-wrapper">
+          <span class="deadline-label">Due Date</span>
+          <div class="deadline-date">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            20/02/2026
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="content-grid">
+      <!-- Left Column - Tasks -->
+      <div class="main-column">
+        <!-- Progress Bar -->
+        <app-progress-bar
+          [completed]="completedCount"
+          [total]="tasks.length">
+        </app-progress-bar>
+
+        <!-- Task List Card -->
+        <div class="task-list-card">
+          <app-task-filter-tabs
+            [activeFilter]="activeFilter"
+            [counts]="{
+              all: tasks.length,
+              remaining: remainingCount,
+              completed: completedCount
+            }"
+            (filterChange)="onFilterChange($event)">
+          </app-task-filter-tabs>
+
+          <div class="task-list-wrapper">
+            <app-task-list
+              [tasks]="filteredTasks"
+              (taskToggle)="onToggleTask($event)">
+            </app-task-list>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Sidebar -->
+      <div class="sidebar-column">
+        <app-countdown-timer
+          [targetDate]="challengeDeadline">
+        </app-countdown-timer>
+
+        <app-submission-section
+          [allTasksCompleted]="allTasksCompleted"
+          (submit)="onSubmit($event)">
+        </app-submission-section>
+      </div>
+    </div>
+  </div>
+</div>

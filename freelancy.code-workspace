@@ -1,0 +1,37 @@
+{
+  "folders": [
+    {
+      "name": "frontend-root",
+      "path": "."
+    },
+    {
+      "name": "smart-freelance-backend",
+      "path": "../user/smart-freelance-backend"
+    }
+  ],
+  "settings": {
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.import.maven.enabled": true,
+    "java.import.gradle.enabled": false,
+    "maven.executable.path": "C:/Program Files/apache-maven-3.9.9/bin/mvn.cmd",
+
+    "java.configuration.runtimes": [
+      { "name": "JavaSE-17", "path": "C:/Program Files/Java/jdk-17" }
+    ],
+    "java.jdt.ls.java.home": "C:/Program Files/Java/jdk-17",
+
+    // Use Java 17 in integrated terminals too (helps Maven commands from VS Code)
+    "terminal.integrated.env.windows": {
+      "JAVA_HOME": "C:/Program Files/Java/jdk-17",
+      "PATH": "C:/Program Files/Java/jdk-17/bin;${env:PATH}"
+    },
+    "maven.terminal.useJavaHome": true,
+
+    // If you installed a stable JDK 17, uncomment and set its path:
+    // "java.configuration.runtimes": [
+    //   { "name": "JavaSE-17", "path": "C:/Program Files/Java/jdk-17" }
+    // ],
+
+    "java.compile.nullAnalysis.mode": "disabled"
+  }
+}
