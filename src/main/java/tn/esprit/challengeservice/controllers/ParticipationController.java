@@ -1,8 +1,8 @@
 package tn.esprit.challengeservice.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.challengeservice.dtos.SaveSonarPointsRequest;
 import tn.esprit.challengeservice.entities.ChallengeParticipation;
 import tn.esprit.challengeservice.entities.SonarCloudResult;
 import tn.esprit.challengeservice.exceptions.SonarResultsNotFoundException;
@@ -30,7 +30,8 @@ public class ParticipationController {
     }
 
     @GetMapping("/my/challenges")
-    public List<ChallengeParticipation> getMyParticipations(@RequestHeader("Authorization") String authorization) {
+    public List<ChallengeParticipation> getMyParticipations(
+            @RequestHeader("Authorization") String authorization) {
         return participationService.getMyParticipations(authorization);
     }
 
@@ -57,7 +58,8 @@ public class ParticipationController {
     }
 
     @GetMapping("/challenge/{challengeId}")
-    public List<ChallengeParticipation> getParticipationsByChallenge(@PathVariable String challengeId) {
+    public List<ChallengeParticipation> getParticipationsByChallenge(
+            @PathVariable String challengeId) {
         return participationService.getParticipationsByChallenge(challengeId);
     }
 
@@ -76,6 +78,24 @@ public class ParticipationController {
         );
     }
 
+    @PostMapping("/{participationId}/confirm-invitation")
+    public ResponseEntity<Map<String, Object>> confirmInvitation(
+            @PathVariable String participationId) {
+        boolean accepted = participationService.checkInvitationStatus(participationId);
+        if (!accepted) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "participationId", participationId,
+                    "accepted", false,
+                    "message", "Invitation not yet accepted"
+            ));
+        }
+        return ResponseEntity.ok(Map.of(
+                "participationId", participationId,
+                "accepted", true,
+                "message", "Invitation confirmed successfully"
+        ));
+    }
+
     @PostMapping("/{participationId}/submit")
     public Map<String, Object> submitChallenge(
             @PathVariable String participationId,
@@ -84,14 +104,10 @@ public class ParticipationController {
         return Map.of(
                 "participationId", participationId,
                 "pullRequestUrl", prUrl,
-                "message", "Challenge submitted successfully. SonarCloud analysis will run automatically."
+                "message", "Challenge submitted successfully."
         );
     }
 
-    /**
-     * Fetch SonarCloud results by GitHub PR URL. For Swagger testing.
-     * Example: GET /participations/sonar-results/fetch-by-url?prUrl=https://github.com/challenge-org-Freelancy/AI-Task-Manager-with-Smart-Suggestions-Ameny323/pull/1
-     */
     @GetMapping("/sonar-results/fetch-by-url")
     public Map<String, Object> fetchSonarResultsByPrUrl(@RequestParam String prUrl) {
         Map<String, Object> metrics = gitHubService.fetchSonarCloudMetricsByPrUrl(prUrl);
@@ -109,27 +125,11 @@ public class ParticipationController {
         );
     }
 
-    private static String parseString(Map<String, Object> m, String key) {
-        Object v = m.get(key);
-        return v != null ? v.toString() : "";
-    }
-
-    private static int parseInt(Map<String, Object> m, String key) {
-        Object v = m.get(key);
-        return v != null ? Integer.parseInt(v.toString()) : 0;
-    }
-
-    private static double parseDouble(Map<String, Object> m, String key) {
-        Object v = m.get(key);
-        return v != null ? Double.parseDouble(v.toString()) : 0.0;
-    }
-
     @GetMapping("/{participationId}/sonar-results")
     public SonarCloudResult getSonarResults(@PathVariable String participationId) {
         try {
             return participationService.getSonarResults(participationId);
         } catch (SonarResultsNotFoundException e) {
-            // Try to fetch from SonarCloud (analysis may have just finished)
             try {
                 return participationService.fetchSonarResults(participationId);
             } catch (Exception ex) {
@@ -154,16 +154,18 @@ public class ParticipationController {
     }
 
     @PutMapping("/{participationId}/sonar-results")
-    public SonarCloudResult updateSonarResults(@PathVariable String participationId,
-                                               @RequestBody SonarCloudResult updatedResult) {
+    public SonarCloudResult updateSonarResults(
+            @PathVariable String participationId,
+            @RequestBody SonarCloudResult updatedResult) {
         return participationService.updateSonarResults(participationId, updatedResult);
     }
 
     @PatchMapping("/{participationId}/sonar-results/{sonarResultId}/points")
-    public void saveSonarPoints(@PathVariable String participationId,
-                                @PathVariable String sonarResultId,
-                                @RequestBody SaveSonarPointsRequest body) {
-        Integer points = body != null ? body.getPointsAwarded() : null;
+    public void saveSonarPoints(
+            @PathVariable String participationId,
+            @PathVariable String sonarResultId,
+            @RequestBody Map<String, Integer> body) {
+        Integer points = body != null ? body.get("pointsAwarded") : null;
         if (points == null) {
             throw new IllegalArgumentException("pointsAwarded is required");
         }
@@ -171,7 +173,8 @@ public class ParticipationController {
     }
 
     @GetMapping("/github/user-exists/{usernameGithub}")
-    public Map<String, Object> checkGitHubUserExists(@PathVariable String usernameGithub) {
+    public Map<String, Object> checkGitHubUserExists(
+            @PathVariable String usernameGithub) {
         boolean exists = gitHubService.doesUserExist(usernameGithub);
         return Map.of(
                 "usernameGithub", usernameGithub,
@@ -189,5 +192,20 @@ public class ParticipationController {
                 "branchName", branchName,
                 "exists", exists
         );
+    }
+
+    private static String parseString(Map<String, Object> m, String key) {
+        Object v = m.get(key);
+        return v != null ? v.toString() : "";
+    }
+
+    private static int parseInt(Map<String, Object> m, String key) {
+        Object v = m.get(key);
+        return v != null ? Integer.parseInt(v.toString()) : 0;
+    }
+
+    private static double parseDouble(Map<String, Object> m, String key) {
+        Object v = m.get(key);
+        return v != null ? Double.parseDouble(v.toString()) : 0.0;
     }
 }

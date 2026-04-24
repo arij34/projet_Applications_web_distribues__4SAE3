@@ -71,17 +71,25 @@ public class GitHubService {
 
         HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
 
-        ResponseEntity<Map> response = restTemplate.exchange(
-                url,
-                HttpMethod.PUT,
-                request,
-                Map.class
-        );
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.PUT,
+                    request,
+                    Map.class
+            );
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            log.info("Collaborator {} added to repo {}", usernameGithub, repoName);
-        } else {
-            throw new RuntimeException("Failed to add collaborator: " + response.getStatusCode());
+            if (response.getStatusCode().is2xxSuccessful()) {
+                log.info("Collaborator {} added to repo {}", usernameGithub, repoName);
+            } else {
+                throw new RuntimeException("Failed to add collaborator: " + response.getStatusCode());
+            }
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new RuntimeException(
+                    "GitHub collaborator invite failed (404). Verify repo '" + repoName + "' exists under org '"
+                            + ORG_OWNER + "' and user '" + usernameGithub + "' exists.",
+                    e
+            );
         }
     }
 

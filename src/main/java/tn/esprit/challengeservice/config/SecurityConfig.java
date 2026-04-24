@@ -6,9 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
-import org.springframework.security.oauth2.core.OAuth2TokenValidator;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -24,19 +21,12 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    /**
-     * Custom JwtDecoder:
-     * - Validates issuer against HTTPS Keycloak (8443) because browser-issued tokens have iss=https://...
-     * - Fetches JWKS from HTTP (8081) to avoid Java TLS trust issues with self-signed certs.
-     */
     @Bean
     public JwtDecoder jwtDecoder(
-            @Value("${app.keycloak.issuer}") String issuer,
-            @Value("${app.keycloak.jwk-set-uri}") String jwkSetUri
+            @Value("${app.keycloak.jwk-set-uri:http://keycloak:8080/realms/smart-platform/protocol/openid-connect/certs}") String jwkSetUri
     ) {
         NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
-        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
-        decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(withIssuer));
+        decoder.setJwtValidator(JwtValidators.createDefault());
         return decoder;
     }
 
