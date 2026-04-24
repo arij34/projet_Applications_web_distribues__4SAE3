@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { SignupService, SignupPayload } from '../../services/signup.service';
 import { AuthService } from '../../auth/auth.service';
 
@@ -19,7 +20,11 @@ export class SignupComponent {
   error?: string;
   success?: string;
 
-  constructor(private readonly signup: SignupService, private readonly auth: AuthService) {}
+  constructor(
+    private readonly signup: SignupService,
+    private readonly auth: AuthService,
+    private readonly router: Router
+  ) {}
 
   async submit(): Promise<void> {
     this.error = undefined;
@@ -28,8 +33,13 @@ export class SignupComponent {
     try {
       await this.signup.signup(this.model);
       this.success = 'Account created. Redirecting to Sign In...';
-      // Go to Keycloak login
-      await this.auth.login(window.location.origin + '/');
+      if (this.auth.isKeycloakEnabled()) {
+        // Go to Keycloak login
+        await this.auth.login(window.location.origin + '/');
+      } else {
+        this.auth.setLocalSession(this.model.accountType, `${this.model.firstName} ${this.model.lastName}`.trim());
+        await this.router.navigateByUrl('/front');
+      }
     } catch (e: any) {
       this.error = e?.error?.error || e?.message || 'Signup failed';
     } finally {

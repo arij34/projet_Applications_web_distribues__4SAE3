@@ -13,7 +13,7 @@ export class BackOfficeComponent implements OnInit {
   isMobile: boolean = false;
 
   // Tabs qui utilisent router-outlet (ont des sous-routes comme /form)
-  private routedTabs = ['skills', 'pending-skills'];
+  private routedTabs = ['skills', 'pending-skills', 'blog', 'blog-analytics'];
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
@@ -52,6 +52,13 @@ export class BackOfficeComponent implements OnInit {
     // Challenge → route dédiée
     if (tab === 'Challenge') {
       this.router.navigate(['/admin/challenges']);
+      return;
+    }
+
+    if (tab === 'blog' || tab === 'blog-analytics') {
+      this.activeTab = tab;
+      this.router.navigate(['/admin', tab]);
+      if (this.isMobile) this.sidebarOpen = false;
       return;
     }
 

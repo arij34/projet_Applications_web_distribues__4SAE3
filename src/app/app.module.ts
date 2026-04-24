@@ -6,8 +6,9 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { KeycloakAngularModule, KeycloakBearerInterceptor, KeycloakService } from 'keycloak-angular';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { initializeKeycloak } from './core/auth/keycloak-init.factory';
+import { AuthTokenInterceptor } from './core/auth/auth-token.interceptor';
 
 import { NotAuthorizedComponent } from './core/pages/not-authorized/not-authorized.component';
 import { FormsModule } from '@angular/forms';
@@ -41,7 +42,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: KeycloakBearerInterceptor,
+      useClass: AuthTokenInterceptor,
       multi: true
     },
     provideCharts(withDefaultRegisterables())

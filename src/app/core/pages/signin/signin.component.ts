@@ -20,6 +20,13 @@ export class SigninComponent implements OnInit {
     private readonly me: MeService
   ) {}
 
+  private async completeLocalRoleSelection(role: 'CLIENT' | 'FREELANCER' | 'ADMIN'): Promise<void> {
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || undefined;
+    this.googleRolePickerOpen = false;
+    this.auth.setLocalSession(role);
+    await this.router.navigateByUrl(returnUrl || this.auth.getDefaultRouteByRole());
+  }
+
   async ngOnInit(): Promise<void> {
     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || undefined;
 
@@ -40,7 +47,12 @@ export class SigninComponent implements OnInit {
 
           // If we already have a stored pending role (from earlier click), try to apply it now.
           const pending = localStorage.getItem('pendingGoogleRole') as any;
-          if (pending === 'CLIENT' || pending === 'FREELANCER') {
+          if (pending === 'CLIENT' || pending === 'FREELANCER' || pending === 'ADMIN') {
+            if (!this.auth.isKeycloakEnabled()) {
+              await this.completeLocalRoleSelection(pending);
+              return;
+            }
+
             await this.applyRoleAndRedirect(pending);
           }
           return;
@@ -53,13 +65,19 @@ export class SigninComponent implements OnInit {
       // ignore
     }
 
-    // If not logged in but user came from "choose role" action, open the picker.
-    if (this.route.snapshot.queryParamMap.get('chooseRole') === '1' || !!returnUrl) {
+    // Open picker explicitly via chooseRole=1.
+    // In local fallback mode (without Keycloak), we also open it when a protected route redirects with returnUrl.
+    if (this.route.snapshot.queryParamMap.get('chooseRole') === '1' || (!this.auth.isKeycloakEnabled() && !!returnUrl)) {
       this.googleRolePickerOpen = true;
     }
   }
 
-  private async applyRoleAndRedirect(role: 'CLIENT' | 'FREELANCER'): Promise<void> {
+  private async applyRoleAndRedirect(role: 'CLIENT' | 'FREELANCER' | 'ADMIN'): Promise<void> {
+    if (!this.auth.isKeycloakEnabled()) {
+      await this.completeLocalRoleSelection(role);
+      return;
+    }
+
     this.error = undefined;
     this.loading = true;
     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || undefined;
@@ -85,6 +103,12 @@ export class SigninComponent implements OnInit {
     this.error = undefined;
     this.loading = true;
     try {
+      if (!this.auth.isKeycloakEnabled()) {
+        this.loading = false;
+        this.googleRolePickerOpen = true;
+        return;
+      }
+
       // redirect back here then route by role
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '';
       await this.auth.login(window.location.origin + '/signin' + (returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : ''));
@@ -95,10 +119,15 @@ export class SigninComponent implements OnInit {
     }
   }
 
-  async signInWithGoogle(role: 'CLIENT' | 'FREELANCER'): Promise<void> {
+  async signInWithGoogle(role: 'CLIENT' | 'FREELANCER' | 'ADMIN'): Promise<void> {
     this.error = undefined;
     this.loading = true;
     try {
+      if (!this.auth.isKeycloakEnabled()) {
+        await this.completeLocalRoleSelection(role);
+        return;
+      }
+
       this.googleRolePickerOpen = false;
       // Single Google IdP (alias='google') is provisioned.
       // Role selection is done in the app and will be assigned after login.
@@ -122,7 +151,12 @@ export class SigninComponent implements OnInit {
     this.googleRolePickerOpen = false;
   }
 
-  async chooseRole(role: 'CLIENT' | 'FREELANCER'): Promise<void> {
+  async chooseRole(role: 'CLIENT' | 'FREELANCER' | 'ADMIN'): Promise<void> {
+    if (!this.auth.isKeycloakEnabled()) {
+      await this.completeLocalRoleSelection(role);
+      return;
+    }
+
     // If already authenticated (e.g. user landed in NotAuthorized), just assign role.
     const loggedIn = await this.auth.isLoggedIn();
     if (loggedIn) {

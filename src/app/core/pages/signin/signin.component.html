@@ -37,6 +37,14 @@
 
         <div class="mt-5 flex flex-col gap-2">
           <button
+            class="w-full py-2 rounded-lg bg-gray-800 text-white font-semibold disabled:opacity-60"
+            type="button"
+            (click)="chooseRole('ADMIN')"
+            [disabled]="loading">
+            Continue as Admin
+          </button>
+
+          <button
             class="w-full py-2 rounded-lg bg-indigo-600 text-white font-semibold disabled:opacity-60"
             type="button"
             (click)="chooseRole('CLIENT')"

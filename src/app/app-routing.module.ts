@@ -28,6 +28,13 @@ const routes: Routes = [
       .then(m => m.BackOfficeModule)
   },
 
+  // ADMIN DASHBOARD ALIAS
+  {
+    path: 'dashboard',
+    redirectTo: 'admin/dashboard',
+    pathMatch: 'full'
+  },
+
   // CLIENT
   {
     path: 'client',
@@ -130,6 +137,22 @@ const routes: Routes = [
     data: { roles: [KC_ROLES.FREELANCER, KC_ROLES.CLIENT] },
     loadChildren: () => import('./features/front-office/front-office.module')
       .then(m => m.FrontOfficeModule)
+  },
+
+  // BLOG (CLIENT/FREELANCER)
+  {
+    path: 'blog',
+    canActivate: [RoleGuard],
+    data: { roles: [KC_ROLES.FREELANCER, KC_ROLES.CLIENT] },
+    loadComponent: () => import('./features/blog/pages/blog-management-page.component')
+      .then(m => m.BlogManagementPageComponent)
+  },
+  {
+    path: 'blog-analytics',
+    canActivate: [RoleGuard],
+    data: { roles: [KC_ROLES.FREELANCER, KC_ROLES.CLIENT] },
+    loadComponent: () => import('./features/blog/pages/blog-analytics-page.component')
+      .then(m => m.BlogAnalyticsPageComponent)
   },
 
   // FALLBACK

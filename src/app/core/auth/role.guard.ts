@@ -1,32 +1,26 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RoleGuard extends KeycloakAuthGuard implements CanActivate {
+export class RoleGuard implements CanActivate {
   constructor(
-    protected override readonly router: Router,
-    protected override readonly keycloakAngular: KeycloakService
-  ) {
-    super(router, keycloakAngular);
-  }
+    private readonly router: Router,
+    private readonly auth: AuthService
+  ) {}
 
   /**
    * Expects route data:
    * data: { roles: ['ADMIN'] }
    */
-  public override async isAccessAllowed(
+  public async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> {
-    if (!this.authenticated) {
-      // IMPORTANT:
-      // Do NOT redirect directly to Keycloak here.
-      // We want the user to land on our /signin page first so we can:
-      // - show "Sign in with Google"
-      // - ask the user to choose their role (CLIENT/FREELANCER) BEFORE Google login
+    const loggedIn = await this.auth.isLoggedIn();
+    if (!loggedIn) {
       return this.router.parseUrl(`/signin?returnUrl=${encodeURIComponent(state.url)}`);
     }
 
@@ -35,7 +29,8 @@ export class RoleGuard extends KeycloakAuthGuard implements CanActivate {
       return true;
     }
 
-    const hasRole = requiredRoles.some((role) => this.roles.includes(role));
+    const localRoles = this.auth.getUserRoles();
+    const hasRole = requiredRoles.some((role) => localRoles.includes(role as any));
     if (!hasRole) {
       return this.router.parseUrl('/not-authorized');
     }

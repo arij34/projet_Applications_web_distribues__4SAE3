@@ -562,9 +562,15 @@ export class ProfileComponent implements OnInit {
     try {
       const loggedIn = await this.auth.isLoggedIn();
       if (!loggedIn) { await this.auth.login(window.location.origin + '/profile'); return; }
-      try { await this.keycloak.updateToken(30); } catch { /* ignore */ }
-      await this.meService.sync();
-      this.me = await this.meService.me();
+      if (this.auth.isKeycloakEnabled()) {
+        try { await this.keycloak.updateToken(30); } catch { /* ignore */ }
+      }
+      if (this.auth.isKeycloakEnabled()) {
+        await this.meService.sync();
+        this.me = await this.meService.me();
+      } else {
+        this.me = await this.meService.me();
+      }
       this.resetForm();
     } catch (e: any) {
       this.error = e?.error?.error || e?.message || 'Failed to load profile';
@@ -583,12 +589,20 @@ export class ProfileComponent implements OnInit {
     try {
       const loggedIn = await this.auth.isLoggedIn();
       if (!loggedIn) { await this.auth.login(window.location.origin + '/profile'); return; }
-      try { await this.keycloak.updateToken(30); } catch { /* ignore */ }
+      if (this.auth.isKeycloakEnabled()) {
+        try { await this.keycloak.updateToken(30); } catch { /* ignore */ }
+      }
 
-      const updated = await firstValueFrom(this.http.put<MeDto>(`${this.baseUrl}`, {
-        firstName: this.form.firstName, lastName: this.form.lastName,
-        email: this.form.email, password: this.form.password
-      }));
+      const payload = {
+        firstName: this.form.firstName,
+        lastName: this.form.lastName,
+        email: this.form.email,
+        password: this.form.password
+      };
+
+      const updated = this.auth.isKeycloakEnabled()
+        ? await firstValueFrom(this.http.put<MeDto>(`${this.baseUrl}`, payload))
+        : this.meService.saveLocalProfile(payload);
 
       this.me = updated;
       this.resetForm();
@@ -603,10 +617,12 @@ export class ProfileComponent implements OnInit {
 
   async cancel(): Promise<void> {
     // Ensure Keycloak session is fresh; avoids RoleGuard redirecting to /signin.
-    try {
-      await this.keycloak.updateToken(30);
-    } catch {
-      // ignore
+    if (this.auth.isKeycloakEnabled()) {
+      try {
+        await this.keycloak.updateToken(30);
+      } catch {
+        // ignore
+      }
     }
 
     const role = (this.me?.role || '').toUpperCase();
@@ -616,7 +632,7 @@ export class ProfileComponent implements OnInit {
     try {
       const kcRoles = this.auth.getUserRoles().map(r => String(r).toUpperCase());
       const needsRealmRole = (role === KC_ROLES.CLIENT || role === KC_ROLES.FREELANCER) && !kcRoles.includes(role);
-      if (needsRealmRole) {
+      if (needsRealmRole && this.auth.isKeycloakEnabled()) {
         await this.meService.setRole(role as any);
         // Force refresh to pick up the new realm role in the token
         await this.keycloak.updateToken(9999);

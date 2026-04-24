@@ -28,7 +28,11 @@ export class AppComponent implements OnInit {
     try {
       const profile = await this.me.sync();
       localStorage.setItem('userId', profile.id.toString());
-      localStorage.setItem('userRole', profile.role || (this.auth.hasRole(KC_ROLES.FREELANCER) ? 'FREELANCER' : 'CLIENT'));
+      const detectedRole = profile.role
+        || (this.auth.hasRole(KC_ROLES.ADMIN)
+          ? KC_ROLES.ADMIN
+          : (this.auth.hasRole(KC_ROLES.FREELANCER) ? KC_ROLES.FREELANCER : KC_ROLES.CLIENT));
+      localStorage.setItem('userRole', detectedRole);
       const displayName = [profile.firstName, profile.lastName].filter(Boolean).join(' ').trim() || profile.email || 'User';
       localStorage.setItem('userName', displayName);
     } catch (e) {

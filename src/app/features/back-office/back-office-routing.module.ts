@@ -13,6 +13,8 @@ import { SkillListComponent } from './skillManagement/skill/skill-list/skill-lis
 import { SkillFormComponent } from './skillManagement/skill/skill-form/skill-form.component';
 import { PendingSkillListComponent } from './skillManagement/pending-skill/pending-skill-list/pending-skill-list.component';
 import { PendingSkillFormComponent } from './skillManagement/pending-skill/pending-skill-form/pending-skill-form.component';
+import { AdminBlogManagementPageComponent } from '../blog/pages/admin-blog-management-page.component';
+import { AdminBlogAnalyticsPageComponent } from '../blog/pages/admin-blog-analytics-page.component';
 
 const routes: Routes = [
   {
@@ -35,6 +37,10 @@ const routes: Routes = [
       { path: 'pending-skills',        component: PendingSkillListComponent },
       { path: 'pending-skills/form',   component: PendingSkillFormComponent },
       { path: 'pending-skills/form/:id', component: PendingSkillFormComponent },
+
+      // Blog modules
+      { path: 'blog',                  component: AdminBlogManagementPageComponent },
+      { path: 'blog-analytics',        component: AdminBlogAnalyticsPageComponent },
     ]
   }
 ];

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export type AccountType = 'CLIENT' | 'FREELANCER';
 
@@ -21,6 +22,10 @@ export class SignupService {
   constructor(private readonly http: HttpClient) {}
 
   signup(payload: SignupPayload): Promise<{ message: string }> {
+    if (!environment.useKeycloak) {
+      return Promise.resolve({ message: 'Local account created.' });
+    }
+
     return firstValueFrom(this.http.post<{ message: string }>(this.baseUrl, payload));
   }
 }

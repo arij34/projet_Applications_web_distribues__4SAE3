@@ -89,6 +89,7 @@
               <button class="dropdown-item" routerLink="/contract">Contract</button>
               <button class="dropdown-item" routerLink="/challenge">Challenge</button>
               <button class="dropdown-item" routerLink="/blog">Blog</button>
+              <button class="dropdown-item" routerLink="/blog-analytics">Blog Analytics</button>
               <button type="button" class="dropdown-item" (click)="logout()">Log out</button>
             </div>
           </div>
@@ -141,6 +142,12 @@
       </a>
       <a class="mobile-nav-link" href="#contact" (click)="closeMobileMenu()">
         Contact
+      </a>
+      <a class="mobile-nav-link" routerLink="/blog" routerLinkActive="active" (click)="closeMobileMenu()" *ngIf="isLoggedIn">
+        Blog
+      </a>
+      <a class="mobile-nav-link" routerLink="/blog-analytics" routerLinkActive="active" (click)="closeMobileMenu()" *ngIf="isLoggedIn">
+        Blog Analytics
       </a>
       <button class="mobile-cta-button" type="button" (click)="closeMobileMenu()">
         Get Started

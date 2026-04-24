@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  useKeycloak: false,
 
   // API Gateway (proxy Angular)
   apiUrl: '/api',

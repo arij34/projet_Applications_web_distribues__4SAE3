@@ -1,4 +1,5 @@
 import { KeycloakService } from 'keycloak-angular';
+import { environment } from '../../../environments/environment';
 
 /**
  * Initializes Keycloak before Angular bootstraps.
@@ -8,6 +9,10 @@ import { KeycloakService } from 'keycloak-angular';
  */
 export function initializeKeycloak(keycloak: KeycloakService) {
   return () => {
+    if (!environment.useKeycloak) {
+      return Promise.resolve(true);
+    }
+
     const initPromise = keycloak.init({
       config: {
         // Use HTTPS to make social login (Google) work correctly with cookies.

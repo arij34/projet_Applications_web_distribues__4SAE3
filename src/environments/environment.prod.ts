@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  useKeycloak: true,
 
   apiUrl: 'https://api.challengepro.com/api',
 

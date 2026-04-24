@@ -27,17 +27,17 @@ interface StatCard {
     Have a wonderful day and keep up the great work!
   </p>
         <div class="flex gap-6">
-  <a href="#" class="text-black hover:text-indigo-600 text-base font-semibold transition-all flex items-center gap-2 hover:border-b-2 hover:border-indigo-600 pb-1">
+  <a routerLink="/admin/blog" class="text-black hover:text-indigo-600 text-base font-semibold transition-all flex items-center gap-2 hover:border-b-2 hover:border-indigo-600 pb-1">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
     </svg>
-    Check Email
+    Blog
   </a>
-  <a href="#" class="text-black hover:text-indigo-600 text-base font-semibold transition-all flex items-center gap-2 hover:border-b-2 hover:border-indigo-600 pb-1">
+  <a routerLink="/admin/blog-analytics" class="text-black hover:text-indigo-600 text-base font-semibold transition-all flex items-center gap-2 hover:border-b-2 hover:border-indigo-600 pb-1">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
     </svg>
-    Check Calendar
+    Blog Analytics
   </a>
 </div>
       </div>
@@ -81,6 +81,73 @@ interface StatCard {
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <a routerLink="/admin/blog" class="group bg-white rounded-xl border border-gray-100 p-4 shadow-sm hover:shadow-md transition-all">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Content</p>
+              <h3 class="text-lg font-bold text-gray-900 mt-1">Blog</h3>
+              <p class="text-sm text-gray-500 mt-1">Manage posts and editorial content</p>
+            </div>
+            <span class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14-7H9a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2z"></path>
+              </svg>
+            </span>
+          </div>
+          <p class="text-sm text-indigo-600 font-semibold mt-3 group-hover:underline">Open Blog</p>
+        </a>
+
+        <a routerLink="/admin/blog-analytics" class="group bg-white rounded-xl border border-gray-100 p-4 shadow-sm hover:shadow-md transition-all">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Insights</p>
+              <h3 class="text-lg font-bold text-gray-900 mt-1">Blog Analytics</h3>
+              <p class="text-sm text-gray-500 mt-1">Track and update blog metrics</p>
+            </div>
+            <span class="w-9 h-9 rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19V6m-5 13V10m10 9v-6m5 6V4"></path>
+              </svg>
+            </span>
+          </div>
+          <p class="text-sm text-cyan-600 font-semibold mt-3 group-hover:underline">Open Analytics</p>
+        </a>
+
+        <a routerLink="/admin/users" class="group bg-white rounded-xl border border-gray-100 p-4 shadow-sm hover:shadow-md transition-all">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Access</p>
+              <h3 class="text-lg font-bold text-gray-900 mt-1">Users</h3>
+              <p class="text-sm text-gray-500 mt-1">Review and manage user accounts</p>
+            </div>
+            <span class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5V4H2v16h5m10 0v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2m12 0H7m10-11a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              </svg>
+            </span>
+          </div>
+          <p class="text-sm text-emerald-600 font-semibold mt-3 group-hover:underline">Open Users</p>
+        </a>
+
+        <a routerLink="/admin/stats" class="group bg-white rounded-xl border border-gray-100 p-4 shadow-sm hover:shadow-md transition-all">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Overview</p>
+              <h3 class="text-lg font-bold text-gray-900 mt-1">Stats</h3>
+              <p class="text-sm text-gray-500 mt-1">View platform statistics summary</p>
+            </div>
+            <span class="w-9 h-9 rounded-lg bg-violet-100 text-violet-700 flex items-center justify-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18M7 13l3-3 3 3 4-5"></path>
+              </svg>
+            </span>
+          </div>
+          <p class="text-sm text-violet-600 font-semibold mt-3 group-hover:underline">Open Stats</p>
+        </a>
       </div>
 
       <!-- Middle Section: Charts -->
